@@ -1,0 +1,8 @@
+261c261
+< The interval algorithm and both plaintext and covertext models were implemented in Mathematica. The COCA database was processed using Python and stored in a PostgreSQL database. Single letter frequencies were stored in the source code.
+---
+> The interval algorithm and both plaintext and covertext models were implemented in Mathematica. The COCA ngrams database was processed using Python and stored in a PostgreSQL database. Single letter frequencies were stored in the source code.
+301c301
+< The problem is that the tree representation would have to be both parsed and generated in a consistent and linear manner. This is a very interesting problem in the field of algorithms and linguistics, but most likely is outside the scope of this project.
+---
+> The problem is that the tree representation would have to be both parsed and generated in a consistent and sequential manner. This is a very interesting problem in the field of algorithms and linguistics, but most likely is outside the scope of this project.
