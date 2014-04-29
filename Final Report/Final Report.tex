@@ -1,0 +1,131 @@
+\documentclass{IIBproject}
+
+% Set margin size
+\usepackage[margin=2.5cm]{geometry}
+
+% Use BibTeX for bibliography management, use the hyperref package to include URLs in the entries
+\usepackage{cite}
+\usepackage{url}
+
+% Sets 1.5 line spacing
+\usepackage{setspace}
+\onehalfspacing
+
+% Document
+\begin{document}
+
+% Title page
+\thispagestyle{empty}
+\author{Konrad Komorowski (CHU)}
+\title{Hiding Secrets in Plain Text}
+\projectgroup{F}
+\maketitle
+
+% Summary and table of contents
+\thispagestyle{empty}
+\begin{abstract}
+Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.
+\end{abstract}
+\tableofcontents
+\newpage
+
+% Contents
+\pagestyle{plain}
+
+\section{Technical abstract}
+
+Lorem ipsum.
+
+\section{Introduction}
+
+Lorem ipsum.
+
+\subsection{Aim}
+
+\subsection{Overview of steganography}
+
+\subsection{High level description of the stegosystem}
+
+\section{The interval algorithm}
+
+Lorem ipsum.
+
+\section{Stochastic process language models}
+
+Lorem ipsum.
+
+\subsection{Theoretical background}
+
+\subsection{Sources of statistical data}
+
+\subsubsection{COCA}
+
+\subsubsection{Google Books Ngrams}
+
+\section{Detailed description of the stegosystem}
+
+Lorem ipsum.
+
+\subsection{Source -- plaintext concatenated with randomness}
+
+\subsection{Target -- English language model}
+
+\subsection{Storing length of plaintext}
+
+\subsubsection{Universal coding of plaintext length}
+
+\subsubsection{EOF symbol}
+
+\subsection{Sufficient length of the output interval}
+
+\subsection{Secrecy}
+
+\section{Implementation}
+
+Lorem ipsum.
+
+\subsection{Language model}
+
+\subsubsection{Mining the Google Books Ngrams Database}
+
+\subsubsection{Efficient computation of conditional probabilities}
+
+\subsection{Plaintext to stegotext translation using the interval algorithm}
+
+\section{Security vulnerabilities}
+
+Lorem ipsum.
+
+\subsection{Telling stegotext from covertext}
+
+\subsubsection{Plaintext length declaration incompatible with interval size}
+
+If the plaintext length declaration is longer than the maximum length of plaintext that can be recovered from the potential stegotext, we know the message was covertext.
+
+Conversely -- how often does a compatible length declaration indicate stegotext? If almost always, then the system is flawed.
+
+\section{Theoretical considerations}
+
+Lorem ipsum.
+
+\subsection{Rate of the system}
+
+\subsection{Entropy of the language model and its effect on stegotext length}
+
+Use the bounds from Han \& Hoshi's paper.
+
+\section{Interesting questions}
+
+Lorem ipsum.
+
+\subsection{How many bits of information stored per word, sentence, tweet?}
+
+\subsubsection{Dependence on the entropy of the language model}
+
+\bibliography{test}
+
+\appendix
+
+\section{First appendix}
+
+\end{document}
