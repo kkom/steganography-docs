@@ -88,22 +88,15 @@
    Fourth-year undergraduate project in\\Group \@projectgroup, 2013/2014%
   \end{center}%
   \par
-%\vskip 6cm%
-%\noindent I hereby declare that, except where specifically indicated, 
-%the work submitted herein is my own original work.
+\vskip 11cm%
+\noindent I hereby declare that, except where specifically indicated, 
+the work submitted herein is my own original work.
 
-%\vskip 1cm %or some other suitable small distance
-%\begin{center}
-%Signed: \underline{\hspace{6cm}} Date: \underline{\hspace{3cm}}
-%\end{center}
-\begin{table}[b]
-\begin{tabular}{l}
-I hereby declare that, except where specifically indicated, the work\\ 
-submitted herein is my own original work.\\
-\\
+\vskip 0.5cm %or some other suitable small distance
+\begin{center}
 Signed: \underline{\hspace{6cm}} Date: \underline{\hspace{3cm}}
-\end{tabular}
-\end{table}
+\end{center}
+
 \newpage}
 \fi
 
