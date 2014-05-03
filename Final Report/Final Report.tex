@@ -1,17 +1,47 @@
+%%%
+%%% Document class and page properties
+%%%
+
 \documentclass{IIBproject}
 
 % Set margin size
 \usepackage[margin=2.5cm]{geometry}
 
+%%%
+%%% Standard packages in alphabetical order
+%%%
+
 % Use BibTeX for bibliography management, use the hyperref package to include URLs in the entries
 \usepackage{cite}
 \usepackage{url}
+
+% Color text
+\usepackage{color}
 
 % Sets 1.5 line spacing
 \usepackage{setspace}
 \onehalfspacing
 
-% Document
+% Provides formatting of numbers (here used for thousands' separators)
+\usepackage{siunitx}
+
+% Provides robust spaces after commands
+\usepackage{xspace}
+
+%%%
+%%% Commands
+%%%
+
+% Placeholder for parts of the report to be finished later
+\DeclareRobustCommand{\later}{\textcolor{red}{\textbf{(?)}}\@\xspace}
+
+% Notes to be discussed with supervisor/thought about later
+\DeclareRobustCommand{\noteSelf}[1]{\textcolor{red}{#1}}
+
+%%%
+%%% Document
+%%%
+
 \begin{document}
 
 % Title page
@@ -27,15 +57,16 @@
 Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.
 \end{abstract}
 \tableofcontents
-\newpage
 
 % Contents
 \pagestyle{plain}
 
+\newpage
 \section{Technical abstract}
 
 Lorem ipsum.
 
+\newpage
 \section{Introduction}
 
 Lorem ipsum.
@@ -46,22 +77,64 @@ Lorem ipsum.
 
 \subsection{High level description of the stegosystem}
 
+\newpage
 \section{The interval algorithm}
 
 Lorem ipsum.
 
-\section{Stochastic process language models}
+\newpage
+\section{Statistical language models}
 
-Lorem ipsum.
+\subsection{Standard theory and notation}
 
-\subsection{Theoretical background}
+The notation and theory in this section is based on \cite{4f11:statistical_language_models, 4f11:smt_systems, coursera:nlp}.
 
-\subsection{Sources of statistical data}
+\subsubsection{Text as the output of a stochastic process}
+
+A string $\mathbf w$ of length $L$ can be regarded as a sequence of \emph{tokens} $w_l$. Tokens are atomic elements of a sentence such as words or punctuation.
+
+\begin{equation}
+\mathbf w = [ w_1, \dots, w_L ] \equiv w_1^L
+\end{equation}
+
+$\mathbf w$ can be regarded as an $L$-dimensional vector of jointly distributed random variables $w_l \in \{1, \dots, M\}$, where $M$ is the number of distinct tokens. According to the chain rule of probability, we can factorise $P(\mathbf w)$ in the following way:
+
+\begin{equation}
+\label{eq:exact_string_probability}
+P(\mathbf w) = \prod_{l=1}^{L} P( w_l | w_1^{l-1} )
+\end{equation}
+
+\subsubsection{$N$-gram language models}
+
+Even though Eq.~\ref{eq:exact_string_probability} gives us a convenient formulation of language as a stochastic process, it is computationally intractable. The conditional probabilities need to be stored in tables. Conditional probability table of just the last token would have $M^L$ entries. With $M \approx 10^6$ and $L \approx 10$, this number very quickly becomes prohibitively large.
+
+The usual solution is to restrict the size of the context to $N-1$ previous tokens, resulting in an approximate $N$-gram language model:
+
+\begin{equation}
+\label{eq:ngram_string_probability}
+P(\mathbf w) \approx P_{\text{$N$-gram}}(\mathbf w) \equiv \prod_{l=1}^{L} P( w_l | w_{l-N+1}^{l-1} )
+\end{equation}
+
+\subsubsection{Estimating parameters}
+
+Eq.~\ref{eq:ml_conditional_ngram_probability} can be shown to be the ML (maximum likelihood) estimate of conditional probability of $w_l$ in an $N$-gram model. $f(\cdot)$ is the number of occurrences of a particular sequence of tokens in the training dataset.
+
+\begin{equation}
+\label{eq:ml_conditional_ngram_probability}
+\hat P( w_l | w_{l-N+1}^{l-1} ) = \frac {f(w_{l-N+1}^l)} {f(w_{l-N+1}^{l-1})}
+\end{equation}
+
+\subsubsection{Discounting and back-off}
+
+A problem with Eq.~\ref{eq:ml_conditional_ngram_probability} is that most of the conditional probabilities will be zero. For example, a $5$-gram model with $M \approx 10^6$ will still have $M^L \approx \left( 10^6 \right)^5 = 10^{30}$ parameters. For every possible $5$-gram sequence to occur at least once, the training set would need to consist of at least $\approx 10^{30}$ tokens. Currently largest available dataset is based on $\approx 3.6 \times 10^{11}$ English words. \cite{googlengrams2011} The standard way of dealing with this problem is by introducing \emph{discounting} and \emph{back-off} to the model.
+
+\subsection{Sources of natural language statistical data}
 
 \subsubsection{COCA}
 
 \subsubsection{Google Books Ngrams}
 
+\newpage
 \section{Detailed description of the stegosystem}
 
 Lorem ipsum.
@@ -80,6 +153,7 @@ Lorem ipsum.
 
 \subsection{Secrecy}
 
+\newpage
 \section{Implementation}
 
 Lorem ipsum.
@@ -92,6 +166,7 @@ Lorem ipsum.
 
 \subsection{Plaintext to stegotext translation using the interval algorithm}
 
+\newpage
 \section{Security vulnerabilities}
 
 Lorem ipsum.
@@ -104,6 +179,7 @@ If the plaintext length declaration is longer than the maximum length of plainte
 
 Conversely -- how often does a compatible length declaration indicate stegotext? If almost always, then the system is flawed.
 
+\newpage
 \section{Theoretical considerations}
 
 Lorem ipsum.
@@ -114,6 +190,7 @@ Lorem ipsum.
 
 Use the bounds from Han \& Hoshi's paper.
 
+\newpage
 \section{Interesting questions}
 
 Lorem ipsum.
@@ -122,8 +199,12 @@ Lorem ipsum.
 
 \subsubsection{Dependence on the entropy of the language model}
 
-\bibliography{test}
+\newpage
+\footnotesize
+\bibliographystyle{unsrt}
+\bibliography{../bibliography}
 
+\newpage
 \appendix
 
 \section{First appendix}
