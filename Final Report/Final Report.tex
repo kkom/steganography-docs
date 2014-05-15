@@ -211,11 +211,9 @@ The interval algorithm works by continuously mapping the observed input sequence
 \newpage
 \section{Statistical language models}
 
-\subsection{Standard theory and notation}
-
 The notation and theory in this section is mostly based on \cite{4f11:statistical_language_models, 4f11:smt_systems, coursera:nlp}.
 
-\subsubsection{Text as the output of a stochastic process}
+\subsection{Text as the output of a stochastic process}
 
 A string $\mathbf w$ of length $L$ can be regarded as a sequence of \emph{tokens} $w_l$. Tokens are atomic elements of text such as words or punctuation marks.
 
@@ -232,7 +230,7 @@ P(\mathbf w) = \prod_{l=1}^{L} P( w_l | w_1^{l-1} )
 
 Even though Eq.~\ref{eq:exact_string_probability} gives a convenient formulation of language as a stochastic process, it is computationally intractable. The conditional probabilities need to be stored in tables. Conditional probability table of just the last token would have $M^L$ entries. With $M \approx 10^6$ and $L \approx 10$, this number very quickly becomes prohibitively large.
 
-\subsubsection{$N$-gram language models}
+\subsection{$N$-gram language models}
 
 The usual solution is to restrict the size of the context to $N-1$ previous tokens, resulting in an approximate $N$-gram language model:
 
@@ -241,7 +239,7 @@ The usual solution is to restrict the size of the context to $N-1$ previous toke
 P(\mathbf w) \approx P_{\text{$N$-gram}}(\mathbf w) \equiv \prod_{l=1}^{L} P( w_l | w_{l-N+1}^{l-1} )
 \end{equation}
 
-\subsubsection{Estimating parameters}
+\subsection{Estimating ML parameters}
 
 Eq.~\ref{eq:ml_conditional_token_probability} is the ML (maximum likelihood) estimate of conditional probability of $w_l$ in an $N$-gram model. $f(\cdot)$ is the number of occurrences of a particular sequence of tokens in the training dataset.
 
@@ -252,7 +250,7 @@ Eq.~\ref{eq:ml_conditional_token_probability} is the ML (maximum likelihood) est
 
 A problem with Eq.~\ref{eq:ml_conditional_token_probability} is that most $N$-gram counts will be zero. For example, a $5$-gram model with $M \approx 10^6$ will have $M^L \approx \left( 10^6 \right)^5 = 10^{30}$ distinct $N$-grams. For every possible $5$-gram sequence to occur at least once, the training set would need to consist of $\ge 10^{30}$ tokens. Currently largest available dataset is based on $\approx 3.6 \times 10^{11}$ English words. \cite{googlengrams2011} As a result, a large number of grammatically correct sentences would have 0 probability.
 
-\subsubsection{Limiting database size, discounting and back-off}
+\subsection{Limiting database size, discounting and back-off}
 
 A standard way of dealing with this problem is by introducing \emph{discounting} and \emph{backing-off} the model. In addition, $N$-grams with counts below a threshold $C$ are sometimes discarded from the database to conserve storage space. Conditional distribution of the $l$th token becomes:
 
@@ -267,11 +265,43 @@ A standard way of dealing with this problem is by introducing \emph{discounting}
 
 $d(\cdot)$ and $\alpha(\cdot)$ return the discount and back-off weights -- scaling factors used to ensure that Eq.~\ref{eq:conditional_token_probability_with_backoff} is a valid \pmf. Intuitively, they reduce the mass assigned to observed $N$-grams to accommodate for estimates of order $N-1$ and lower. $d(\cdot)$ and $\alpha(\cdot)$ are hard to choose or compute -- there exist many different schemes motivated by linguistics and statistics. Examples include Good-Turing smoothing,\cite{good1953} Kneser-Ney smoothing,\cite{kneserney1995} or stupid back-off.\cite{brants2007} All exhibit various levels of complexity and the latter does not even return a valid \pmf's.
 
+\section{Processing and storing $N$-gram counts}
+
 \subsection{Sources of natural language statistical data}
 
-\subsubsection{COCA}
+Make a table comparing COCA and Google Books $N$-grams. Indicate that I've chosen Google Books $N$-grams because they are free and have a higher order.
 
-\subsubsection{Google Books Ngrams}
+\subsection{Google Books $N$-grams format}
+
+\subsection{Normalising tokens}
+
+\subsubsection{Discarding $N$-grams containing digits}
+
+\subsubsection{Normalising tokens using the \texttt{unidecode} package}
+
+\subsection{Exploding tokens by punctuation}
+
+Use the \emph{it's} example.
+
+\subsubsection{Induced exploded $N$-gram counts}
+
+Describe algorithm to calculate induced lower-order counts after exploding $N$-grams.
+
+\subsection{Ensuring counts consistency}
+
+\subsection{Sentence delimiters}
+
+\subsection{BinDB file format}
+
+\section{Language model with back-off}
+
+\subsection{Requirements}
+
+Describe the requirements: need to assign non-zero probability to every token -- need to use back-off, each token needs to be assigned a contiguous probability region -- makes back-off more complicated, need to use exactly 100\% of the probability mass.
+
+\subsection{Back-off without repeat tokens}
+
+\subsection{$\beta-\gamma$ algorithm for calculating back-off pseudo-counts}
 
 \newpage
 \section{Detailed description of the stegosystem}
@@ -296,14 +326,6 @@ Lorem ipsum.
 \section{Implementation}
 
 Lorem ipsum.
-
-\subsection{Language model}
-
-\subsubsection{Mining the Google Books Ngrams Database}
-
-\subsubsection{Efficient computation of conditional probabilities}
-
-\subsection{Plaintext to stegotext translation using the interval algorithm}
 
 \newpage
 \section{Security vulnerabilities}
