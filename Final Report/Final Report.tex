@@ -16,6 +16,9 @@
 \usepackage{amsmath}
 \usepackage{amssymb}
 
+% Use the calc package for infix arithmetic
+\usepackage{calc}
+
 % Use BibTeX for bibliography management, use the hyperref package to include URLs in the entries
 \usepackage{cite}
 \usepackage{url}
@@ -30,6 +33,9 @@
 % Provides formatting of numbers (here used for thousands' separators)
 \usepackage{siunitx}
 
+% Use the tikz package for drawing
+\usepackage{tikz}
+
 % Provides robust spaces after commands
 \usepackage{xspace}
 
@@ -38,6 +44,9 @@
 %%%
 
 % Define macros for correct spacing after abbreviations, source: http://tex.stackexchange.com/a/15017
+\newcommand*{\ie}{i.e.\@\xspace}
+
+% Abbreviations which can occur at the end of the sentence cannot duplicate the following dot
 \makeatletter
 \DeclareRobustCommand*{\AbbreviationWithDot}[1]{\@ifnextchar{.}{#1}{#1.\@\xspace}}
 \DeclareRobustCommand*{\pmf}{\AbbreviationWithDot{p.m.f}}
@@ -48,6 +57,50 @@
 
 % Notes to be discussed with supervisor/thought about later
 \DeclareRobustCommand{\noteSelf}[1]{\textcolor{red}{#1}}
+
+%%%
+%%% Drawing
+%%%
+
+% Define a new tikz style for drawings left-closed intervals: [i], notice that the heads are centred exactly on the start and end coordinates of the line
+\usetikzlibrary{decorations.markings}
+\tikzset{
+    i/.style={
+        shorten >=#1,
+        decoration={
+            markings,
+            mark={ at position 0 with {\filldraw[solid] circle [radius=#1];} },
+            mark={ at position 1 with {\draw[solid] circle [radius=#1];} }
+        },
+        postaction=decorate
+    },
+    i/.default=1.5pt
+}
+
+% Define macros for drawing a vertical interval, the arguments are always:
+%	(#1,#2)	- start position
+%	(0,#3)	- length vector
+%	(#4,#5)	- beginning and end of the interval, normalised between 0 and 1
+%	#6		- line style
+%	#7		- position of the label ("left" or "right") if the interval is labelled
+\newcommand{\interval}[6] {
+	\draw[#6] [i] (#1,#2+#4*#3) -- (#1,#2+#5*#3);
+}
+
+\newcommand{\intervalTopLabel}[7] {
+	\interval{#1}{#2}{#3}{#4}{#5}{#6}
+	\node[#7] at (#1,#2+#5*#3) {\footnotesize #5};
+}
+
+\newcommand{\intervalBottomLabel}[7] {
+	\interval{#1}{#2}{#3}{#4}{#5}{#6}
+	\node[#7] at (#1,#2+#4*#3) {\footnotesize #4};
+}
+
+\newcommand{\intervalBothLabels}[7] {
+	\intervalBottomLabel{#1}{#2}{#3}{#4}{#5}{#6}{#7}
+	\node[#7] at (#1,#2+#5*#3) {\footnotesize #5};
+}
 
 %%%
 %%% Document
@@ -91,7 +144,65 @@ Lorem ipsum.
 \newpage
 \section{The interval algorithm}
 
-Lorem ipsum.
+The interval algorithm \cite{hanhoshi1997} provides a means of sampling from an arbitrary stochastic process (target) given an input sequence from a different arbitrary stochastic process (source). The algorithm is very similar to arithmetic coding -- it also uses successive refinements of the $[0,1)$ interval to map sequences.
+
+The sequence mapping algorithm starts by mapping the empty sequence $[~]$ to the interval $[0,1)$. For any sequence, its interval is partitioned into subintervals corresponding to the sequence extended by a single term. The size of each interval is chosen to be proportional to the probability of the last term occurring given the preceding sequence. The order of the subintervals does not matter, but needs to be consistent if reverse mapping from an interval to a sequence is to be performed. By the chain rule of probability, the size of the resulting interval is equal to the probability of observing its sequence. Consequently, only sequences of non-zero probability can be mapped. For a more detailed overview of arithmetic coding see \cite{coverthomas:sfecoding}.
+
+The interval algorithm works by continuously mapping the observed input sequence to successive intervals defined by the stochastic model of the source. In parallel, the intervals are reverse mapped to an output sequence according to the stochastic model of the target. Terms of the output sequence can be generated as long as its interval is a superinterval of the input sequence interval. See Fig.~\ref{fig:interval_algorithm} for an example of the procedure.
+
+\begin{figure}[h]
+	\centering
+
+	\begin{tikzpicture}[scale=0.05]
+		% Final interval range
+		\fill [opacity=0.1] (-30,0.39*100) rectangle (120,0.47*100);
+
+		% Input side
+		\intervalBothLabels{-120}{0}{100}{0}{1}{solid}{left}
+		\node[below] at (-120,-5) {\footnotesize $[~]$};
+
+		\intervalBothLabels{-90}{0}{100}{0.81}{1.00}{densely dotted}{left}
+		\intervalBottomLabel{-90}{0}{100}{0.17}{0.81}{solid}{left}
+		\intervalBottomLabel{-90}{0}{100}{0.08}{0.17}{densely dotted}{left}
+		\intervalBottomLabel{-90}{0}{100}{0.00}{0.08}{densely dotted}{left}
+		\node[below] at (-90,-5) {\footnotesize $[C]$};
+
+		\intervalBothLabels{-60}{0}{100}{0.69}{0.81}{densely dotted}{left}
+		\intervalBottomLabel{-60}{0}{100}{0.39}{0.69}{solid}{left}
+		\intervalBottomLabel{-60}{0}{100}{0.27}{0.39}{densely dotted}{left}
+		\intervalBottomLabel{-60}{0}{100}{0.17}{0.27}{densely dotted}{left}
+		\node[below] at (-60,-5) {\footnotesize $[C,C]$};
+
+		\intervalBottomLabel{-30}{0}{100}{0.39}{0.47}{solid}{left}
+		\intervalBottomLabel{-30}{0}{100}{0.47}{0.54}{densely dotted}{left}
+		\intervalBottomLabel{-30}{0}{100}{0.54}{0.63}{densely dotted}{left}
+		\intervalBothLabels{-30}{0}{100}{0.63}{0.69}{densely dotted}{left}
+		\node[below] at (-30,-5) {\footnotesize $[C,C,A]$};
+
+		% Output side
+		\intervalBothLabels{120}{0}{100}{0}{1}{solid}{right}
+		\node[below] at (120,-5) {\footnotesize $[~]$};
+
+		\intervalBothLabels{90}{0}{100}{0.87}{1.00}{densely dotted}{right}
+		\intervalBottomLabel{90}{0}{100}{0.19}{0.87}{solid}{right}
+		\intervalBottomLabel{90}{0}{100}{0.00}{0.19}{densely dotted}{right}
+		\node[below] at (90,-5) {\footnotesize $[2]$};
+
+		\intervalBothLabels{60}{0}{100}{0.72}{0.87}{densely dotted}{right}
+		\intervalBottomLabel{60}{0}{100}{0.53}{0.72}{densely dotted}{right}
+		\intervalBottomLabel{60}{0}{100}{0.19}{0.53}{solid}{right}
+		\node[below] at (60,-5) {\footnotesize $[2,1]$};
+
+		\intervalBothLabels{30}{0}{100}{0.43}{0.53}{densely dotted}{right}
+		\intervalBottomLabel{30}{0}{100}{0.29}{0.43}{densely dotted}{right}
+		\intervalBottomLabel{30}{0}{100}{0.19}{0.29}{densely dotted}{right}
+		\node[below] at (30,-5) {\footnotesize $[2,1,-]$};
+
+	\end{tikzpicture}
+
+	\caption{\label{fig:interval_algorithm} Example run of the interval algorithm. On the left, an input sequence $[C,C,A]$ from the source process gets mapped to $[0.39,0.47)$. On the right, this interval allows to generate up to 2 terms of an output sequence from the target process, \ie $[2,1]$, which correspond to $[0.19,0.53)$. Note that it is not possible to generate more terms of the output sequence, as neither $[0.19,0.29)$ nor $[0.29,0.43)$ nor $[0.43,0.53)$ is a superinterval of $[0.39,0.47)$.}
+
+\end{figure}
 
 \newpage
 \section{Statistical language models}
