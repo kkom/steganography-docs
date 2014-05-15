@@ -115,7 +115,7 @@ $\mathbf w$ can be regarded as an $L$-dimensional vector of jointly distributed 
 P(\mathbf w) = \prod_{l=1}^{L} P( w_l | w_1^{l-1} )
 \end{equation}
 
-Even though Eq.~\ref{eq:exact_string_probability} gives us a convenient formulation of language as a stochastic process, it is computationally intractable. The conditional probabilities need to be stored in tables. Conditional probability table of just the last token would have $M^L$ entries. With $M \approx 10^6$ and $L \approx 10$, this number very quickly becomes prohibitively large.
+Even though Eq.~\ref{eq:exact_string_probability} gives a convenient formulation of language as a stochastic process, it is computationally intractable. The conditional probabilities need to be stored in tables. Conditional probability table of just the last token would have $M^L$ entries. With $M \approx 10^6$ and $L \approx 10$, this number very quickly becomes prohibitively large.
 
 \subsubsection{$N$-gram language models}
 
