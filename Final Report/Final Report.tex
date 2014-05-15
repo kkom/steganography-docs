@@ -11,6 +11,11 @@
 %%% Standard packages in alphabetical order
 %%%
 
+% Use the AMS math package for special fonts such as mathbb (included in the amssymb package
+% coming with ams math), inline text in equations, etc.
+\usepackage{amsmath}
+\usepackage{amssymb}
+
 % Use BibTeX for bibliography management, use the hyperref package to include URLs in the entries
 \usepackage{cite}
 \usepackage{url}
@@ -31,6 +36,12 @@
 %%%
 %%% Commands
 %%%
+
+% Define macros for correct spacing after abbreviations, source: http://tex.stackexchange.com/a/15017
+\makeatletter
+\DeclareRobustCommand*{\AbbreviationWithDot}[1]{\@ifnextchar{.}{#1}{#1.\@\xspace}}
+\DeclareRobustCommand*{\pmf}{\AbbreviationWithDot{p.m.f}}
+\makeatother
 
 % Placeholder for parts of the report to be finished later
 \DeclareRobustCommand{\later}{\textcolor{red}{\textbf{(?)}}\@\xspace}
@@ -87,11 +98,11 @@ Lorem ipsum.
 
 \subsection{Standard theory and notation}
 
-The notation and theory in this section is based on \cite{4f11:statistical_language_models, 4f11:smt_systems, coursera:nlp}.
+The notation and theory in this section is mostly based on \cite{4f11:statistical_language_models, 4f11:smt_systems, coursera:nlp}.
 
 \subsubsection{Text as the output of a stochastic process}
 
-A string $\mathbf w$ of length $L$ can be regarded as a sequence of \emph{tokens} $w_l$. Tokens are atomic elements of a sentence such as words or punctuation.
+A string $\mathbf w$ of length $L$ can be regarded as a sequence of \emph{tokens} $w_l$. Tokens are atomic elements of text such as words or punctuation marks.
 
 \begin{equation}
 \mathbf w = [ w_1, \dots, w_L ] \equiv w_1^L
@@ -104,9 +115,9 @@ $\mathbf w$ can be regarded as an $L$-dimensional vector of jointly distributed 
 P(\mathbf w) = \prod_{l=1}^{L} P( w_l | w_1^{l-1} )
 \end{equation}
 
-\subsubsection{$N$-gram language models}
-
 Even though Eq.~\ref{eq:exact_string_probability} gives us a convenient formulation of language as a stochastic process, it is computationally intractable. The conditional probabilities need to be stored in tables. Conditional probability table of just the last token would have $M^L$ entries. With $M \approx 10^6$ and $L \approx 10$, this number very quickly becomes prohibitively large.
+
+\subsubsection{$N$-gram language models}
 
 The usual solution is to restrict the size of the context to $N-1$ previous tokens, resulting in an approximate $N$-gram language model:
 
@@ -117,16 +128,29 @@ P(\mathbf w) \approx P_{\text{$N$-gram}}(\mathbf w) \equiv \prod_{l=1}^{L} P( w_
 
 \subsubsection{Estimating parameters}
 
-Eq.~\ref{eq:ml_conditional_ngram_probability} can be shown to be the ML (maximum likelihood) estimate of conditional probability of $w_l$ in an $N$-gram model. $f(\cdot)$ is the number of occurrences of a particular sequence of tokens in the training dataset.
+Eq.~\ref{eq:ml_conditional_token_probability} is the ML (maximum likelihood) estimate of conditional probability of $w_l$ in an $N$-gram model. $f(\cdot)$ is the number of occurrences of a particular sequence of tokens in the training dataset.
 
 \begin{equation}
-\label{eq:ml_conditional_ngram_probability}
+\label{eq:ml_conditional_token_probability}
 \hat P( w_l | w_{l-N+1}^{l-1} ) = \frac {f(w_{l-N+1}^l)} {f(w_{l-N+1}^{l-1})}
 \end{equation}
 
-\subsubsection{Discounting and back-off}
+A problem with Eq.~\ref{eq:ml_conditional_token_probability} is that most $N$-gram counts will be zero. For example, a $5$-gram model with $M \approx 10^6$ will have $M^L \approx \left( 10^6 \right)^5 = 10^{30}$ distinct $N$-grams. For every possible $5$-gram sequence to occur at least once, the training set would need to consist of $\ge 10^{30}$ tokens. Currently largest available dataset is based on $\approx 3.6 \times 10^{11}$ English words. \cite{googlengrams2011} As a result, a large number of grammatically correct sentences would have 0 probability.
 
-A problem with Eq.~\ref{eq:ml_conditional_ngram_probability} is that most of the conditional probabilities will be zero. For example, a $5$-gram model with $M \approx 10^6$ will still have $M^L \approx \left( 10^6 \right)^5 = 10^{30}$ parameters. For every possible $5$-gram sequence to occur at least once, the training set would need to consist of at least $\approx 10^{30}$ tokens. Currently largest available dataset is based on $\approx 3.6 \times 10^{11}$ English words. \cite{googlengrams2011} The standard way of dealing with this problem is by introducing \emph{discounting} and \emph{back-off} to the model.
+\subsubsection{Limiting database size, discounting and back-off}
+
+A standard way of dealing with this problem is by introducing \emph{discounting} and \emph{backing-off} the model. In addition, $N$-grams with counts below a threshold $C$ are sometimes discarded from the database to conserve storage space. Conditional distribution of the $l$th token becomes:
+
+\begin{equation}
+	\label{eq:conditional_token_probability_with_backoff}
+	P( w_l | w_{l-N+1}^{l-1} ) =
+	\begin{cases}
+		d (w_{l-N+1}^l) ~ \frac {f\left(w_{l-N+1}^l \right)} {f\left(w_{l-N+1}^{l-1} \right)} & \text{if $f(w_{l-N+1}^l) \ge C$},\\
+		\alpha (w_{l-N+1}^{l-1}) ~ P( w_l | w_{l-N+2}^{l-1} ) & \text{otherwise}.
+	\end{cases}
+\end{equation}
+
+$d(\cdot)$ and $\alpha(\cdot)$ return the discount and back-off weights -- scaling factors used to ensure that Eq.~\ref{eq:conditional_token_probability_with_backoff} is a valid \pmf. Intuitively, they reduce the mass assigned to observed $N$-grams to accommodate for estimates of order $N-1$ and lower. $d(\cdot)$ and $\alpha(\cdot)$ are hard to choose or compute -- there exist many different schemes motivated by linguistics and statistics. Examples include Good-Turing smoothing,\cite{good1953} Kneser-Ney smoothing,\cite{kneserney1995} or stupid back-off.\cite{brants2007} All exhibit various levels of complexity and the latter does not even return a valid \pmf's.
 
 \subsection{Sources of natural language statistical data}
 
