@@ -293,11 +293,45 @@ Describe algorithm to calculate induced lower-order counts after exploding $N$-g
 
 \subsection{BinDB file format}
 
-\section{Language model with back-off}
+\section{Language model}
 
 \subsection{Requirements}
 
-Describe the requirements: need to assign non-zero probability to every token -- need to use back-off, each token needs to be assigned a contiguous probability region -- makes back-off more complicated, need to use exactly 100\% of the probability mass.
+Language model fit for steganographic application using the interval algorithm needs to satisfy certain requirements:
+
+\begin{enumerate}
+  \item \label{lm_req:non_zero_probability} Every sequence of tokens has non-zero probability.
+  \item \label{lm_req:contiguous_probability} Every token extending a sequence is assigned a single contiguous probability region.
+  \item \label{lm_req:hidden_symbols} Formatted sequence of tokens uniquely identifies the tokens.
+\end{enumerate}
+
+Requirement \ref{lm_req:non_zero_probability} warrants the use of back-off. Consider the counts from Tab.~\ref{tab:the_esteem_of_many_CONT} and Tab.~\ref{tab:the_esteem_of_many}. In the 5-gram model, only 5 tokens are explicitly allowed to follow \emph{the esteem of many} and their total count is 542. If we were to use the ML model from Eq.~\ref{eq:ml_conditional_token_probability} to calculate their probabilities, we would assign zero probability to all tokens other than those in column $w_5$ of Tab.~\ref{tab:the_esteem_of_many_CONT}. Thus, we would account for only $\frac {542} {1146} \approx 0.47$ of the probability mass and discard the vast majority of tokens. The former problem can be mitigated by upscaling the probabilities, but the latter has no solution other than back-off.
+
+\begin{table}[h]
+	\centering
+	\begin{tabular}{c | *{5}{| c} || c}
+	index & $w_1$ & $w_2$ & $w_3$ & $w_4$ & $w_5$ & $f(w_1^5)$ \\
+	\hline
+	400000787 & the & esteem & of & many & , & 143 \\
+	400000788 & the & esteem & of & many & . & 56 \\
+	400000789 & the & esteem & of & many & friends & 66 \\
+	400000790 & the & esteem & of & many & of & 237 \\
+	400000791 & the & esteem & of & many & who & 40
+	\end{tabular}
+	\caption{\label{tab:the_esteem_of_many_CONT}Counts of all 5-grams beginning with \emph{the esteem of many}.}
+\end{table}
+
+\begin{table}[h]
+	\centering
+	\begin{tabular}{c | *{4}{| c} || c}
+	index & $w_1$ & $w_2$ & $w_3$ & $w_4$ & $f(w_1^4)$ \\
+	\hline
+	456820272 & the & esteem & of & many & 1146
+	\end{tabular}
+	\caption{\label{tab:the_esteem_of_many}Count of \emph{the esteem of many} 4-gram.}
+\end{table}
+
+%Requirements \ref{lm_req:contiguous_probability} and \ref{lm_req:hidden_symbols} introduce important constraints on the back-off scheme. Consider using Eq.~\
 
 \subsection{Back-off without repeat tokens}
 
