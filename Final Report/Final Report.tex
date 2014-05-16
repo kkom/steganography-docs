@@ -263,7 +263,7 @@ A standard way of dealing with this problem is by introducing \emph{discounting}
 	\end{cases}
 \end{equation}
 
-$d(\cdot)$ and $\alpha(\cdot)$ return the discount and back-off weights -- scaling factors used to ensure that Eq.~\ref{eq:conditional_token_probability_with_backoff} is a valid \pmf. Intuitively, they reduce the mass assigned to observed $N$-grams to accommodate for estimates of order $N-1$ and lower. $d(\cdot)$ and $\alpha(\cdot)$ are hard to choose or compute -- there exist many different schemes motivated by linguistics and statistics. Examples include Good-Turing smoothing,\cite{good1953} Kneser-Ney smoothing,\cite{kneserney1995} or stupid back-off.\cite{brants2007} All exhibit various levels of complexity and the latter does not even return a valid \pmf's.
+$d(\cdot)$ and $\alpha(\cdot)$ return the discount and back-off weights -- scaling factors used to ensure that Eq.~\ref{eq:conditional_token_probability_with_backoff} is a valid \pmf. Intuitively, they reduce the mass assigned to observed $N$-grams to accommodate for estimates of order $N-1$ and lower. $d(\cdot)$ and $\alpha(\cdot)$ are hard to choose or compute -- there exist many different schemes motivated by linguistics and statistics. Examples include Good-Turing smoothing,\cite{good1953} Kneser-Ney smoothing,\cite{kneserney1995} or stupid back-off.\cite{brants2007} All exhibit various levels of complexity and the latter does not even return valid \pmf's.
 
 \section{Processing and storing $N$-gram counts}
 
