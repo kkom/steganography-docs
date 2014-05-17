@@ -29,6 +29,9 @@
 % Color text
 \usepackage{color}
 
+% Use the package for declaring paired delimiters
+\usepackage{mathtools}
+
 % Sets 1.5 line spacing
 \usepackage{setspace}
 \onehalfspacing
@@ -47,6 +50,10 @@
 %%%
 %%% Commands
 %%%
+
+% Declare paired delimiters
+\DeclarePairedDelimiter{\ceil}{\lceil}{\rceil}
+\DeclarePairedDelimiter{\bracket}{(}{)}
 
 % Define macros for correct spacing after abbreviations, source: http://tex.stackexchange.com/a/15017
 \newcommand*{\eg}{e.g.\@\xspace}
@@ -301,6 +308,7 @@ Describe algorithm to calculate induced lower-order counts after exploding $N$-g
 \section{Language model}
 
 \subsection{Requirements}
+\label{eq:lm_requirements}
 
 Language model fit for steganographic application using the interval algorithm needs to satisfy certain requirements:
 
@@ -521,6 +529,22 @@ Intuitively, level 1 tokens are the ones that give non-zero probability in an ML
 Sizes of intervals $v(w_l)$ are proportional to the ML estimate $\hat P(w_l | w_{l-N'+1}^{l-1})$ for highest $N' \le N$ that gives a non-zero value. The constant of proportionally is different for each level of the back-off tree and depends on the back-off pseudo-counts $c(b_1), \dots, c(b_{N-1})$.
 
 \subsection{$\beta-\gamma$ algorithm for calculating back-off pseudo-counts}
+
+The value $c(b_d)$ needs to reflect the probability that a not explicitly allowed token follows the context. I propose the following algorithm for assigning back-off pseudo-count in the first level of back-off tree:
+
+\begin{equation}
+\label{eq:backoff_pseudocount_level1}
+c(b_1) = \ceil*{ \beta \bracket*{ f(w_{l-N+1}^{l-1}) - \sum_{w_l \in \mathcal W_1} f(w_{l-N+1}^l) } + \gamma ~ f(w_{l-N+1}^{l-1}) }
+\end{equation}
+
+Parameter $\beta$ controls what proportion of the \emph{leftover probability mass} is used to account for the event of a back-off. $\gamma$ controls how much of the \emph{total probability mass} is added to account for back-off. To illustrate, the total probability mass in the example from Section~\ref{eq:lm_requirements} is $1146$ and the leftover probability mass is $1146-542=604$.
+
+Dealing with excluded tokens in the deeper levels of the back-off tree is not difficult. It suffices to subtract their counts from the total probability mass and repeat the calculation from Eq.~\ref{eq:backoff_pseudocount_level1} in an analogous way:
+
+\begin{align}
+m &= f(w_{l-N+d}^{l-1}) - \sum_{w_l \in \mathcal W_1 \cup \dots \cup W_{d-1}} f(w_{l-N+d}^l) \\
+\label{eq:backoff_pseudocount_deep_levels} c(b_d) &= \ceil*{ \beta \bracket*{ m - \sum_{w_l \in \mathcal W_d} f(w_{l-N+d}^l) } + \gamma ~ m }
+\end{align}
 
 \newpage
 \section{Detailed description of the stegosystem}
