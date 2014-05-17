@@ -356,103 +356,107 @@ The complication with using implicit back-off and Eq.~\ref{eq:conditional_token_
 %
 %	(#1,#2)	- coordinates
 \newcommand{\rootVertex}[2] {
-	\node [vertex,fill=black!10] at (#1,#2) {};
+	\node [vertex,fill=black!0] at (#1,#2) {};
 }
 
 % 	connectedVertex: vertex connected to a previous vertex
 %
 %	(#1,#2)	- previous vertex coordinates
-%	(#1,#2)	- coordinates
+%	(#3,#4)	- coordinates
 \newcommand{\connectedVertex}[4] {
-	\draw [shorten >= 0.5*(\vertexSize+\pgflinewidth), shorten <= 0.5*(\vertexSize+\pgflinewidth), ->] (#1,#2) -- (#3,#4);
+	\draw [shorten >= 0.5*(\vertexSize+\pgflinewidth), shorten <= 0.5*(\vertexSize+\pgflinewidth), ->] (#1,#2) to [bend left=12.5] (#3,#4);
 	\node [vertex,fill=black!10] at (#3,#4) {};
 }
 
 % 	connectedLeaf: leaf vertex connected to a previous vertex
 %
 %	(#1,#2)	- previous vertex coordinates
-%	(#1,#2)	- coordinates
-\newcommand{\connectedLeaf}[4] {
-	\draw [shorten >= 0.5*(\vertexSize+\pgflinewidth), shorten <= 0.5*(\vertexSize+\pgflinewidth), ->] (#1,#2) -- (#3,#4);
+%	(#3,#4)	- coordinates
+%	#5		- bend
+\newcommand{\connectedLeaf}[5] {
+	\draw [shorten >= 0.5*(\vertexSize+\pgflinewidth), shorten <= 0.5*(\vertexSize+\pgflinewidth), ->] (#1,#2) to [bend #5=12.5] (#3,#4);
 	\node [vertex,fill=black!0] at (#3,#4) {};
-}
-
-% 	vertexLabel: label of a vertex
-%
-%	(#1,#2)	- vertex coordinates
-%	#3		- label
-\newcommand{\vertexLabel}[3] {
-	\node[below] at (#1,#2-7.5*\vertexSize) {\footnotesize #3};
 }
 
 \begin{figure}[h]
 \centering
-\begin{tikzpicture}[scale=0.05]
+\begin{tikzpicture}[scale=0.5]
 
 	% The context  words from w_A to w_D
-	\rootVertex{60}{0}
-	\vertexLabel{60}{0}{root}
+	\rootVertex{6}{9.5}
+	\node[left] at (5.5,9.5) {\footnotesize root};
 
 	% First level word leaves
-	\connectedLeaf{60}{0}{90}{-10}
-	\connectedLeaf{60}{0}{90}{0}
-	\connectedLeaf{60}{0}{90}{10}
+	\connectedLeaf{6}{9.5}{9}{-1}{right}
+	\connectedLeaf{6}{9.5}{9}{0}{right}
+	\connectedLeaf{6}{9.5}{9}{1}{right}
 
 	% First level backoff node
-	\connectedVertex{60}{0}{90}{35}
+	\connectedVertex{6}{9.5}{9}{11}
 
 
 	% Second level word leaves
-	\connectedLeaf{90}{35}{120}{20}
-	\connectedLeaf{90}{35}{120}{30}
-	\connectedLeaf{90}{35}{120}{40}
-	\connectedLeaf{90}{35}{120}{50}
+	\connectedLeaf{9}{11}{12}{2}{right}
+	\connectedLeaf{9}{11}{12}{3}{right}
+	\connectedLeaf{9}{11}{12}{4}{right}
+	\connectedLeaf{9}{11}{12}{5}{right}
 
 	% Second level backoff node
-	\connectedVertex{90}{35}{120}{65}
+	\connectedVertex{9}{11}{12}{13}
 
 
 	% Third level word leaves
-	\connectedLeaf{120}{65}{150}{60}
-	\connectedLeaf{120}{65}{150}{70}
+	\connectedLeaf{12}{13}{15}{6}{right}
+	\connectedLeaf{12}{13}{15}{7}{right}
 
 	% Third level backoff node
-	\connectedVertex{120}{65}{150}{100}
+	\connectedVertex{12}{13}{15}{14}
 
 
 	% Fourth level word leaves
-	\connectedLeaf{150}{100}{180}{80}
-	\connectedLeaf{150}{100}{180}{90}
-	\connectedLeaf{150}{100}{180}{100}
-	\connectedLeaf{150}{100}{180}{110}
-	\connectedLeaf{150}{100}{180}{120}
+	\connectedLeaf{15}{14}{18}{8}{right}
+	\connectedLeaf{15}{14}{18}{9}{right}
+	\connectedLeaf{15}{14}{18}{10}{right}
+	\connectedLeaf{15}{14}{18}{11}{right}
+	\connectedLeaf{15}{14}{18}{12}{right}
 
 	% Fourth level backoff node
-	\connectedVertex{150}{100}{180}{165}
+	\connectedVertex{15}{14}{18}{16.5}
 
 
 	% Fifth level word leaves
-	\connectedLeaf{180}{165}{210}{130}
-	\connectedLeaf{180}{165}{210}{140}
-	\connectedLeaf{180}{165}{210}{150}
-	\connectedLeaf{180}{165}{210}{160}
-	\connectedLeaf{180}{165}{210}{170}
-	\connectedLeaf{180}{165}{210}{180}
-	\connectedLeaf{180}{165}{210}{190}
-	\connectedLeaf{180}{165}{210}{200}
+	\connectedLeaf{18}{16.5}{21}{13}{right}
+	\connectedLeaf{18}{16.5}{21}{14}{right}
+	\connectedLeaf{18}{16.5}{21}{15}{right}
+	\connectedLeaf{18}{16.5}{21}{16}{right}
+	\connectedLeaf{18}{16.5}{21}{17}{left}
+	\connectedLeaf{18}{16.5}{21}{18}{left}
+	\connectedLeaf{18}{16.5}{21}{19}{left}
+	\connectedLeaf{18}{16.5}{21}{20}{left}
 
-	% Draw the intervals
-	\draw[dashed] (210,205) -- (240,205);
-	\draw[densely dotted] [i] (240,125) -- (240,205);
-	\draw[dashed] (180,125) -- (240,125);
-	\draw[densely dotted] [i] (240,75) -- (240,125);
-	\draw[dashed] (150,75) -- (240,75);
-	\draw[densely dotted] [i] (240,55) -- (240,75);
-	\draw[dashed] (120,55) -- (240,55);
-	\draw[densely dotted] [i] (240,15) -- (240,55);
-	\draw[dashed] (90,15) -- (240,15);
-	\draw[densely dotted] [i] (240,-15) -- (240,15);
-	\draw[dashed] (90,-15) -- (240,-15);
+	% Draw the intervals and the dashed line showing correspondence to leaves
+	\draw[dashed] [shorten >= 1.5 pt] (21,20.5) -- (24,20.5);
+	\draw[solid] [i] (24,12.5) -- (24,20.5);
+	\draw[dashed] (18,12.5) -- (24,12.5);
+	\draw[solid] [i] (24,7.5) -- (24,12.5);
+	\draw[dashed] (15,7.5) -- (24,7.5);
+	\draw[solid] [i] (24,5.5) -- (24,7.5);
+	\draw[dashed] (12,5.5) -- (24,5.5);
+	\draw[solid] [i] (24,1.5) -- (24,5.5);
+	\draw[dashed] (9,1.5) -- (24,1.5);
+	\draw[solid] [i] (24,-1.5) -- (24,1.5);
+	\draw[dashed] (9,-1.5) -- (24,-1.5);
+
+	% Label the intervals
+	\node[above] at (24,20.5) {\footnotesize 1};
+	\node[below] at (24,-1.5) {\footnotesize 0};
+
+	% Label the levels
+	\node[below] at (9,-3) {\footnotesize level 0};
+	\node[below] at (12,-3) {\footnotesize level 1};
+	\node[below] at (15,-3) {\footnotesize level 2};
+	\node[below] at (18,-3) {\footnotesize level 3};
+	\node[below] at (21,-3) {\footnotesize level 4};
 
 \end{tikzpicture}
 \caption{\label{fig:backoff_tree}The back-off tree.}
