@@ -335,9 +335,9 @@ Requirement \ref{lm_req:non_zero_probability} warrants the use of back-off. Cons
 	\caption{\label{tab:the_esteem_of_many}Count of \emph{the esteem of many} 4-gram.}
 \end{table}
 
-Requirement \ref{lm_req:hidden_symbols} greatly complicates the language model. If arithmetic coding is used only to compress text, it is possible to augment the sequence during compression by inserting \emph{explicit} back-off symbols. Their purpose is to indicate that the next token's probability is to be evaluated using a lower-order model. But back-off symbols in the output would compromise innocuousness of the stegosystem. Therefore an \emph{implicit} back-off scheme is needed.
+Requirement \ref{lm_req:hidden_symbols} greatly complicates the language model. If arithmetic coding is only used to compress text, it is possible to augment the sequence during encoding by inserting \emph{explicit} back-off symbols. Their purpose is to indicate during decoding that the next token's probability is to be evaluated using a lower-order model. But in a steganographic scenario, the usage of a back-off symbol would compromise innocuousness of the system. Therefore an \emph{implicit} back-off scheme is needed.
 
-The complication with using implicit back-off and Eq.~\ref{eq:conditional_token_probability_with_backoff} is that if a token has non-zero probability in \eg a 5-gram model, by counts consistency it is also included in all lower-order models. As a result, there are 5 separate probability regions corresponding to it -- one in each back-off level (\ie in models from 5-gram to 1-gram). These intervals will not be contiguous and requirement \ref{lm_req:contiguous_probability} will be violated.
+The problem with implicit back-off and using Eq.~\ref{eq:conditional_token_probability_with_backoff} \emph{exactly} is that if a token has non-zero probability in \eg a 5-gram model, by counts consistency it is also included in all lower-order models. As a result, there are 5 separate probability regions corresponding to it -- one in each back-off level (\ie in models from 5-gram to 1-gram). These intervals will not be contiguous and requirement \ref{lm_req:contiguous_probability} will be violated.
 
 \subsection{Back-off tree}
 
