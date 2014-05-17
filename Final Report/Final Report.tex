@@ -39,6 +39,8 @@
 % Use the tikz package for drawing
 \usepackage{tikz}
 
+\usetikzlibrary{decorations.pathreplacing}
+
 % Provides robust spaces after commands
 \usepackage{xspace}
 
@@ -49,6 +51,7 @@
 % Define macros for correct spacing after abbreviations, source: http://tex.stackexchange.com/a/15017
 \newcommand*{\eg}{e.g.\@\xspace}
 \newcommand*{\ie}{i.e.\@\xspace}
+\newcommand*{\st}{s.t.\@\xspace}
 
 % Abbreviations which can occur at the end of the sentence cannot duplicate the following dot
 \makeatletter
@@ -387,7 +390,7 @@ The complication with using implicit back-off and Eq.~\ref{eq:conditional_token_
 
 	% The context  words from w_A to w_D
 	\rootVertex{6}{9.5}
-	\node[left] at (5.5,9.5) {\footnotesize root};
+	\node[left] at (5.5,9.5) {\scriptsize $w_{l-4}^{l-1}$};
 
 	% First level word leaves
 	\leaf{6}{9.5}{9}{-1}{right}{3}
@@ -438,31 +441,49 @@ The complication with using implicit back-off and Eq.~\ref{eq:conditional_token_
 	\leaf{18}{16.5}{21}{20}{left}{22}
 
 	% Draw the intervals and the dashed line showing correspondence to leaves
-	\draw[dashed] [shorten >= 1.5 pt] (21,20.5) -- (24,20.5);
-	\draw[solid] [i] (24,12.5) -- (24,20.5);
-	\draw[dashed] (18,12.5) -- (24,12.5);
-	\draw[solid] [i] (24,7.5) -- (24,12.5);
-	\draw[dashed] (15,7.5) -- (24,7.5);
-	\draw[solid] [i] (24,5.5) -- (24,7.5);
-	\draw[dashed] (12,5.5) -- (24,5.5);
-	\draw[solid] [i] (24,1.5) -- (24,5.5);
-	\draw[dashed] (9,1.5) -- (24,1.5);
-	\draw[solid] [i] (24,-1.5) -- (24,1.5);
-	\draw[dashed] (9,-1.5) -- (24,-1.5);
+	\draw[dashed] [shorten >= 1.5 pt] (9,20.5) -- (35,20.5);
+	\draw[solid] [i] (35,12.5) -- (35,20.5);
+	\draw[dashed] (18,12.5) -- (35,12.5);
+	\draw[solid] [i] (35,7.5) -- (35,12.5);
+	\draw[dashed] (15,7.5) -- (35,7.5);
+	\draw[solid] [i] (35,5.5) -- (35,7.5);
+	\draw[dashed] (12,5.5) -- (35,5.5);
+	\draw[solid] [i] (35,1.5) -- (35,5.5);
+	\draw[dashed] (9,1.5) -- (35,1.5);
+	\draw[solid] [i] (35,-1.5) -- (35,1.5);
+	\draw[dashed] (9,-1.5) -- (35,-1.5);
 
-	% Label the intervals
-	\node[above] at (24,20.5) {\footnotesize 1};
-	\node[below] at (24,-1.5) {\footnotesize 0};
+	% Label the interval ends
+	\node[right] at (35,20.5) {\footnotesize 1};
+	\node[right] at (35,-1.5) {\footnotesize 0};
+
+%	% Define sets of leaves in a certain level (with braces)
+%	\draw [decorate,decoration={brace,amplitude=5pt,raise=10pt,mirror}] (9,-1.4) -- (9,1.4) node [midway,right,xshift=15pt] {\footnotesize $\mathcal W_1 = \left\{ w_l : f(w_{l-4}^l) \ge C \right\}$ };
+%	\draw [decorate,decoration={brace,amplitude=5pt,raise=10pt,mirror}] (12,1.6) -- (12,5.4) node [midway,right,xshift=15pt] {\footnotesize $\mathcal W_2 = \left\{ w_l : f(w_{l-3}^l) \ge C \land f(w_{l-4}^l) < C \right\}$ };
+%	\draw [decorate,decoration={brace,amplitude=5pt,raise=10pt,mirror}] (15,5.6) -- (15,7.4) node [midway,right,xshift=15pt] {\footnotesize $\mathcal W_3 = \left\{ w_l : f(w_{l-2}^l) \ge C \land f(w_{l-3}^l) < C \right\}$ };
+%	\draw [decorate,decoration={brace,amplitude=5pt,raise=10pt,mirror}] (18,7.6) -- (18,12.4) node [midway,right,xshift=15pt] {\footnotesize $\mathcal W_4 = \left\{ w_l : f(w_{l-1}^l) \ge C \land f(w_{l-2}^l) < C \right\}$ };
+%	\draw [decorate,decoration={brace,amplitude=5pt,raise=10pt,mirror}] (21,12.6) -- (21,20.4) node [midway,right,xshift=15pt] {\footnotesize $\mathcal W_5 = \left\{ w_l : f(w_l) \ge C \land f(w_{l-1}^l) < C \right\}$ };
+
+	% Define sets of leaves in a certain level
+	\node [right,xshift=10pt] at (21,0) {\scriptsize $\mathcal W_1 = \left\{ w_l : f(w_{l-4}^l) \ge C \right\}$ };
+	\node [right,xshift=10pt] at (21,3.5) {\scriptsize $\mathcal W_2 = \left\{ w_l : f(w_{l-3}^l) \ge C \land f(w_{l-4}^l) < C \right\}$ };
+	\node [right,xshift=10pt] at (21,6.5) {\scriptsize $\mathcal W_3 = \left\{ w_l : f(w_{l-2}^l) \ge C \land f(w_{l-3}^l) < C \right\}$ };
+	\node [right,xshift=10pt] at (21,10) {\scriptsize $\mathcal W_4 = \left\{ w_l : f(w_{l-1}^l) \ge C \land f(w_{l-2}^l) < C \right\}$ };
+	\node [right,xshift=10pt] at (21,16.5) {\scriptsize $\mathcal W_5 = \left\{ w_l : f(w_l) \ge C \land f(w_{l-1}^l) < C \right\}$ };
 
 	% Label the levels
-	\node[below] at (9,-3) {\footnotesize level 1};
-	\node[below] at (12,-3) {\footnotesize level 2};
-	\node[below] at (15,-3) {\footnotesize level 3};
-	\node[below] at (18,-3) {\footnotesize level 4};
-	\node[below] at (21,-3) {\footnotesize level 5};
+	\node[below] at (9,-2) {\footnotesize level 1};
+	\node[below] at (12,-2) {\footnotesize level 2};
+	\node[below] at (15,-2) {\footnotesize level 3};
+	\node[below] at (18,-2) {\footnotesize level 4};
+	\node[below] at (21,-2) {\footnotesize level 5};
+
+	% Label the intervals in level 1
+%	\draw [decorate,decoration={brace,amplitude=5pt,raise=5pt,mirror}] (35,-1.5) -- (35,1.5) node [midway,right,xshift=10pt] {\scriptsize $\frac {\sum_{w_l \in \mathcal W_1} f(w_{l-4}^l)} {b_1 + \sum_{w_l \in \mathcal W_1} f(w_{l-4}^l)}$};
+%	\draw [decorate,decoration={brace,amplitude=5pt,raise=5pt,mirror}] (35,1.5) -- (35,20.5) node [midway,right,xshift=10pt] {\scriptsize $\frac {b_1} {b_1 + \sum_{w_l \in \mathcal W_1} f(w_{l-4}^l)}$};
 
 \end{tikzpicture}
-\caption{\label{fig:backoff_tree}The back-off tree.}
+\caption{\label{fig:backoff_tree}Example back-off tree with context $w_{l-4}^{l-1}$. Leaf labels correspond to different possible tokens $w_l$ from 1 to 22.}
 \end{figure}
 
 \subsection{$\beta-\gamma$ algorithm for calculating back-off pseudo-counts}
