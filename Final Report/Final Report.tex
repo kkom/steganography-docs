@@ -443,42 +443,65 @@ The complication with using implicit back-off and Eq.~\ref{eq:conditional_token_
 	\leaf{18}{16.5}{21}{20}{left}{22}
 
 	% Draw the intervals and the dashed line showing correspondence to leaves
-	\draw[dashed] [shorten >= 1.5 pt] (9,20.5) -- (35,20.5);
-	\draw[solid] [i] (35,12.5) -- (35,20.5);
-	\draw[dashed] (18,12.5) -- (35,12.5);
-	\draw[solid] [i] (35,7.5) -- (35,12.5);
-	\draw[dashed] (15,7.5) -- (35,7.5);
-	\draw[solid] [i] (35,5.5) -- (35,7.5);
-	\draw[dashed] (12,5.5) -- (35,5.5);
-	\draw[solid] [i] (35,1.5) -- (35,5.5);
-	\draw[dashed] (9,1.5) -- (35,1.5);
-	\draw[solid] [i] (35,-1.5) -- (35,1.5);
-	\draw[dashed] (9,-1.5) -- (35,-1.5);
+	\draw[dashed] [shorten >= 1.5 pt] (9,20.5) -- (23,20.5);
+	\draw[solid] [i] (23,12.5) -- (23,20.5);
+	\draw[dashed] (18,12.5) -- (23,12.5);
+	\draw[solid] [i] (23,7.5) -- (23,12.5);
+	\draw[dashed] (15,7.5) -- (23,7.5);
+	\draw[solid] [i] (23,5.5) -- (23,7.5);
+	\draw[dashed] (12,5.5) -- (23,5.5);
+	\draw[solid] [i] (23,1.5) -- (23,5.5);
+	\draw[dashed] (9,1.5) -- (23,1.5);
+	\draw[solid] [i] (23,-1.5) -- (23,1.5);
+	\draw[dashed] (9,-1.5) -- (23,-1.5);
+
+	% Draw thin dotted lines showing token correspondence to intervals
+	\draw[dotted, thin] (9,-0.5) -- (23,-0.5);
+	\draw[dotted, thin] (9,0.5) -- (23,0.5);
+
+	\draw[dotted, thin] (12,2.5) -- (23,2.5);
+	\draw[dotted, thin] (12,3.5) -- (23,3.5);
+	\draw[dotted, thin] (12,4.5) -- (23,4.5);
+
+	\draw[dotted, thin] (15,6.5) -- (23,6.5);
+
+	\draw[dotted, thin] (18,8.5) -- (23,8.5);
+	\draw[dotted, thin] (18,9.5) -- (23,9.5);
+	\draw[dotted, thin] (18,10.5) -- (23,10.5);
+	\draw[dotted, thin] (18,11.5) -- (23,11.5);
+
+	\draw[dotted, thin] (21,13.5) -- (23,13.5);
+	\draw[dotted, thin] (21,14.5) -- (23,14.5);
+	\draw[dotted, thin] (21,15.5) -- (23,15.5);
+	\draw[dotted, thin] (21,16.5) -- (23,16.5);
+	\draw[dotted, thin] (21,17.5) -- (23,17.5);
+	\draw[dotted, thin] (21,18.5) -- (23,18.5);
+	\draw[dotted, thin] (21,19.5) -- (23,19.5);
 
 	% Label the interval ends
-	\node[right] at (35,20.5) {\footnotesize 1};
-	\node[right] at (35,-1.5) {\footnotesize 0};
+	\node[above] at (23,20.5) {\footnotesize 1};
+	\node[below] at (23,-1.5) {\footnotesize 0};
 
-%	% Define sets of leaves in a certain level (with braces)
-%	\draw [decorate,decoration={brace,amplitude=5pt,raise=10pt,mirror}] (9,-1.4) -- (9,1.4) node [midway,right,xshift=15pt] {\footnotesize $\mathcal W_1 = \left\{ w_l : f(w_{l-4}^l) \ge C \right\}$ };
-%	\draw [decorate,decoration={brace,amplitude=5pt,raise=10pt,mirror}] (12,1.6) -- (12,5.4) node [midway,right,xshift=15pt] {\footnotesize $\mathcal W_2 = \left\{ w_l : f(w_{l-3}^l) \ge C \land f(w_{l-4}^l) < C \right\}$ };
-%	\draw [decorate,decoration={brace,amplitude=5pt,raise=10pt,mirror}] (15,5.6) -- (15,7.4) node [midway,right,xshift=15pt] {\footnotesize $\mathcal W_3 = \left\{ w_l : f(w_{l-2}^l) \ge C \land f(w_{l-3}^l) < C \right\}$ };
-%	\draw [decorate,decoration={brace,amplitude=5pt,raise=10pt,mirror}] (18,7.6) -- (18,12.4) node [midway,right,xshift=15pt] {\footnotesize $\mathcal W_4 = \left\{ w_l : f(w_{l-1}^l) \ge C \land f(w_{l-2}^l) < C \right\}$ };
-%	\draw [decorate,decoration={brace,amplitude=5pt,raise=10pt,mirror}] (21,12.6) -- (21,20.4) node [midway,right,xshift=15pt] {\footnotesize $\mathcal W_5 = \left\{ w_l : f(w_l) \ge C \land f(w_{l-1}^l) < C \right\}$ };
+	% Define sets of leaves in a certain level (with braces)
+	\draw [decorate,decoration={brace,amplitude=5pt,raise=5pt,mirror}] (23,-1.4) -- (23,1.4) node [midway,right,xshift=10pt] {\scriptsize $\mathcal W_1 = \left\{ w_l : f(w_{l-4}^l) \ge C \right\}$ };
+	\draw [decorate,decoration={brace,amplitude=5pt,raise=5pt,mirror}] (23,1.6) -- (23,5.4) node [midway,right,xshift=10pt] {\scriptsize $\mathcal W_2 = \left\{ w_l : f(w_{l-3}^l) \ge C \land f(w_{l-4}^l) < C \right\}$ };
+	\draw [decorate,decoration={brace,amplitude=5pt,raise=5pt,mirror}] (23,5.6) -- (23,7.4) node [midway,right,xshift=10pt] {\scriptsize $\mathcal W_3 = \left\{ w_l : f(w_{l-2}^l) \ge C \land f(w_{l-3}^l) < C \right\}$ };
+	\draw [decorate,decoration={brace,amplitude=5pt,raise=5pt,mirror}] (23,7.6) -- (23,12.4) node [midway,right,xshift=10pt] {\scriptsize $\mathcal W_4 = \left\{ w_l : f(w_{l-1}^l) \ge C \land f(w_{l-2}^l) < C \right\}$ };
+	\draw [decorate,decoration={brace,amplitude=5pt,raise=5pt,mirror}] (23,12.6) -- (23,20.4) node [midway,right,xshift=10pt] {\scriptsize $\mathcal W_5 = \left\{ w_l : f(w_l) \ge C \land f(w_{l-1}^l) < C \right\}$ };
 
-	% Define sets of leaves in a certain level
-	\node [right,xshift=10pt] at (21,0) {\scriptsize $\mathcal W_1 = \left\{ w_l : f(w_{l-4}^l) \ge C \right\}$ };
-	\node [right,xshift=10pt] at (21,3.5) {\scriptsize $\mathcal W_2 = \left\{ w_l : f(w_{l-3}^l) \ge C \land f(w_{l-4}^l) < C \right\}$ };
-	\node [right,xshift=10pt] at (21,6.5) {\scriptsize $\mathcal W_3 = \left\{ w_l : f(w_{l-2}^l) \ge C \land f(w_{l-3}^l) < C \right\}$ };
-	\node [right,xshift=10pt] at (21,10) {\scriptsize $\mathcal W_4 = \left\{ w_l : f(w_{l-1}^l) \ge C \land f(w_{l-2}^l) < C \right\}$ };
-	\node [right,xshift=10pt] at (21,16.5) {\scriptsize $\mathcal W_5 = \left\{ w_l : f(w_l) \ge C \land f(w_{l-1}^l) < C \right\}$ };
+%	% Define sets of leaves in a certain level
+%	\node [right,xshift=10pt] at (23,0) {\scriptsize $\mathcal W_1 = \left\{ w_l : f(w_{l-4}^l) \ge C \right\}$ };
+%	\node [right,xshift=10pt] at (23,3.5) {\scriptsize $\mathcal W_2 = \left\{ w_l : f(w_{l-3}^l) \ge C \land f(w_{l-4}^l) < C \right\}$ };
+%	\node [right,xshift=10pt] at (23,6.5) {\scriptsize $\mathcal W_3 = \left\{ w_l : f(w_{l-2}^l) \ge C \land f(w_{l-3}^l) < C \right\}$ };
+%	\node [right,xshift=10pt] at (23,10) {\scriptsize $\mathcal W_4 = \left\{ w_l : f(w_{l-1}^l) \ge C \land f(w_{l-2}^l) < C \right\}$ };
+%	\node [right,xshift=10pt] at (23,16.5) {\scriptsize $\mathcal W_5 = \left\{ w_l : f(w_l) \ge C \land f(w_{l-1}^l) < C \right\}$ };
 
 	% Label the levels
-	\node[below] at (9,-2) {\footnotesize level 1};
-	\node[below] at (12,-2) {\footnotesize level 2};
-	\node[below] at (15,-2) {\footnotesize level 3};
-	\node[below] at (18,-2) {\footnotesize level 4};
-	\node[below] at (21,-2) {\footnotesize level 5};
+	\node[below] at (9,-2.5) {\footnotesize level 1};
+	\node[below] at (12,-2.5) {\footnotesize level 2};
+	\node[below] at (15,-2.5) {\footnotesize level 3};
+	\node[below] at (18,-2.5) {\footnotesize level 4};
+	\node[below] at (21,-2.5) {\footnotesize level 5};
 
 	% Label the intervals in level 1
 %	\draw [decorate,decoration={brace,amplitude=5pt,raise=5pt,mirror}] (35,-1.5) -- (35,1.5) node [midway,right,xshift=10pt] {\scriptsize $\frac {\sum_{w_l \in \mathcal W_1} f(w_{l-4}^l)} {b_1 + \sum_{w_l \in \mathcal W_1} f(w_{l-4}^l)}$};
