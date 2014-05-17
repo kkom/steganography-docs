@@ -338,6 +338,126 @@ The complication with using implicit back-off and Eq.~\ref{eq:conditional_token_
 
 \subsection{Back-off tree}
 
+% Define a new tikz style for drawing vertices
+\newlength{\vertexSize}
+\setlength{\vertexSize}{10 pt}
+\tikzset{
+    vertex/.style={
+        circle,
+        draw,
+        inner sep = 0pt,
+        minimum width = \vertexSize
+    }
+}
+
+% Define macros for drawing vertices
+
+%	rootVertex: vertex without any edges
+%
+%	(#1,#2)	- coordinates
+\newcommand{\rootVertex}[2] {
+	\node [vertex,fill=black!10] at (#1,#2) {};
+}
+
+% 	connectedVertex: vertex connected to a previous vertex
+%
+%	(#1,#2)	- previous vertex coordinates
+%	(#1,#2)	- coordinates
+\newcommand{\connectedVertex}[4] {
+	\draw [shorten >= 0.5*(\vertexSize+\pgflinewidth), shorten <= 0.5*(\vertexSize+\pgflinewidth), ->] (#1,#2) -- (#3,#4);
+	\node [vertex,fill=black!10] at (#3,#4) {};
+}
+
+% 	connectedLeaf: leaf vertex connected to a previous vertex
+%
+%	(#1,#2)	- previous vertex coordinates
+%	(#1,#2)	- coordinates
+\newcommand{\connectedLeaf}[4] {
+	\draw [shorten >= 0.5*(\vertexSize+\pgflinewidth), shorten <= 0.5*(\vertexSize+\pgflinewidth), ->] (#1,#2) -- (#3,#4);
+	\node [vertex,fill=black!0] at (#3,#4) {};
+}
+
+% 	vertexLabel: label of a vertex
+%
+%	(#1,#2)	- vertex coordinates
+%	#3		- label
+\newcommand{\vertexLabel}[3] {
+	\node[below] at (#1,#2-7.5*\vertexSize) {\footnotesize #3};
+}
+
+\begin{figure}[h]
+\centering
+\begin{tikzpicture}[scale=0.05]
+
+	% The context  words from w_A to w_D
+	\rootVertex{60}{0}
+	\vertexLabel{60}{0}{root}
+
+	% First level word leaves
+	\connectedLeaf{60}{0}{90}{-10}
+	\connectedLeaf{60}{0}{90}{0}
+	\connectedLeaf{60}{0}{90}{10}
+
+	% First level backoff node
+	\connectedVertex{60}{0}{90}{35}
+
+
+	% Second level word leaves
+	\connectedLeaf{90}{35}{120}{20}
+	\connectedLeaf{90}{35}{120}{30}
+	\connectedLeaf{90}{35}{120}{40}
+	\connectedLeaf{90}{35}{120}{50}
+
+	% Second level backoff node
+	\connectedVertex{90}{35}{120}{65}
+
+
+	% Third level word leaves
+	\connectedLeaf{120}{65}{150}{60}
+	\connectedLeaf{120}{65}{150}{70}
+
+	% Third level backoff node
+	\connectedVertex{120}{65}{150}{100}
+
+
+	% Fourth level word leaves
+	\connectedLeaf{150}{100}{180}{80}
+	\connectedLeaf{150}{100}{180}{90}
+	\connectedLeaf{150}{100}{180}{100}
+	\connectedLeaf{150}{100}{180}{110}
+	\connectedLeaf{150}{100}{180}{120}
+
+	% Fourth level backoff node
+	\connectedVertex{150}{100}{180}{165}
+
+
+	% Fifth level word leaves
+	\connectedLeaf{180}{165}{210}{130}
+	\connectedLeaf{180}{165}{210}{140}
+	\connectedLeaf{180}{165}{210}{150}
+	\connectedLeaf{180}{165}{210}{160}
+	\connectedLeaf{180}{165}{210}{170}
+	\connectedLeaf{180}{165}{210}{180}
+	\connectedLeaf{180}{165}{210}{190}
+	\connectedLeaf{180}{165}{210}{200}
+
+	% Draw the intervals
+	\draw[dashed] (210,205) -- (240,205);
+	\draw[densely dotted] [i] (240,125) -- (240,205);
+	\draw[dashed] (180,125) -- (240,125);
+	\draw[densely dotted] [i] (240,75) -- (240,125);
+	\draw[dashed] (150,75) -- (240,75);
+	\draw[densely dotted] [i] (240,55) -- (240,75);
+	\draw[dashed] (120,55) -- (240,55);
+	\draw[densely dotted] [i] (240,15) -- (240,55);
+	\draw[dashed] (90,15) -- (240,15);
+	\draw[densely dotted] [i] (240,-15) -- (240,15);
+	\draw[dashed] (90,-15) -- (240,-15);
+
+\end{tikzpicture}
+\caption{\label{fig:backoff_tree}The back-off tree.}
+\end{figure}
+
 \subsection{$\beta-\gamma$ algorithm for calculating back-off pseudo-counts}
 
 \newpage
