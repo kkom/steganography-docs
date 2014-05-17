@@ -341,7 +341,7 @@ The complication with using implicit back-off and Eq.~\ref{eq:conditional_token_
 
 \subsection{Back-off tree}
 
-
+Fig.~\ref{fig:backoff_tree} shows how to a construct a \emph{back-off tree} where each token is represented by a single leaf. Each leaf corresponds to a contiguous, non-zero interval. The set of all leaf intervals partitions $[0,1)$. As a result, the tree can be interpreted as a \pmf over all tokens. It also satisfies all requirements from the previous section.
 
 % Define a new tikz style for drawing vertices
 \newlength{\vertexSize}
@@ -510,8 +510,6 @@ The complication with using implicit back-off and Eq.~\ref{eq:conditional_token_
 \end{tikzpicture}
 \caption{\label{fig:backoff_tree}Example back-off tree for context $w_{l-4}^{l-1}$. Leaf labels $w_l \in 1, \dots, V$ correspond to token indices. $V=22$ in this example.}
 \end{figure}
-
-Fig.~\ref{fig:backoff_tree} shows how to a construct a \emph{back-off tree} where each token is represented by only one leaf.
 
 \subsection{$\beta-\gamma$ algorithm for calculating back-off pseudo-counts}
 
