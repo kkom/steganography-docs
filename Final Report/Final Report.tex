@@ -508,8 +508,16 @@ Fig.~\ref{fig:backoff_tree} shows how to a construct a \emph{back-off tree} wher
 %	\draw [decorate,decoration={brace,amplitude=5pt,raise=5pt,mirror}] (35,1.5) -- (35,20.5) node [midway,right,xshift=10pt] {\scriptsize $\frac {b_1} {b_1 + \sum_{w_l \in \mathcal W_1} f(w_{l-4}^l)}$};
 
 \end{tikzpicture}
-\caption{\label{fig:backoff_tree}Example back-off tree for context $w_{l-4}^{l-1}$. Leaf labels $w_l \in 1, \dots, V$ correspond to token indices. $V=22$ in this example.}
+\caption{\label{fig:backoff_tree}Example back-off tree for context $w_{l-4}^{l-1}$. Leaf labels $w_l \in \left\{ 1, \dots, V \right\}$ correspond to token indices. $V=22$ in this example.}
 \end{figure}
+
+A different back-off tree is defined for each context $w_{l-N+1}^{l-1}$. The first level contains leaf nodes corresponding to tokens that belong to the set $\mathcal W_1 = \left\{ w_l : f(w_{l-N-1}^l) \ge C \right\}$ and a single back-off parent node $b_1$. Each node is assigned a count $c(\cdot)$. For the leaves the count is simply $c(w_l) = f(w_{l-N+1}^l)$. Calculating the back-off pseudo-count $c(b_1)$ is covered in the next section. Nodes are arranged in the following way: leaves in order of increasing index followed by the back-off node. They partition $[0,1)$ into corresponding intervals $v(\cdot)$ with size proportional to the node count.
+
+Subsequent levels of depth $d \in \left\{ 2, \dots, N \right\}$ are constructed analogously. One difference is that the set of leaf nodes is $\mathcal W_d = \left\{ w_l : f(w_{l-N+d}^l) \ge C \land f(w_{l-N+d-1}^l) < C \right\}$. Nodes do not partition $[0,1)$, but $v(b_{d-1})$ -- interval assigned to the back-off node in the previous level. There is also no back-off node in the last level.
+
+Intuitively, level 1 tokens are the ones that give non-zero probability in an ML language model of order $N$. Level 2 tokens give non-zero probability in an ML model of order $N-1$, but do not include tokens from level 1. Tokens in levels of depth $d \ge 3$ are chosen analogously and exclude tokens from \emph{all} previous levels. By counts consistency it suffices to check that $f(w_{l-N+d-1}^l) \ge C$ to exclude a token from level $d$ -- it must have appeared in \emph{some} previous level.
+
+Sizes of intervals $v(w_l)$ are proportional to the ML estimate $\hat P(w_l | w_{l-N'+1}^{l-1})$ for highest $N' \le N$ that gives a non-zero value. The constant of proportionally is different for each level of the back-off tree and depends on the back-off pseudo-counts $c(b_1), \dots, c(b_{N-1})$.
 
 \subsection{$\beta-\gamma$ algorithm for calculating back-off pseudo-counts}
 
