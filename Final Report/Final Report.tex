@@ -263,7 +263,7 @@ A standard way of dealing with this problem is by introducing \emph{discounting}
 	P( w_l | w_{l-N+1}^{l-1} ) =
 	\begin{cases}
 		d (w_{l-N+1}^l) ~ \frac {f\left(w_{l-N+1}^l \right)} {f\left(w_{l-N+1}^{l-1} \right)} & \text{if $f(w_{l-N+1}^l) \ge C$},\\
-		\alpha (w_{l-N+1}^{l-1}) ~ P( w_l | w_{l-N+2}^{l-1} ) & \text{otherwise}.
+		\alpha (w_{l-N+1}^l) ~ P( w_l | w_{l-N+2}^{l-1} ) & \text{otherwise}.
 	\end{cases}
 \end{equation}
 
