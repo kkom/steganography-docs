@@ -531,20 +531,29 @@ Sizes of intervals $v(w_l)$ are proportional to the ML estimate $\hat P(w_l | w_
 \subsection{$\beta-\gamma$ algorithm for calculating back-off pseudo-counts}
 
 The value $c(b_d)$ needs to reflect the probability that a not explicitly allowed token follows the context. I propose the following algorithm for assigning back-off pseudo-count in the first level of back-off tree:
+%
+\begin{align}
+\label{eq:total_probability_mass} m &= f(w_{l-N+1}^{l-1}) \\
+\label{eq:backoff_pseudocount_level1} c(b_1) &= \ceil*{ \beta \bracket*{ m - \sum_{w_l \in \mathcal W_1} f(w_{l-N+1}^l) } + \gamma ~ m }
+\end{align}
+
+Parameter $\beta$ controls what proportion of the \emph{leftover probability mass} is used to account for the event of a back-off. $\gamma$ controls how much of the \emph{total probability mass} is added to account for back-off. To illustrate using the example from Section~\ref{eq:lm_requirements}, the total probability mass is $m = 1146$ and the leftover probability mass is $1146-542=604$.
+
+Dealing with excluded tokens in a deeper level $d$ of the back-off tree is not difficult. It suffices to restate the total probability mass as $\overline m$ to remove counts of excluded tokens:
 
 \begin{equation}
-\label{eq:backoff_pseudocount_level1}
-c(b_1) = \ceil*{ \beta \bracket*{ f(w_{l-N+1}^{l-1}) - \sum_{w_l \in \mathcal W_1} f(w_{l-N+1}^l) } + \gamma ~ f(w_{l-N+1}^{l-1}) }
+\label{eq:adjusted_total_probability_mass}
+\overline m = f(w_{l-N+d}^{l-1}) - \sum_{w_l \in \mathcal W_1 \cup \dots \cup \mathcal W_{d-1}} f(w_{l-N+d}^l)
 \end{equation}
 
-Parameter $\beta$ controls what proportion of the \emph{leftover probability mass} is used to account for the event of a back-off. $\gamma$ controls how much of the \emph{total probability mass} is added to account for back-off. To illustrate, the total probability mass in the example from Section~\ref{eq:lm_requirements} is $1146$ and the leftover probability mass is $1146-542=604$.
+Then the calculation from Eq.~\ref{eq:backoff_pseudocount_level1} can be repeated in an analogous way.
 
-Dealing with excluded tokens in the deeper levels of the back-off tree is not difficult. It suffices to subtract their counts from the total probability mass and repeat the calculation from Eq.~\ref{eq:backoff_pseudocount_level1} in an analogous way:
+\begin{equation}
+\label{eq:backoff_pseudocount_deep_levels}
+c(b_d) = \ceil*{ \beta \bracket*{ \overline m - \sum_{w_l \in \mathcal W_d} f(w_{l-N+d}^l) } + \gamma ~ \overline m }
+\end{equation}
 
-\begin{align}
-m &= f(w_{l-N+d}^{l-1}) - \sum_{w_l \in \mathcal W_1 \cup \dots \cup W_{d-1}} f(w_{l-N+d}^l) \\
-\label{eq:backoff_pseudocount_deep_levels} c(b_d) &= \ceil*{ \beta \bracket*{ m - \sum_{w_l \in \mathcal W_d} f(w_{l-N+d}^l) } + \gamma ~ m }
-\end{align}
+The only special case to consider is when $m=0$ or $\overline m = 0$. This can simply occur if the context was observed in the training dataset fewer than $C$ times, but also in more subtle situations.\footnote{If all tokens in a level are excluded \emph{and} the context count $f(w_{l-N+d}^{l-1})$ is equal to the sum of excluded counts $f(w_{l-N+d}^l)$ then $\overline m$ will be 0. This happens if the context was observed in the training set only followed by the excluded tokens.} Back-off pseudo-count would be then 0, but the back-off node would be the only node in its level anyway. It can be arbitrarily given a count of 1, or just assigned the full interval corresponding to its level regardless of the pseudo-count.
 
 \newpage
 \section{Detailed description of the stegosystem}
