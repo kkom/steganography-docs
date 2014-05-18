@@ -288,6 +288,8 @@ Make a table comparing COCA and Google Books $N$-grams. Indicate that I've chose
 
 \subsubsection{Discarding $N$-grams containing digits}
 
+The Google Books $N$-grams database is based on many books, some of which include data tables. As a result, they contain a large number of $N$-grams consisting of just numbers and punctuation marks. Randomly generated text would sometimes include long sequences of those. I decided to discard $N$-grams containing digits to avoid such possibility and focus on generating natural language. The only trade-off is that dates that use digits to write days of the month will not longer be a part of the language.
+
 \subsubsection{Normalising tokens using the \texttt{unidecode} package}
 
 \subsection{Exploding tokens by punctuation}
