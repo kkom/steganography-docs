@@ -351,7 +351,7 @@ The database needs to be processed in a way that all entries from Tab.~\ref{tab:
 \begin{table}[h]
 	\centering
 	\begin{tabular}{c | c}
-	token & token exploded by punctuation \\
+	token & exploded token \\
 	\hline
 	e.g. & e\ .\ g\ . \\
 	it's & it\ '\ s \\
@@ -366,9 +366,48 @@ The database needs to be processed in a way that all entries from Tab.~\ref{tab:
 
 If we explode tokens in Tab.~\ref{tab:its_ngrams}, all $N$-grams will correspond to the same sequence of base tokens: \emph{it\ '\ s}. More generally, any phonological word that can be ambiguously split into multiple tokens because of internal punctuation can be uniquely identified by the sequence of its base tokens.
 
-\subsection{Induced counts of normalised and exploded $N$-grams}
+\subsection{Induced counts of base $N$-grams}
 
-Google Books database contains counts of 1- to 5-grams consisting of unnormalised, extended tokens. In order to be able to interpret and generate plain text in an unambiguous way, we need to operate on tokens that are normalised and exploded by punctuation. We know how to apply normalisation and explosion to plain text, but we do not have $N$-gram counts from training dataset processed in this way.
+Google Books database contains counts of 1- to 5-grams that consist of unnormalised extended tokens. In order to be able to interpret and generate plain text in an unambiguous way, we need to operate on tokens that are normalised and exploded by punctuation. We know how to apply normalisation and explosion to plain text, but we do not have $N$-gram counts from training dataset processed in this way.
+
+\emph{Extended $N$-gram} will signify a sequence of $N$ unnormalised extended tokens (as given in the Google Books counts database) and \emph{base $N$-gram} a sequence of $N$ normalised base tokens (what we wish to know the counts of).
+
+\subsubsection{Induced counts from extended 1-grams}
+
+Inducing the counts of base $N$-grams from extended 1-grams is easy. It suffices to normalise and explode the extended token to get the sequence of base tokens.
+
+\begin{table}[h]
+	\centering
+	\begin{tabular}{c | c}
+	$w_1$ & $f(w_1)$ \\
+	\hline
+	d:diazo-oxide/phenol-formaldehyde & \num{58}
+	\end{tabular}
+	\caption{\label{tab:extended_1gram}Extended 1-gram count.}
+\end{table}
+
+\begin{table}[h]
+	\centering
+	\scriptsize
+	\begin{tabular}{c | c | c | c | c}
+	\normalsize 1-grams & \normalsize 2-grams & \normalsize 3-grams & \normalsize 4-grams & \normalsize 5-grams \\
+	\hline
+	d & d : & d : diazo & d : diazo - & d : diazo - oxide \\
+	: & : diazo & : diazo - & : diazo - oxide & : diazo - oxide / \\
+	diazo & diazo - & diazo - oxide & diazo - oxide / & diazo - oxide / phenol \\
+	- & - oxide & - oxide / & - oxide / phenol & - oxide / phenol - \\
+	oxide & oxide / & oxide / phenol & oxide / phenol - & oxide / phenol - formaldehyde \\
+	/ & / phenol & / phenol - & / phenol - formaldehyde & \\
+	phenol & phenol - & phenol - formaldehyde & & \\
+	- & - formaldehyde &  & & \\
+	formaldehyde & & & & \\
+	\end{tabular}
+	\caption{\label{tab:extended_1gram_induced_base_ngrams}Base $N$-grams induced from the extended 1-gram.}
+\end{table}
+
+Each $N$-gram from Tab.~\ref{tab:extended_1gram_induced_base_ngrams} has to be inserted into the appropriate table of base $N$-gram counts using the count of the extended 1-gram, in this case 58. Note that the base token \emph{-} (hyphen) will be inserted twice. This is correct -- it should be assigned a count of $2 \times 58 = 116$ because it occurs twice in the extended 1-gram. Duplicate $N$-grams will be dealt with later.
+
+\subsubsection{Induced counts from extended $N$-grams ($N > 1$)}
 
 \subsection{Ensuring counts consistency}
 
