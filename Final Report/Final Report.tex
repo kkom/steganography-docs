@@ -75,7 +75,7 @@
 \DeclareRobustCommand{\noteSelf}[1]{\textcolor{red}{#1}}
 
 % Ngram that cannot be broken over a line and uses emphasised font (i.e. usually is in italics)
-\DeclareRobustCommand{\ngram}[1]{\mbox{\emph{#1}}}
+\DeclareRobustCommand{\ngram}[1]{\emph{[#1]}}
 
 %%%
 %%% Drawing
@@ -335,7 +335,7 @@ Tab.~\ref{tab:normalisation_examples} shows examples of the normalisation proced
 
 \subsubsection{Extended and base tokens}
 
-Tab.~\ref{tab:its_ngrams} shows counts of three chosen $N$-grams: \emph{it's}, \emph{it\ 's} and \emph{it\ '\ s}. Even though they consist of respectively 1, 2 and 3 tokens, in plain text they all should be formatted in the same way -- as \emph{it's}. This introduces ambiguity -- if we observe \emph{it's} we do not know if we should interpret it as a 1-, 2- or 3-gram.
+Tab.~\ref{tab:its_ngrams} shows counts of three chosen $N$-grams: \ngram{it's}, \ngram{it 's} and \ngram{it ' s}. Even though they consist of respectively 1, 2 and 3 tokens, in plain text they all should be formatted in the same way -- as \emph{it's}. This introduces ambiguity -- if we observe \emph{it's} we do not know if we should interpret it as a 1-, 2- or 3-gram.
 
 \begin{table}[h]
 	\centering
@@ -367,7 +367,7 @@ The database needs to be processed in a way such that all entries from Tab.~\ref
 	\caption{\label{tab:extended_tokens}Example extended tokens with their corresponding base token sequences.}
 \end{table}
 
-If we explode tokens in Tab.~\ref{tab:its_ngrams}, all $N$-grams will correspond to the same sequence of base tokens: \emph{it\ '\ s}. More generally, any phonological word that can be ambiguously split into multiple tokens because of internal punctuation can be uniquely identified by its sequence of base tokens.
+If we explode tokens in Tab.~\ref{tab:its_ngrams}, all $N$-grams will correspond to the same sequence of base tokens: \ngram{it ' s}. More generally, any phonological word that can be ambiguously split into multiple tokens because of internal punctuation can be uniquely identified by its sequence of base tokens.
 
 \subsection{Induced counts of base $N$-grams}
 
@@ -500,9 +500,9 @@ Google Books database contains counts of 1- to 5-grams that consist of unnormali
 
 \subsubsection{Inducing counts from extended 1-grams}
 
-Inducing counts of base $N$-grams from extended 1-grams is easy. It is enough to generate base token sequences of the extended 1-grams and find all base $N$-grams in each of them. Fig.~\ref{fig:extended_and_base_ngrams} should make it clear why this is the case. Base $N$-grams \emph{cross}, \emph{-}, \emph{section}, \emph{cross~-}, \emph{-~section} and \emph{cross~-~section} occur as many times as the extended 1-gram \emph{cross-section}.
+Inducing counts of base $N$-grams from extended 1-grams is easy. It is enough to generate base token sequences of the extended 1-grams and find all base $N$-grams in each of them. Fig.~\ref{fig:extended_and_base_ngrams} should make it clear why this is the case. Base $N$-grams \ngram{cross}, \ngram{-}, \ngram{section}, \ngram{cross -}, \ngram{- section} and \ngram{cross - section} occur as many times as the extended 1-gram \ngram{cross-section}.
 
-Consider processing the extended 1-gram from Tab.~\ref{tab:extended_1gram} as an example. 35 base $N$-grams listed in Tab.~\ref{tab:extended_1gram_induced_base_ngrams} can be found in it. Each should be inserted in its respective counts table using the count of the extended 1-gram, in this case 58. Note that the \emph{-} (hyphen) token will be inserted twice. It should be assigned a total count of $2 \times 58 = 116$ because it occurs twice in the extended 1-gram.
+Consider processing the extended 1-gram from Tab.~\ref{tab:extended_1gram} as an example. 35 base $N$-grams listed in Tab.~\ref{tab:extended_1gram_induced_base_ngrams} can be found in it. Each should be inserted in its respective counts table using the count of the extended 1-gram, in this case 58. Note that the \ngram{-} token will be inserted twice. It should be assigned a total count of $2 \times 58 = 116$ because it occurs twice in the extended 1-gram.
 
 \begin{table}[h]
 	\centering
@@ -558,7 +558,7 @@ Language model fit for steganographic application using the interval algorithm n
   \item \label{lm_req:hidden_symbols} Formatted sequence of tokens uniquely identifies the tokens.
 \end{enumerate}
 
-Requirement \ref{lm_req:non_zero_probability} warrants the use of back-off. Consider the counts from Tab.~\ref{tab:the_esteem_of_many_CONT} and Tab.~\ref{tab:the_esteem_of_many}. In the 5-gram model, only 5 tokens are explicitly allowed to follow \emph{the esteem of many} and their total count is 542. If we used the ML model from Eq.~\ref{eq:ml_conditional_token_probability} to calculate their probabilities, we would assign zero probability to all tokens other than those in column $w_5$ of Tab.~\ref{tab:the_esteem_of_many_CONT}. Thus, we would account for only $\frac {542} {1146} \approx 0.47$ of the probability mass and also discard the vast majority of tokens. The former problem can be mitigated by upscaling the probabilities, but the latter has no solution other than back-off.
+Requirement \ref{lm_req:non_zero_probability} warrants the use of back-off. Consider the counts from Tab.~\ref{tab:the_esteem_of_many_CONT} and Tab.~\ref{tab:the_esteem_of_many}. In the 5-gram model, only 5 tokens are explicitly allowed to follow \ngram{the esteem of many} and their total count is 542. If we used the ML model from Eq.~\ref{eq:ml_conditional_token_probability} to calculate their probabilities, we would assign zero probability to all tokens other than those in column $w_5$ of Tab.~\ref{tab:the_esteem_of_many_CONT}. Thus, we would account for only $\frac {542} {1146} \approx 0.47$ of the probability mass and also discard the vast majority of tokens. The former problem can be mitigated by upscaling the probabilities, but the latter has no solution other than back-off.
 
 \begin{table}[h]
 	\centering
@@ -571,7 +571,7 @@ Requirement \ref{lm_req:non_zero_probability} warrants the use of back-off. Cons
 	\num{400000790} & the & esteem & of & many & of & 237 \\
 	\num{400000791} & the & esteem & of & many & who & 40
 	\end{tabular}
-	\caption{\label{tab:the_esteem_of_many_CONT}Counts of all 5-grams beginning with \emph{the esteem of many}.}
+	\caption{\label{tab:the_esteem_of_many_CONT}Counts of all 5-grams beginning with \ngram{the esteem of many}.}
 \end{table}
 
 \begin{table}[h]
@@ -581,7 +581,7 @@ Requirement \ref{lm_req:non_zero_probability} warrants the use of back-off. Cons
 	\hline
 	\num{456820272} & the & esteem & of & many & 1146
 	\end{tabular}
-	\caption{\label{tab:the_esteem_of_many}Count of \emph{the esteem of many} 4-gram.}
+	\caption{\label{tab:the_esteem_of_many}Count of \ngram{the esteem of many} 4-gram.}
 \end{table}
 
 Requirement \ref{lm_req:hidden_symbols} greatly complicates the language model. If arithmetic coding is only used to compress text, it is possible to augment the sequence during encoding by inserting \emph{explicit} back-off symbols. Their purpose is to indicate during decoding that the next token's probability is to be evaluated using a lower-order model. But in a steganographic scenario, the usage of a back-off symbol would compromise innocuousness of the system. Therefore an \emph{implicit} back-off scheme is needed.
