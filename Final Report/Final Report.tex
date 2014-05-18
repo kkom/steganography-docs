@@ -332,9 +332,39 @@ Tab.~\ref{tab:normalisation_examples} shows examples of the normalisation proced
 
 \subsection{Exploding tokens by punctuation}
 
-Use the \emph{it's} example.
+Tab.~\ref{tab:its_ngrams} shows counts of three chosen $N$-grams: \emph{it's}, \emph{it\ 's} and \emph{it\ '\ s}. Even though they consist of respectively 1, 2 and 3 tokens, in plain text they all should be formatted in the same way -- as \emph{it's}. This introduces ambiguity -- if we observe \emph{it's} we are not sure if we should interpret it as a 1-, 2- or 3-gram.
 
-\subsubsection{Induced exploded $N$-gram counts}
+\begin{table}[h]
+	\centering
+	\begin{tabular}{c | c | c | c | r}
+	$N$ & $w_1$ & $w_2$ & $w_3$ & \multicolumn{1}{c}{$f(w_1^N)$} \\
+	\hline
+	1 & it's & & & \num{37406} \\
+	2 & it & 's & & \num{78658875} \\
+	3 & it & ' & s & \num{7060268}
+	\end{tabular}
+	\caption{\label{tab:its_ngrams}Ways in which \emph{it's} is stored as Google Books $N$-grams (after normalisation).}
+\end{table}
+
+The database needs to be processed in a way that all entries from Tab.~\ref{tab:its_ngrams} are absorbed to a single $N$-gram. One way to do it is by \emph{exploding tokens by punctuation}. Let us classify tokens into two groups: \emph{extended tokens} and \emph{base tokens}. A base token can consist of any number of lowercase letters and digits (\ie alphanumeric characters) or a single punctuation mark. An extended token is a concatenation of base tokens where two alphanumeric base tokens cannot appear next to each other. Exploding a token by punctuation is defined as finding the corresponding base token sequence of an extended token.
+
+\begin{table}[h]
+	\centering
+	\begin{tabular}{c | c}
+	extended token & corresponding base token sequence \\
+	\hline
+	e.g. & e\ .\ g\ . \\
+	he's & he\ '\ s \\
+	mr. & mr\ . \\
+	yesterday). & yesterday\ )\ . \\
+	"great" & "\ great\ " \\
+	... & .\ .\ . \\
+	\textless= & \textless\ =
+	\end{tabular}
+	\caption{\label{tab:extended_tokens}Example extended tokens with corresponding base token sequences.}
+\end{table}
+
+\subsubsection{Induced base $N$-gram counts}
 
 Describe algorithm to calculate induced lower-order counts after exploding $N$-grams.
 
