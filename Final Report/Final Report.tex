@@ -343,7 +343,7 @@ Tab.~\ref{tab:its_ngrams} shows counts of three chosen $N$-grams: \emph{it's}, \
 	2 & it & 's & & \num{78658875} \\
 	3 & it & ' & s & \num{7060268}
 	\end{tabular}
-	\caption{\label{tab:its_ngrams}Ways in which \emph{it's} is stored as Google Books $N$-grams (after normalisation).}
+	\caption{\label{tab:its_ngrams}Ways in which \emph{it's} is stored in Google Books $N$-grams (after normalisation).}
 \end{table}
 
 The database needs to be processed in a way that all entries from Tab.~\ref{tab:its_ngrams} are absorbed to a single $N$-gram. It can be achieved through \emph{exploding tokens by punctuation}. Let us classify tokens into two groups: \emph{extended tokens} and \emph{base tokens}. A base token can consist of any number of lowercase letters and digits (\ie alphanumeric characters) or a single punctuation mark. An extended token is a concatenation of base tokens where two alphanumeric base tokens cannot appear next to each other. Exploding a token by punctuation is defined as finding the corresponding base token sequence of an extended token.
@@ -351,7 +351,7 @@ The database needs to be processed in a way that all entries from Tab.~\ref{tab:
 \begin{table}[h]
 	\centering
 	\begin{tabular}{c | c}
-	extended token & corresponding base token sequence \\
+	token & token exploded by punctuation \\
 	\hline
 	e.g. & e\ .\ g\ . \\
 	it's & it\ '\ s \\
@@ -361,10 +361,10 @@ The database needs to be processed in a way that all entries from Tab.~\ref{tab:
 	... & .\ .\ . \\
 	\textless= & \textless\ =
 	\end{tabular}
-	\caption{\label{tab:extended_tokens}Example extended tokens with corresponding base token sequences.}
+	\caption{\label{tab:extended_tokens}Example extended tokens with their corresponding base token sequences.}
 \end{table}
 
-If we explode tokens in Tab.~\ref{tab:its_ngrams}, all $N$-grams will correspond to the same sequence of base tokens: \emph{it\ '\ s}.
+If we explode tokens in Tab.~\ref{tab:its_ngrams}, all $N$-grams will correspond to the same sequence of base tokens: \emph{it\ '\ s}. More generally, any phonological word that can be ambiguously split into multiple tokens because of internal punctuation can be uniquely identified by the sequence of its base tokens.
 
 \subsection{Induced counts of normalised and exploded $N$-grams}
 
