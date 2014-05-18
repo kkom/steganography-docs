@@ -372,6 +372,116 @@ Google Books database contains counts of 1- to 5-grams that consist of unnormali
 
 \emph{Extended $N$-gram} will signify a sequence of $N$ unnormalised extended tokens (as given in the Google Books counts database) and \emph{base $N$-gram} a sequence of $N$ normalised base tokens (what we wish to know the counts of).
 
+\newcommand{\letterMark}[1] {
+	\filldraw (#1-1,1) circle (3pt); \draw (#1-1,1)--(#1,1); \filldraw (#1,1) circle (3pt);
+}
+
+\newcommand{\ngramMark}[3] {
+	\filldraw (#1,#3) circle (3pt);
+	\draw (#1,#3)--(#2,#3);
+	\filldraw (#2,#3) circle (3pt);
+}
+
+\newcommand{\extendedTokenDelimiter}[1] {
+	\draw (#1,-19)--(#1,14.5);
+}
+
+\newcommand{\baseTokenDelimiter}[1] {
+	\draw [dashed] (#1,-19)--(#1,14.5);
+}
+
+\newcommand{\ngramsLabel}[3] {
+	\draw [decorate,decoration={brace,amplitude=2.5pt,raise=2.5pt}] (-1,#1) -- (-1,#2) node [midway,left,xshift=-5pt] {#3};
+}
+
+\begin{figure}[h]
+\centering
+\begin{tikzpicture}[scale=0.312]
+
+	\node [right] at (-0.45,0) {\Large \texttt{\textcolor{red}{what} '\textcolor{red}{s} the \textcolor{red}{cross}-\textcolor{red}{section} area \textcolor{red}{?}}};
+%	\node [right] at (-0.45,0) {\Large \texttt{\textcolor{red}{what 's the cross-section area ?}}};
+
+	% Extended token delimiters
+	\extendedTokenDelimiter{-0.5}
+	\extendedTokenDelimiter{4.5}
+	\extendedTokenDelimiter{7.5}
+	\extendedTokenDelimiter{11.5}
+	\extendedTokenDelimiter{25.5}
+	\extendedTokenDelimiter{30.5}
+	\extendedTokenDelimiter{32.5}
+
+	% Base token delimiters
+	\baseTokenDelimiter{6}
+	\baseTokenDelimiter{17}
+	\baseTokenDelimiter{18}
+
+	% Extended 1-grams
+	\ngramMark{-0.5}{4.5}{3}
+	\ngramMark{4.5}{7.5}{3.5}
+	\ngramMark{7.5}{11.5}{4}
+	\ngramMark{11.5}{25.5}{4.5}
+	\ngramMark{25.5}{30.5}{5}
+	\ngramMark{30.5}{32.5}{5.5}
+
+	\ngramsLabel{3}{5.5}{Extended 1-grams}
+
+	% Extended 2-grams
+	\ngramMark{-0.5}{7.5}{7.5}
+	\ngramMark{4.5}{11.5}{8}
+	\ngramMark{7.5}{25.5}{8.5}
+	\ngramMark{11.5}{30.5}{9}
+	\ngramMark{25.5}{32.5}{9.5}
+
+	\ngramsLabel{7.5}{9.5}{Extended 2-grams}
+
+	% Extended 3-grams
+	\ngramMark{-0.5}{11.5}{11.5}
+	\ngramMark{4.5}{25.5}{12}
+	\ngramMark{7.5}{30.5}{12.5}
+	\ngramMark{11.5}{32.5}{13}
+
+	\ngramsLabel{11.5}{13}{Extended 3-grams}
+
+	% Base 1-grams
+	\ngramMark{-0.5}{4.5}{-3}
+	\ngramMark{4.5}{6}{-3.5}
+	\ngramMark{6}{7.5}{-4}
+	\ngramMark{7.5}{11.5}{-4.5}
+	\ngramMark{11.5}{17}{-5}
+	\ngramMark{17}{18}{-5.5}
+	\ngramMark{18}{25.5}{-6}
+	\ngramMark{25.5}{30.5}{-6.5}
+	\ngramMark{30.5}{32.5}{-7}
+
+	\ngramsLabel{-7}{-3}{Base 1-grams}
+
+	% Base 2-grams
+	\ngramMark{-0.5}{6}{-9}
+	\ngramMark{4.5}{7.5}{-9.5}
+	\ngramMark{6}{11.5}{-10}
+	\ngramMark{7.5}{17.5}{-10.5}
+	\ngramMark{11.5}{18}{-11}
+	\ngramMark{17}{25.5}{-11.5}
+	\ngramMark{18}{30.5}{-12}
+	\ngramMark{25.5}{32.5}{-12.5}
+
+	\ngramsLabel{-12.5}{-9}{Base 2-grams}
+
+	% Base 3-grams
+	\ngramMark{-0.5}{7.5}{-14.5}
+	\ngramMark{4.5}{11.5}{-15}
+	\ngramMark{6}{17.5}{-15.5}
+	\ngramMark{7.5}{18}{-16}
+	\ngramMark{11.5}{25.5}{-16.5}
+	\ngramMark{17}{30.5}{-17}
+	\ngramMark{18}{32.5}{-17.5}
+
+	\ngramsLabel{-17.5}{-14.5}{Base 3-grams}
+
+\end{tikzpicture}
+\caption{\label{fig:extended_base_counts}Extended and base $N$-grams for $N \le 3$ in an example text.}
+\end{figure}
+
 \subsubsection{Induced counts from extended 1-grams}
 
 Inducing the counts of base $N$-grams from extended 1-grams is easy. It suffices to normalise and explode the extended token to get the sequence of base tokens.
