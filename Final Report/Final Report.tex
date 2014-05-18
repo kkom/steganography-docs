@@ -297,7 +297,7 @@ The Google Books $N$-grams database is based on many books, some of which includ
 
 Google Books team made the best effort to represent each character of a token as precisely as possible using the full range of Unicode characters. This may be problematic -- equivalent words may be written in multiple ways and some characters will be impossible to represent using certain media. In addition, interpretation of text will be very sensitive to encoding -- not only the character glyph, but its underlying Unicode representation will matter.
 
-To mitigate these problem, the tokens are \emph{normalised}. The first step is transliterate Unicode text into plain 7-bit ASCII using using the \texttt{unidecode} Python package.\cite{lib:unidecode} Following this, uppercase letters are converted to lowercase. Finally, the tokens are filtered to contain only characters from Tab.~\ref{tab:normal_characters}.
+To mitigate these problem, the tokens are \emph{normalised}. The first step is to transliterate Unicode text into plain 7-bit ASCII using using the \texttt{unidecode} Python package.\cite{lib:unidecode} Following this, uppercase letters are converted to lowercase. Finally, the tokens are filtered to contain only characters from Tab.~\ref{tab:normal_characters}.
 
 \begin{table}[h]
 	\centering
