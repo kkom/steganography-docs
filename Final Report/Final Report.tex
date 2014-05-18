@@ -770,7 +770,7 @@ The value $c(b_d)$ needs to reflect the probability that a not explicitly allowe
 \label{eq:backoff_pseudocount_level1} c(b_1) &= \ceil*{ \beta \bracket*{ m - \sum_{w_l \in \mathcal W_1} f(w_{l-N+1}^l) } + \gamma ~ m }
 \end{align}
 
-Parameter $\beta$ controls what proportion of the \emph{leftover probability mass} is used to account for the event of a back-off. $\gamma$ controls how much of the \emph{total probability mass} is added to account for back-off. To illustrate using the example from Section~\ref{eq:lm_requirements}, the total probability mass is $m = 1146$ and the leftover probability mass is $1146-542=604$.
+Parameter $\beta$ controls what proportion of the \emph{leftover probability mass} is used to account for the event of a back-off. $\gamma$ controls how much of the \emph{total probability mass} is added to account for back-off. To illustrate using the example from Section~\ref{eq:lm_requirements}, there the total probability mass is $m = 1146$ and the leftover probability mass is $1146-542=604$.
 
 Dealing with excluded tokens in a deeper level $d$ of the back-off tree is not difficult. It suffices to restate the total probability mass as $\overline m$ to remove counts of excluded tokens:
 
