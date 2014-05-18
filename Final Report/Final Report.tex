@@ -29,6 +29,9 @@
 % Color text
 \usepackage{color}
 
+% Use UTF-8 input encoding
+\usepackage[utf8]{inputenc}
+
 % Use the package for declaring paired delimiters
 \usepackage{mathtools}
 
@@ -288,9 +291,44 @@ Make a table comparing COCA and Google Books $N$-grams. Indicate that I've chose
 
 \subsubsection{Discarding $N$-grams containing digits}
 
-The Google Books $N$-grams database is based on many books, some of which include data tables. As a result, they contain a large number of $N$-grams consisting of just numbers and punctuation marks. Randomly generated text would sometimes include long sequences of those. I decided to discard $N$-grams containing digits to avoid such possibility and focus on generating natural language. The only trade-off is that dates that use digits to write days of the month will not longer be a part of the language.
+The Google Books $N$-grams database is based on many books, some of which include data tables. As a result, they contain a large number of $N$-grams consisting of just numbers and punctuation marks. Randomly generated text would sometimes include long sequences of those. To avoid such possibility, I decided to create a second version of the database where $N$-grams containing digits are discarded. The only trade-off is that dates that use digits to write days of the month will no longer be a part of the language.
 
 \subsubsection{Normalising tokens using the \texttt{unidecode} package}
+
+Google Books team made the best effort to represent each character of a token as precisely as possible using the full range of Unicode characters. This may be problematic -- equivalent words may be written in multiple ways and some characters will be impossible to represent using certain media. In addition, interpretation of text will be very sensitive to encoding -- not only the character glyph, but its underlying Unicode representation will matter.
+
+To mitigate these problem, the tokens are \emph{normalised}. The first step is transliterate Unicode text into plain 7-bit ASCII using using the \texttt{unidecode} Python package.\cite{lib:unidecode} Following this, uppercase letters are converted to lowercase. Finally, the tokens are filtered to contain only characters from Tab.~\ref{tab:normal_characters}.
+
+\begin{table}[h]
+	\centering
+	\begin{tabular}{r | l}
+	\multicolumn{1}{c |}{class} & \multicolumn{1}{c}{characters} \\
+	\hline
+	lowercase letters & \texttt{\footnotesize a b c d e f g h i j k l m n o p q r s t u v w x y z} \\
+	digits & \texttt{\footnotesize 0 1 2 3 4 5 6 7 8 9} \\
+	punctuation & \texttt{\footnotesize !\ "\ \#\ \$\ \%\ \&\ \'\ (\ )\ *\ +\ ,\ -\ .\ /\ :\ ;\ <\ =\ >\ ?\ @\ [\ \textbackslash\ ]\ \textasciicircum\ \_\ `\ \{\ |\ \}\ \textasciitilde}
+	\end{tabular}
+	\caption{\label{tab:normal_characters}Characters that can be a part of a normalised token.}
+\end{table}
+
+Tab.~\ref{tab:normalisation_examples} shows examples of the normalisation procedure. Note that some tokens are normalised to an empty string -- this is not a problem since they will be simply ignored. However, \texttt{unidecode} sometimes transliterates special symbols to \emph{[?]}. Ideally these situations should be detected and handled using an empty string, but they are rare enough not to affect the model in a considerable way.
+
+\begin{table}[h]
+	\centering
+	\begin{tabular}{c | c}
+	before & after \\
+	\hline
+	Ægean & aegean \\
+	œuvre & oeuvre \\
+	\textsterling & ps \\
+	Universitätsstraße & universitatsstrasse \\
+	\copyright & (c) \\
+	$\leq$ & \textless= \\
+	$\clubsuit$ & \\
+	$\preccurlyeq$ & [?]
+	\end{tabular}
+	\caption{\label{tab:normalisation_examples}Example tokens containing special characters before and after normalisation.}
+\end{table}
 
 \subsection{Exploding tokens by punctuation}
 
