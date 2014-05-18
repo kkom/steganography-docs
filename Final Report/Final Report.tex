@@ -368,9 +368,9 @@ If we explode tokens in Tab.~\ref{tab:its_ngrams}, all $N$-grams will correspond
 
 \subsection{Induced counts of base $N$-grams}
 
-Google Books database contains counts of 1- to 5-grams made of unnormalised extended tokens. In order to be able to interpret and generate plain text in an unambiguous way, we need to operate on tokens that are normalised and exploded by punctuation. We know how to apply normalisation and explosion to plain text, but we do not have $N$-gram counts from training dataset processed in this way.
+Google Books database contains counts of 1- to 5-grams that consist of unnormalised extended tokens. In order to be able to interpret and generate plain text in an unambiguous way, we need to operate on tokens that are normalised and exploded by punctuation. We know how to apply normalisation and explosion to plain text, but we do not have $N$-gram counts from training dataset processed in this way. We need to induce those from the original counts.
 
-\emph{Extended $N$-gram} will refer to a sequence of $N$ unnormalised extended tokens (as given in the Google Books counts database) and \emph{base $N$-gram} -- a sequence of $N$ normalised base tokens (what we wish to know the counts of). For examples see Fig.~\ref{fig:extended_and_base_ngrams}.
+\emph{Extended $N$-gram} will refer to a sequence of $N$ unnormalised extended tokens (as stored in the Google Books counts database) and \emph{base $N$-gram} -- a sequence of $N$ normalised base tokens (counts of which we wish to know). See Fig.~\ref{fig:extended_and_base_ngrams} for examples.
 
 % 	ngramMark: draw a horizontal segment signifying ngram boundary
 %
@@ -495,11 +495,11 @@ Google Books database contains counts of 1- to 5-grams made of unnormalised exte
 \caption{\label{fig:extended_and_base_ngrams}Extended and base $N$-grams for $N \le 3$ in an example text. Colour alternates between red and black for consecutive base tokens.}
 \end{figure}
 
-\subsubsection{Counts induced from extended 1-grams}
+\subsubsection{Inducing counts from extended 1-grams}
 
 Inducing counts of base $N$-grams from extended 1-grams is easy. It is enough to generate base token sequences of the extended 1-grams and find all base $N$-grams in each of them. Fig.~\ref{fig:extended_and_base_ngrams} should make it clear why this is the case. Base $N$-grams \emph{cross}, \emph{-}, \emph{section}, \emph{cross~-}, \emph{-~section} and \emph{cross~-~section} occur as many times as the extended 1-gram \emph{cross-section}.
 
-Consider processing the extended 1-gram from Tab.~\ref{tab:extended_1gram} as an example. 35 base $N$-grams listed in Tab.~\ref{tab:extended_1gram_induced_base_ngrams} can be found in it. Each should be inserted in its respective base $N$-gram counts table using the count of the extended 1-gram, in this case 58. Note that the hyphen token will be inserted twice. This is correct -- it should be assigned a total count of $2 \times 58 = 116$ because it occurs twice in the extended 1-gram.
+Consider processing the extended 1-gram from Tab.~\ref{tab:extended_1gram} as an example. 35 base $N$-grams listed in Tab.~\ref{tab:extended_1gram_induced_base_ngrams} can be found in it. Each should be inserted in its respective counts table using the count of the extended 1-gram, in this case 58. Note that the \emph{-} (hyphen) token will be inserted twice. It should be assigned a total count of $2 \times 58 = 116$ because it occurs twice in the extended 1-gram.
 
 \begin{table}[h]
 	\centering
@@ -530,7 +530,7 @@ Consider processing the extended 1-gram from Tab.~\ref{tab:extended_1gram} as an
 	\caption{\label{tab:extended_1gram_induced_base_ngrams}Base $N$-grams induced from the extended 1-gram in Tab.~\ref{tab:extended_1gram}.}
 \end{table}
 
-\subsubsection{Induced counts from extended $N$-grams ($N > 1$)}
+\subsubsection{Inducing counts from extended $N$-grams ($N > 1$)}
 
 \subsection{Ensuring counts consistency}
 
