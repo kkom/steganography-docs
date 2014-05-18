@@ -330,7 +330,7 @@ Tab.~\ref{tab:normalisation_examples} shows examples of the normalisation proced
 	\caption{\label{tab:normalisation_examples}Example tokens containing special characters before and after normalisation.}
 \end{table}
 
-\subsection{Exploding tokens by punctuation}
+\subsubsection{Exploding tokens by punctuation}
 
 Tab.~\ref{tab:its_ngrams} shows counts of three chosen $N$-grams: \emph{it's}, \emph{it\ 's} and \emph{it\ '\ s}. Even though they consist of respectively 1, 2 and 3 tokens, in plain text they all should be formatted in the same way -- as \emph{it's}. This introduces ambiguity -- if we observe \emph{it's} we are not sure if we should interpret it as a 1-, 2- or 3-gram.
 
@@ -364,7 +364,7 @@ The database needs to be processed in a way that all entries from Tab.~\ref{tab:
 	\caption{\label{tab:extended_tokens}Example extended tokens with corresponding base token sequences.}
 \end{table}
 
-\subsubsection{Induced base $N$-gram counts}
+\subsection{Induced counts of normalised and exploded $N$-grams}
 
 Describe algorithm to calculate induced lower-order counts after exploding $N$-grams.
 
