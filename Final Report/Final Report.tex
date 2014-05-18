@@ -74,6 +74,9 @@
 % Notes to be discussed with supervisor/thought about later
 \DeclareRobustCommand{\noteSelf}[1]{\textcolor{red}{#1}}
 
+% Ngram that cannot be broken over a line and uses emphasised font (i.e. usually is in italics)
+\DeclareRobustCommand{\ngram}[1]{\mbox{\emph{#1}}}
+
 %%%
 %%% Drawing
 %%%
@@ -531,6 +534,10 @@ Consider processing the extended 1-gram from Tab.~\ref{tab:extended_1gram} as an
 \end{table}
 
 \subsubsection{Inducing counts from extended $N$-grams ($N > 1$)}
+
+Inducing counts from extended $N$-grams for $N>1$ is similar to the case when $N=1$. An equivalent sequence of base tokens has to be constructed as well, but \emph{not all} possible base $N$-grams can be induced from it.
+
+Let us introduce more notation -- an \emph{extended $M$-gram} is a proper substring over the tokens of an extended $N$-gram. For example, the extended $N$-gram \ngram{'s the cross-section} has extended $M$-grams: \ngram{'s}, \ngram{the}, \ngram{cross-section}, \ngram{'s the} and \ngram{the cross-section}.
 
 \subsection{Ensuring counts consistency}
 
