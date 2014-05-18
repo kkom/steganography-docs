@@ -2,7 +2,7 @@
 %%% Document class and page properties
 %%%
 
-\documentclass{IIBproject}
+\documentclass[draft]{IIBproject}
 
 % Set margin size
 \usepackage[margin=2.5cm]{geometry}
@@ -500,9 +500,11 @@ Google Books database contains counts of 1- to 5-grams that consist of unnormali
 
 \subsubsection{Inducing counts from extended 1-grams}
 
-Inducing counts of base $N$-grams from extended 1-grams is easy. It is enough to generate base token sequences of the extended 1-grams and find all base $N$-grams in each of them. Fig.~\ref{fig:extended_and_base_ngrams} should make it clear why this is the case. Base $N$-grams \ngram{cross}, \ngram{-}, \ngram{section}, \ngram{cross -}, \ngram{- section} and \ngram{cross - section} occur as many times as the extended 1-gram \ngram{cross-section}.
+Inducing counts of base $N$-grams from extended 1-grams is easy. It is enough to generate base token sequences of the extended 1-grams and find all base $N$-grams in each of them -- let us call them \emph{induced $N$-grams}.
 
-Consider processing the extended 1-gram from Tab.~\ref{tab:extended_1gram} as an example. 35 base $N$-grams listed in Tab.~\ref{tab:extended_1gram_induced_base_ngrams} can be found in it. Each should be inserted in its respective counts table using the count of the extended 1-gram, in this case 58. Note that the \ngram{-} token will be inserted twice. It should be assigned a total count of $2 \times 58 = 116$ because it occurs twice in the extended 1-gram.
+Fig.~\ref{fig:extended_and_base_ngrams} should make it clear why this is the case. Base $N$-grams \ngram{cross}, \ngram{-}, \ngram{section}, \ngram{cross -}, \ngram{- section} and \ngram{cross - section} occur as many times as the extended 1-gram \ngram{cross-section}.
+
+As an example, consider processing the extended 1-gram from Tab.~\ref{tab:extended_1gram}. 35 base $N$-grams listed in Tab.~\ref{tab:extended_1gram_induced_base_ngrams} can be induced from it. Each should be inserted in its respective counts table using the count of the extended 1-gram, in this case 58. Note that the \ngram{-} token will be inserted twice. It indeed should be assigned a total count of $2 \times 58 = 116$, as it occurs twice in the extended 1-gram.
 
 \begin{table}[h]
 	\centering
@@ -530,14 +532,16 @@ Consider processing the extended 1-gram from Tab.~\ref{tab:extended_1gram} as an
 	- & - formaldehyde &  & & \\
 	formaldehyde & & & & \\
 	\end{tabular}
-	\caption{\label{tab:extended_1gram_induced_base_ngrams}Base $N$-grams induced from the extended 1-gram in Tab.~\ref{tab:extended_1gram}.}
+	\caption{\label{tab:extended_1gram_induced_base_ngrams}Induced $N$-grams from the extended 1-gram in Tab.~\ref{tab:extended_1gram}.}
 \end{table}
 
 \subsubsection{Inducing counts from extended $N$-grams ($N > 1$)}
 
-Inducing counts from extended $N$-grams for $N>1$ is similar to the case when $N=1$. An equivalent sequence of base tokens has to be constructed as well, but \emph{not all} possible base $N$-grams can be induced from it.
+Let us introduce more nomenclature. An \emph{extended $M$-gram} is a proper substring over the extended tokens of an extended $N$-gram. For example, the extended $N$-gram \ngram{'s the \mbox{cross-section}} has extended $M$-grams \ngram{'s}, \ngram{the}, \ngram{\mbox{cross-section}}, \ngram{'s the} and \ngram{the \mbox{cross-section}}.
 
-Let us introduce more notation -- an \emph{extended $M$-gram} is a proper substring over the tokens of an extended $N$-gram. For example, the extended $N$-gram \ngram{'s the cross-section} has extended $M$-grams: \ngram{'s}, \ngram{the}, \ngram{cross-section}, \ngram{'s the} and \ngram{the cross-section}.
+Inducing counts from extended $N$-grams for $N>1$ is similar to the case when $N=1$. An equivalent sequence of base tokens has to be constructed as well, but \emph{not all} possible induced $N$-grams can be selected. If a base $N$-gram can be also induced from an extended $M$-gram, it \emph{cannot} be selected. If we did select it while processing the extended $N$-gram, it would be double counted -- we are guaranteed to come across its count again when processing the offending $M$-gram.
+
+The above restriction can be easily stated in an equivalent way. A base $N$-gram induced from an extended $N$-gram has to contain at least one base token from the first and last extended tokens of the extended $N$-gram. This is how we ensure that it cannot be induced from an extended $M$-gram.
 
 \subsection{Ensuring counts consistency}
 
