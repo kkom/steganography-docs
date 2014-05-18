@@ -495,9 +495,11 @@ Google Books database contains counts of 1- to 5-grams made of unnormalised exte
 \caption{\label{fig:extended_and_base_ngrams}Extended and base $N$-grams for $N \le 3$ in an example text. Colour alternates between red and black for consecutive base tokens.}
 \end{figure}
 
-\subsubsection{Induced counts from extended 1-grams}
+\subsubsection{Counts induced from extended 1-grams}
 
-Inducing the counts of base $N$-grams from extended 1-grams is easy. It suffices to normalise and explode the extended token to get the sequence of base tokens.
+Inducing counts of base $N$-grams from extended 1-grams is easy. It is enough to generate base token sequences of the extended 1-grams and find all base $N$-grams in each of them. Fig.~\ref{fig:extended_and_base_ngrams} should make it clear why this is the case. Base $N$-grams \emph{cross}, \emph{-}, \emph{section}, \emph{cross~-}, \emph{-~section} and \emph{cross~-~section} occur as many times as the extended 1-gram \emph{cross-section}.
+
+Consider processing the extended 1-gram from Tab.~\ref{tab:extended_1gram} as an example. 35 base $N$-grams listed in Tab.~\ref{tab:extended_1gram_induced_base_ngrams} can be found in it. Each should be inserted in its respective base $N$-gram counts table using the count of the extended 1-gram, in this case 58. Note that the hyphen token will be inserted twice. This is correct -- it should be assigned a total count of $2 \times 58 = 116$ because it occurs twice in the extended 1-gram.
 
 \begin{table}[h]
 	\centering
@@ -525,10 +527,8 @@ Inducing the counts of base $N$-grams from extended 1-grams is easy. It suffices
 	- & - formaldehyde &  & & \\
 	formaldehyde & & & & \\
 	\end{tabular}
-	\caption{\label{tab:extended_1gram_induced_base_ngrams}Base $N$-grams induced from the extended 1-gram.}
+	\caption{\label{tab:extended_1gram_induced_base_ngrams}Base $N$-grams induced from the extended 1-gram in Tab.~\ref{tab:extended_1gram}.}
 \end{table}
-
-Each $N$-gram from Tab.~\ref{tab:extended_1gram_induced_base_ngrams} has to be inserted into the appropriate table of base $N$-gram counts using the count of the extended 1-gram, in this case 58. Note that the base token \emph{-} (hyphen) will be inserted twice. This is correct -- it should be assigned a count of $2 \times 58 = 116$ because it occurs twice in the extended 1-gram. Duplicate $N$-grams will be dealt with later.
 
 \subsubsection{Induced counts from extended $N$-grams ($N > 1$)}
 
