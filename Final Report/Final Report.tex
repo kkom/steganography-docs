@@ -330,9 +330,9 @@ Tab.~\ref{tab:normalisation_examples} shows examples of the normalisation proced
 	\caption{\label{tab:normalisation_examples}Example tokens containing special characters before and after normalisation.}
 \end{table}
 
-\subsubsection{Exploding tokens by punctuation}
+\subsubsection{Extended and base tokens}
 
-Tab.~\ref{tab:its_ngrams} shows counts of three chosen $N$-grams: \emph{it's}, \emph{it\ 's} and \emph{it\ '\ s}. Even though they consist of respectively 1, 2 and 3 tokens, in plain text they all should be formatted in the same way -- as \emph{it's}. This introduces ambiguity -- if we observe \emph{it's} we are not sure if we should interpret it as a 1-, 2- or 3-gram.
+Tab.~\ref{tab:its_ngrams} shows counts of three chosen $N$-grams: \emph{it's}, \emph{it\ 's} and \emph{it\ '\ s}. Even though they consist of respectively 1, 2 and 3 tokens, in plain text they all should be formatted in the same way -- as \emph{it's}. This introduces ambiguity -- if we observe \emph{it's} we do not know if we should interpret it as a 1-, 2- or 3-gram.
 
 \begin{table}[h]
 	\centering
@@ -351,7 +351,7 @@ The database needs to be processed in a way that all entries from Tab.~\ref{tab:
 \begin{table}[h]
 	\centering
 	\begin{tabular}{c | c}
-	token & exploded token \\
+	extended token & base tokens \\
 	\hline
 	e.g. & e\ .\ g\ . \\
 	it's & it\ '\ s \\
@@ -364,13 +364,13 @@ The database needs to be processed in a way that all entries from Tab.~\ref{tab:
 	\caption{\label{tab:extended_tokens}Example extended tokens with their corresponding base token sequences.}
 \end{table}
 
-If we explode tokens in Tab.~\ref{tab:its_ngrams}, all $N$-grams will correspond to the same sequence of base tokens: \emph{it\ '\ s}. More generally, any phonological word that can be ambiguously split into multiple tokens because of internal punctuation can be uniquely identified by the sequence of its base tokens.
+If we explode tokens in Tab.~\ref{tab:its_ngrams}, all $N$-grams will correspond to the same sequence of base tokens: \emph{it\ '\ s}. More generally, any phonological word that can be ambiguously split into multiple tokens because of internal punctuation can be uniquely identified by its sequence of base tokens.
 
 \subsection{Induced counts of base $N$-grams}
 
-Google Books database contains counts of 1- to 5-grams that consist of unnormalised extended tokens. In order to be able to interpret and generate plain text in an unambiguous way, we need to operate on tokens that are normalised and exploded by punctuation. We know how to apply normalisation and explosion to plain text, but we do not have $N$-gram counts from training dataset processed in this way.
+Google Books database contains counts of 1- to 5-grams made of unnormalised extended tokens. In order to be able to interpret and generate plain text in an unambiguous way, we need to operate on tokens that are normalised and exploded by punctuation. We know how to apply normalisation and explosion to plain text, but we do not have $N$-gram counts from training dataset processed in this way.
 
-\emph{Extended $N$-gram} will signify a sequence of $N$ unnormalised extended tokens (as given in the Google Books counts database) and \emph{base $N$-gram} a sequence of $N$ normalised base tokens (what we wish to know the counts of).
+\emph{Extended $N$-gram} will refer to a sequence of $N$ unnormalised extended tokens (as given in the Google Books counts database) and \emph{base $N$-gram} -- a sequence of $N$ normalised base tokens (what we wish to know the counts of). For examples see Fig.~\ref{fig:extended_and_base_ngrams}.
 
 \newcommand{\letterMark}[1] {
 	\filldraw (#1-1,1) circle (3pt); \draw (#1-1,1)--(#1,1); \filldraw (#1,1) circle (3pt);
@@ -459,7 +459,7 @@ Google Books database contains counts of 1- to 5-grams that consist of unnormali
 	\ngramMark{-0.5}{6}{-9}
 	\ngramMark{4.5}{7.5}{-9.5}
 	\ngramMark{6}{11.5}{-10}
-	\ngramMark{7.5}{17.5}{-10.5}
+	\ngramMark{7.5}{17}{-10.5}
 	\ngramMark{11.5}{18}{-11}
 	\ngramMark{17}{25.5}{-11.5}
 	\ngramMark{18}{30.5}{-12}
@@ -470,7 +470,7 @@ Google Books database contains counts of 1- to 5-grams that consist of unnormali
 	% Base 3-grams
 	\ngramMark{-0.5}{7.5}{-14.5}
 	\ngramMark{4.5}{11.5}{-15}
-	\ngramMark{6}{17.5}{-15.5}
+	\ngramMark{6}{17}{-15.5}
 	\ngramMark{7.5}{18}{-16}
 	\ngramMark{11.5}{25.5}{-16.5}
 	\ngramMark{17}{30.5}{-17}
@@ -479,7 +479,7 @@ Google Books database contains counts of 1- to 5-grams that consist of unnormali
 	\ngramsLabel{-17.5}{-14.5}{Base 3-grams}
 
 \end{tikzpicture}
-\caption{\label{fig:extended_base_counts}Extended and base $N$-grams for $N \le 3$ in an example text.}
+\caption{\label{fig:extended_and_base_ngrams}Extended and base $N$-grams for $N \le 3$ in an example text.}
 \end{figure}
 
 \subsubsection{Induced counts from extended 1-grams}
