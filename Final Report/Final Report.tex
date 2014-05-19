@@ -22,6 +22,10 @@
 % Use the calc package for infix arithmetic
 \usepackage{calc}
 
+% Use the cleveref package for automatic formatting of reference
+\usepackage{cleveref}
+\crefname{table}{Table}{Tables} % use capital letters for referencing tables
+
 % Use BibTeX for bibliography management, use the hyperref package to include URLs in the entries
 \usepackage{cite}
 \usepackage{url}
@@ -300,7 +304,7 @@ The Google Books $N$-grams database is based on many books, some of which includ
 
 Google Books team made the best effort to represent each character of a token as precisely as possible using the full range of Unicode characters. This may be problematic -- equivalent words may be written in multiple ways and some characters will be impossible to represent using certain media. In addition, interpretation of text will be very sensitive to encoding -- not only the character glyph, but its underlying Unicode representation will matter.
 
-To mitigate these problems, the tokens are \emph{normalised}. The first step is to transliterate Unicode text into plain 7-bit ASCII using using the \texttt{unidecode} Python package \cite{lib:unidecode}. Following this, uppercase letters are converted to lowercase. Finally, the tokens are filtered to contain only characters from Tab.~\ref{tab:normal_characters}.
+To mitigate these problems, the tokens are \emph{normalised}. The first step is to transliterate Unicode text into plain 7-bit ASCII using using the \texttt{unidecode} Python package \cite{lib:unidecode}. Following this, uppercase letters are converted to lowercase. Finally, the tokens are filtered to contain only characters from \cref{tab:normal_characters}.
 
 \begin{table}[h]
 	\centering
@@ -314,7 +318,7 @@ To mitigate these problems, the tokens are \emph{normalised}. The first step is 
 	\caption{\label{tab:normal_characters}Characters that can be a part of a normalised token.}
 \end{table}
 
-Tab.~\ref{tab:normalisation_examples} shows examples of the normalisation procedure. Note that some tokens are normalised to an empty string -- this is not a problem since they will be simply ignored. However, \texttt{unidecode} sometimes transliterates special symbols to a question mark in square brackets, \ie \emph{[?]}. Ideally these situations should be detected and handled using an empty string, but they are rare enough not to affect the model in a considerable way if ignored. Also, despite being understandable, the normalisation of \emph{Universitätsstraße} is strictly wrong -- in German \emph{ä} should be transliterated to \emph{ae}\cite{standard:din5007v2}.
+\cref{tab:normalisation_examples} shows examples of the normalisation procedure. Note that some tokens are normalised to an empty string -- this is not a problem since they will be simply ignored. However, \texttt{unidecode} sometimes transliterates special symbols to a question mark in square brackets, \ie \emph{[?]}. Ideally these situations should be detected and handled using an empty string, but they are rare enough not to affect the model in a considerable way if ignored. Also, despite being understandable, the normalisation of \emph{Universitätsstraße} is strictly wrong -- in German \emph{ä} should be transliterated to \emph{ae}\cite{standard:din5007v2}.
 
 \begin{table}[h]
 	\centering
@@ -335,7 +339,7 @@ Tab.~\ref{tab:normalisation_examples} shows examples of the normalisation proced
 
 \subsubsection{Extended and base tokens}
 
-Tab.~\ref{tab:its_ngrams} shows counts of three chosen $N$-grams: \ngram{it's}, \ngram{it 's} and \ngram{it ' s}. Even though they consist of respectively 1, 2 and 3 tokens, in plain text they all should be formatted in the same way -- as \emph{it's}. This introduces ambiguity -- if we observe \emph{it's} we do not know if we should interpret it as a 1-, 2- or 3-gram.
+\cref{tab:its_ngrams} shows counts of three chosen $N$-grams: \ngram{it's}, \ngram{it 's} and \ngram{it ' s}. Even though they consist of respectively 1, 2 and 3 tokens, in plain text they all should be formatted in the same way -- as \emph{it's}. This introduces ambiguity -- if we observe \emph{it's} we do not know if we should interpret it as a 1-, 2- or 3-gram.
 
 \begin{table}[h]
 	\centering
@@ -349,7 +353,7 @@ Tab.~\ref{tab:its_ngrams} shows counts of three chosen $N$-grams: \ngram{it's}, 
 	\caption{\label{tab:its_ngrams}Ways in which \emph{it's} is stored in Google Books $N$-grams (after normalisation).}
 \end{table}
 
-The database needs to be processed in a way such that all entries from Tab.~\ref{tab:its_ngrams} are absorbed into a single $N$-gram. It can be achieved through \emph{exploding tokens by punctuation}. Let us classify tokens into two groups: \emph{extended tokens} and \emph{base tokens}. A base token can consist of any number of lowercase letters and digits (\ie alphanumeric characters) or a single punctuation mark. An extended token is a concatenation of base tokens, where two alphanumeric base tokens cannot appear next to each other. Exploding a token by punctuation is defined as finding the corresponding base token sequence of an extended token.
+The database needs to be processed in a way such that all entries from \cref{tab:its_ngrams} are absorbed into a single $N$-gram. It can be achieved through \emph{exploding tokens by punctuation}. Let us classify tokens into two groups: \emph{extended tokens} and \emph{base tokens}. A base token can consist of any number of lowercase letters and digits (\ie alphanumeric characters) or a single punctuation mark. An extended token is a concatenation of base tokens, where two alphanumeric base tokens cannot appear next to each other. Exploding a token by punctuation is defined as finding the corresponding base token sequence of an extended token.
 
 \begin{table}[h]
 	\centering
@@ -367,7 +371,7 @@ The database needs to be processed in a way such that all entries from Tab.~\ref
 	\caption{\label{tab:extended_tokens}Example extended tokens with their corresponding base token sequences.}
 \end{table}
 
-If we explode tokens in Tab.~\ref{tab:its_ngrams}, all $N$-grams will correspond to the same sequence of base tokens: \ngram{it ' s}. More generally, any phonological word that can be ambiguously split into multiple tokens because of internal punctuation can be uniquely identified by its sequence of base tokens.
+If we explode tokens in \cref{tab:its_ngrams}, all $N$-grams will correspond to the same sequence of base tokens: \ngram{it ' s}. More generally, any phonological word that can be ambiguously split into multiple tokens because of internal punctuation can be uniquely identified by its sequence of base tokens.
 
 \subsection{Induced counts of base $N$-grams}
 
@@ -504,7 +508,7 @@ Inducing counts of base $N$-grams from extended 1-grams is easy. It is enough to
 
 Fig.~\ref{fig:extended_and_base_ngrams} should make it clear why this is the case. Base $N$-grams \ngram{cross}, \ngram{-}, \ngram{section}, \ngram{cross -}, \ngram{- section} and \ngram{cross - section} occur as many times as the extended 1-gram \ngram{cross-section}.
 
-As an example, consider processing the extended 1-gram from Tab.~\ref{tab:extended_1gram}. 35 base $N$-grams listed in Tab.~\ref{tab:extended_1gram_induced_base_ngrams} can be induced from it. Each should be inserted in its respective counts table using the count of the extended 1-gram, in this case 58. Note that the \ngram{-} token will be inserted twice. It indeed should be assigned a total count of $2 \times 58 = 116$, as it occurs twice in the extended 1-gram.
+As an example, consider processing the extended 1-gram from \cref{tab:extended_1gram}. 35 base $N$-grams listed in \cref{tab:extended_1gram_induced_base_ngrams} can be induced from it. Each should be inserted in its respective counts table using the count of the extended 1-gram, in this case 58. Note that the \ngram{-} token will be inserted twice. It indeed should be assigned a total count of $2 \times 58 = 116$, as it occurs twice in the extended 1-gram.
 
 \begin{table}[h]
 	\centering
@@ -531,7 +535,7 @@ As an example, consider processing the extended 1-gram from Tab.~\ref{tab:extend
 	\scriptsize - & \scriptsize - formaldehyde & \scriptsize  & & \\
 	\scriptsize formaldehyde & \scriptsize & & & \\
 	\end{tabular}
-	\caption{\label{tab:extended_1gram_induced_base_ngrams}Base $N$-grams induced from the extended 1-gram from Tab.~\ref{tab:extended_1gram}.}
+	\caption{\label{tab:extended_1gram_induced_base_ngrams}Base $N$-grams induced from the extended 1-gram from \cref{tab:extended_1gram}.}
 \end{table}
 
 \subsubsection{Inducing counts from extended $N$-grams ($N > 1$)}
@@ -602,7 +606,7 @@ Language model fit for steganographic application using the interval algorithm n
   \item \label{lm_req:hidden_symbols} Formatted sequence of tokens uniquely identifies the tokens.
 \end{enumerate}
 
-Requirement \ref{lm_req:non_zero_probability} warrants the use of back-off. Consider the counts from Tab.~\ref{tab:the_esteem_of_many_CONT} and Tab.~\ref{tab:the_esteem_of_many}. In the 5-gram model, only 5 tokens are explicitly allowed to follow \ngram{the esteem of many} and their total count is 542. If we used the ML model from Eq.~\ref{eq:ml_conditional_token_probability} to calculate their probabilities, we would assign zero probability to all tokens other than those in column $w_5$ of Tab.~\ref{tab:the_esteem_of_many_CONT}. Thus, we would account for only $\frac {542} {1146} \approx 0.47$ of the probability mass and also discard the vast majority of tokens. The former problem can be mitigated by upscaling the probabilities, but the latter has no solution other than back-off.
+Requirement \ref{lm_req:non_zero_probability} warrants the use of back-off. Consider the counts from \cref{tab:the_esteem_of_many_CONT} and \cref{tab:the_esteem_of_many}. In the 5-gram model, only 5 tokens are explicitly allowed to follow \ngram{the esteem of many} and their total count is 542. If we used the ML model from Eq.~\ref{eq:ml_conditional_token_probability} to calculate their probabilities, we would assign zero probability to all tokens other than those in column $w_5$ of \cref{tab:the_esteem_of_many_CONT}. Thus, we would account for only $\frac {542} {1146} \approx 0.47$ of the probability mass and also discard the vast majority of tokens. The former problem can be mitigated by upscaling the probabilities, but the latter has no solution other than back-off.
 
 \begin{table}[h]
 	\centering
