@@ -261,7 +261,7 @@ The ML (maximum likelihood) estimate of conditional probability of $w_l$ in an $
 
 where $f(\cdot)$ is the number of occurrences of a particular sequence of tokens in the training dataset.
 
-A problem with Eq.~\ref{eq:ml_conditional_token_probability} is that most $N$-gram counts will be zero. For example, a $5$-gram model with $V \approx 10^6$ will have $V^L \approx \left( 10^6 \right)^5 = 10^{30}$ distinct $N$-grams. For every possible $5$-gram sequence to occur at least once, the training set would need to consist of more than $10^{30}$ tokens. Currently the largest available dataset is based on approximately $3.6 \times 10^{11}$ English words. \cite{googlengrams2011} As a result, a large number of grammatically correct sentences would have zero probability.
+A problem with Eq.~\ref{eq:ml_conditional_token_probability} is that most $N$-gram counts will be zero. For example, a $5$-gram model with $V \approx 10^6$ will have $V^L \approx \left( 10^6 \right)^5 = 10^{30}$ distinct $N$-grams. For every possible $5$-gram sequence to occur at least once, the training set would need to consist of more than $10^{30}$ tokens. Google Books $N$-grams database \cite{googlengrams2011}, currently the largest available dataset, is based on approximately $3.6 \times 10^{11}$ English words. As a result, a large number of grammatically correct sentences would have zero probability.
 
 \subsection{Limiting database size, discounting and back-off}
 
@@ -278,7 +278,7 @@ A standard way of dealing with this problem is to introduce \emph{discounting} a
 
 where $d(\cdot)$ and $\alpha(\cdot)$ return the discount and back-off weights -- scaling factors used to ensure that Eq.~\ref{eq:conditional_token_probability_with_backoff} gives a valid \pmf. Intuitively, they reduce the mass assigned to observed $N$-grams to make space for estimates of order $N{-}1$ and lower.
 
-$d(\cdot)$ and $\alpha(\cdot)$ are hard to choose or compute -- there exist many different schemes motivated by linguistics and statistics. Examples include Good-Turing smoothing, \cite{good1953} Kneser-Ney smoothing, \cite{kneserney1995} or stupid back-off \cite{brants2007} -- all exhibit various levels of complexity. In addition, the last does not even return a valid \pmf, but this is judged acceptable for strictly scoring applications.
+$d(\cdot)$ and $\alpha(\cdot)$ are hard to choose or compute -- there exist many different schemes motivated by linguistics and statistics. Examples include Good-Turing smoothing \cite{good1953}, Kneser-Ney smoothing \cite{kneserney1995}, or stupid back-off \cite{brants2007} -- all exhibit various levels of complexity. In addition, the last does not even return a valid \pmf, but this is judged acceptable for strictly scoring applications.
 
 \section{Processing and storing $N$-gram counts}
 
@@ -300,7 +300,7 @@ The Google Books $N$-grams database is based on many books, some of which includ
 
 Google Books team made the best effort to represent each character of a token as precisely as possible using the full range of Unicode characters. This may be problematic -- equivalent words may be written in multiple ways and some characters will be impossible to represent using certain media. In addition, interpretation of text will be very sensitive to encoding -- not only the character glyph, but its underlying Unicode representation will matter.
 
-To mitigate these problems, the tokens are \emph{normalised}. The first step is to transliterate Unicode text into plain 7-bit ASCII using using the \texttt{unidecode} Python package.\cite{lib:unidecode} Following this, uppercase letters are converted to lowercase. Finally, the tokens are filtered to contain only characters from Tab.~\ref{tab:normal_characters}.
+To mitigate these problems, the tokens are \emph{normalised}. The first step is to transliterate Unicode text into plain 7-bit ASCII using using the \texttt{unidecode} Python package \cite{lib:unidecode}. Following this, uppercase letters are converted to lowercase. Finally, the tokens are filtered to contain only characters from Tab.~\ref{tab:normal_characters}.
 
 \begin{table}[h]
 	\centering
