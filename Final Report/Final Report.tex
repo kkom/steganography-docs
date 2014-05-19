@@ -272,7 +272,7 @@ The ML (maximum likelihood) estimate of conditional probability of $w_l$ in an $
 
 where $f(\cdot)$ is the number of occurrences of a particular sequence of tokens in the training dataset.
 
-A problem with \cref{eq:ml_conditional_token_probability} is that most $N$-gram counts will be zero. For example, a $5$-gram model with $V \approx 10^6$ will have $V^L \approx \left( 10^6 \right)^5 = 10^{30}$ distinct $N$-grams. For every possible $5$-gram sequence to occur at least once, the training set would need to consist of more than $10^{30}$ tokens. Google Books $N$-grams database \cite{googlengrams2011}, currently the largest available dataset, is based on approximately $3.6 \times 10^{11}$ English words. As a result, a large number of grammatically correct sentences would have zero probability.
+A problem with \cref{eq:ml_conditional_token_probability} is that most $N$-gram counts will be zero. For example, a $5$-gram model with $V \approx 10^6$ will have $V^N \approx \left( 10^6 \right)^5 = 10^{30}$ distinct $N$-grams. For every possible $5$-gram sequence to occur at least once, the training set would need to consist of more than $10^{30}$ tokens. Google Books $N$-grams database \cite{googlengrams2011}, currently the largest available dataset, is based on approximately $3.6 \times 10^{11}$ English words. As a result, a large number of grammatically correct sentences will have zero probability.
 
 \subsection{Limiting database size, discounting and back-off}
 
