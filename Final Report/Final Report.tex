@@ -88,7 +88,9 @@
 % Ngram that cannot be broken over a line and uses emphasised font (i.e. usually is in italics)
 \DeclareRobustCommand{\ngram}[1]{\emph{[#1]}}
 
-% Macro for spelling out non-breaking (N+1)-grams
+% Macro for spelling out non-breaking (N-1)-grams and (N+1)-grams
+\DeclareRobustCommand{\nmgram}{\mbox{$(N{-}1)$-gram}\@\xspace}
+\DeclareRobustCommand{\nmgrams}{\mbox{$(N{-}1)$-grams}\@\xspace}
 \DeclareRobustCommand{\npgram}{\mbox{$(N{+}1)$-gram}\@\xspace}
 \DeclareRobustCommand{\npgrams}{\mbox{$(N{+}1)$-grams}\@\xspace}
 
@@ -806,35 +808,41 @@ Intuitively, level 1 tokens are the ones that give non-zero probability in an ML
 
 Sizes of intervals $v(w_l)$ are proportional to the ML estimate $\hat P(w_l | w_{l-N'+1}^{l-1})$ for highest $N' \le N$ that gives a non-zero value. The constant of proportionally is different for each level of the back-off tree and depends on the back-off pseudo-counts $c(b_1), \dots, c(b_{N-1})$.
 
-\subsection{$\beta-\gamma$ algorithm for calculating back-off pseudo-counts}
+\subsection{$\beta{-}\gamma$ back-off pseudo-count estimation}
 \label{sec:beta_gamma_backoff}
 
-The value $c(b_d)$ needs to reflect the probability that a not explicitly allowed token follows the context. I propose the following algorithm for assigning back-off pseudo-count in the first level of back-off tree:
-%
-\begin{align}
-\label{eq:total_probability_mass} m &= f(w_{l-N+1}^{l-1}) \\
-\label{eq:backoff_pseudocount_level1} c(b_1) &= \ceil*{ \beta \bracket*{ m - \sum_{w_l \in \mathcal W_1} f(w_{l-N+1}^l) } + \gamma ~ m }
-\end{align}
-
-Parameter $\beta$ controls what proportion of the \emph{leftover probability mass} is used to account for the event of a back-off. $\gamma$ controls how much of the \emph{total probability mass} is added to account for back-off. To illustrate using the example from Section~\ref{eq:lm_requirements}, there the total probability mass is $m = 1146$ and the leftover probability mass is $1146-542=604$.
-
-Dealing with excluded tokens in a deeper level $d$ of the back-off tree is not difficult. It suffices to restate the total probability mass as
+Count of the back-off node $c(b_d)$ needs to reflect the probability that a not explicitly allowed token follows the context. Let us start with the first level of the tree. Context count, \ie the number of times the context was observed in the training dataset, is given by
 
 \begin{equation}
-\label{eq:adjusted_total_probability_mass}
-\overline m = f(w_{l-N+d}^{l-1}) - \sum_{w_l \in \mathcal W_1 \cup \dots \cup \mathcal W_{d-1}} f(w_{l-N+d}^l).
+\label{eq:context_count_level1}
+m_1 = f(w_{l-N+1}^{l-1}) .
 \end{equation}
 
-where the counts of excluded tokens are now removed.
+By counts consistency, it will be larger than the total count of tokens in the first level of the tree. The leftover context count, \ie $m_1 - \sum_{w_l \in \mathcal W_1} f(w_{l-N+1}^l)$, is then a good indication of how likely it is that a token $w_l \notin \mathcal W_1$ follows the context.
+
+Keeping this in mind, $\beta{-}\gamma$ estimation gives a back-off pseudo-count of
+
+\begin{equation}
+\label{eq:backoff_pseudocount_level1} c(b_1) = \ceil*{ \beta \bracket*{ m_1 - \sum_{w_l \in \mathcal W_1} f(w_{l-N+1}^l) } + \gamma ~ m_1 },
+\end{equation}
+
+where $\beta$ controls what proportion of the \emph{leftover context count} is used to account for the event of a back-off, and $\gamma$ controls how much of the \emph{total context count} is added extra to account for back-off as well. To illustrate using the example from Section~\ref{eq:lm_requirements}, there the total context count is $m_1 = 1146$ and the leftover context count is $1146-542=604$.
+
+Dealing with excluded tokens in a deeper level $d$ of the back-off tree is not difficult. It suffices to remove excluded token counts from the total context count as follows
+
+\begin{equation}
+\label{eq:adjusted_context_count}
+\overline m_d = f(w_{l-N+d}^{l-1}) - \sum_{w_l \in \mathcal W_1 \cup \dots \cup \mathcal W_{d-1}} f(w_{l-N+d}^l).
+\end{equation}
 
 Then the calculation from \cref{eq:backoff_pseudocount_level1} can be repeated in an analogous way
 
 \begin{equation}
 \label{eq:backoff_pseudocount_deep_levels}
-c(b_d) = \ceil*{ \beta \bracket*{ \overline m - \sum_{w_l \in \mathcal W_d} f(w_{l-N+d}^l) } + \gamma ~ \overline m }.
+c(b_d) = \ceil*{ \beta \bracket*{ \overline m_d - \sum_{w_l \in \mathcal W_d} f(w_{l-N+d}^l) } + \gamma ~ \overline m_d }.
 \end{equation}
 
-The only special case to consider is when $m=0$ or $\overline m = 0$. This can simply occur if the context was observed in the training dataset fewer than $C$ times, but also in more subtle situations.\footnote{If all tokens in a level are excluded \emph{and} the context count $f(w_{l-N+d}^{l-1})$ is equal to the sum of excluded counts $\sum_{w_l \in \mathcal W_1 \cup \dots \cup \mathcal W_{d-1}} f(w_{l-N+d}^l)$ then $\overline m$ will be 0. This happens if the context was observed in the training set only followed by the excluded tokens.} Back-off pseudo-count would be then 0, but the back-off node would be the only node in its level anyway. One way to deal with this problem is to give the back-off node an arbitrary non-zero pseudo-count, for example 1.
+The only special case to consider is when $m_1 = 0$ or $\overline m_d = 0$. This can simply occur if the context was not observed in the training dataset frequently enough to be in the database, but also in more subtle situations.\footnote{If all tokens in a level are excluded \emph{and} the context count $f(w_{l-N+d}^{l-1})$ is equal to the sum of excluded counts $\sum_{w_l \in \mathcal W_1 \cup \dots \cup \mathcal W_{d-1}} f(w_{l-N+d}^l)$ then $\overline m_d$ will be 0. This happens if the context was observed in the training dataset only followed by the excluded tokens.} Back-off pseudo-count would be then 0, however the back-off node would be the only node in its level anyway. One way to deal with this problem is to give the back-off node an arbitrary non-zero pseudo-count, for example 1.
 
 \newpage
 \section{Detailed description of the stegosystem}
