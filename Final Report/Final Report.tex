@@ -543,11 +543,48 @@ Inducing counts from extended $N$-grams for $N>1$ is similar to the case when $N
 
 The above restriction can be easily stated in an equivalent way. A base $N$-gram induced from an extended $N$-gram has to contain at least one base token from the first and last extended tokens of the extended $N$-gram. This is how we ensure that it cannot be induced from an extended $M$-gram.
 
-\subsection{Ensuring counts consistency}
-
 \subsection{Sentence delimiters}
 
 \subsection{BinDB file format}
+
+\subsection{Counts consistency}
+\label{sec:counts_consistency}
+
+\subsubsection{Definition}
+
+Once we have a table of sorted $N$-grams, we need to ensure that their counts are consistent. $N$-grams are defined to be \emph{left counts consistent} if:
+
+\begin{equation}
+\label{eq:left_counts_consistency}
+\forall_{w_1^N} ~~ f(w_1^N) \ge \sum_{w_{N+1}} f(w_1^{N+1})
+\end{equation}
+
+and \emph{right counts consistent} if:
+
+\begin{equation}
+\label{eq:right_counts_consistency}
+\forall_{w_1^N} ~~ f(w_1^N) \ge \sum_{w_0} f(w_0^N)
+\end{equation}
+
+$N$-grams are \emph{counts consistent} if both Eq.~\ref{eq:left_counts_consistency} and Eq.~\ref{eq:right_counts_consistency} are satisfied.
+
+The above equations are easy to interpret. Left counts consistency ensures that if we add the counts of all $(N{+}1)$-grams created by appending a token to the end of an $N$-gram, their sum will not be larger than the count of the $N$-gram. Right counts consistency is defined analogously. Obviously, correctly counted $N$-grams will be counts consistent. In reality, Google Books $N$-grams are not.\footnote{This may be caused by a bug in the script which downloaded the counts from Google servers. It skipped the last $N$-gram from each of 2892 files that the database is split into. Or the Google Books database may be inconsistent itself, for example due to failure of some jobs in the distributed computation.}
+
+\subsubsection{Ensuring counts consistency}
+
+Counts consistency is assumed in some parts of the stegosystem, for example by the $\beta - \gamma$ algorithm in Section \ref{sec:beta_gamma_backoff}. Since inconsistencies are very rare (in the order of 500 for the whole database of \noteSelf{how many?} $N$-grams), they can be corrected without visibly distorting information in the counts.
+
+In the case of Google Books database, 5-grams are asserted to be counts consistent, since there are no 6-grams to check with. In general, $N$-grams are made left counts consistent in the following way:
+
+\begin{enumerate}
+\item \label{alg:cc_left_integration} $(N{+}1)$-gram counts are \emph{left integrated}. The last token is dropped from each $(N{+}1)$-gram to create a \emph{quasi}-$N$-gram. The counts of all identical \emph{quasi}-$N$-grams are cumulated.
+\item \label{alg:cc_left_consistency} A left counts consistent $N$-grams table is created by \emph{maximising} $N$-gram and \emph{quasi}-$N$-gram counts. Both tables are simultaneously iterated over starting from the first row. Whenever a \emph{quasi}-$N$-gram has a higher count than the same $N$-gram, the $N$-gram count is updated. If there is \emph{quasi}-$N$-gram without a corresponding $N$-gram, a new $N$-gram is created. Otherwise, the original $N$-grams are copied.
+\item \label{alg:cc_full_consistency} The final counts consistent $N$-grams table is created in a similar way. This time, \emph{right integrated} $(N{+}1)$-grams are maximised with left counts consistent $N$-grams.
+\end{enumerate}
+
+Since removing the last token does not change the ordering, left integrated $(N{+}1)$-grams can be created \emph{in place} -- identical \emph{quasi}-$N$-grams will be next to each other in the $(N{+}1)$-grams table. However, creating right integrated $(N{+}1)$-grams required expensive sorting of the whole \emph{quasi}-$N$-grams table before cumulating them. Steps \ref{alg:cc_left_consistency} and \ref{alg:cc_full_consistency} can be performed simultaneously, \ie jointly maximising three tables.
+
+Ensuring counts consistency of $N$-grams requires access to counts consistent $(N{+}1)$-grams. So the above algorithm should be performed decrementing $N$ from 4 to 1 (in the case of the Google Books database).
 
 \section{Language model}
 
@@ -773,6 +810,7 @@ Intuitively, level 1 tokens are the ones that give non-zero probability in an ML
 Sizes of intervals $v(w_l)$ are proportional to the ML estimate $\hat P(w_l | w_{l-N'+1}^{l-1})$ for highest $N' \le N$ that gives a non-zero value. The constant of proportionally is different for each level of the back-off tree and depends on the back-off pseudo-counts $c(b_1), \dots, c(b_{N-1})$.
 
 \subsection{$\beta-\gamma$ algorithm for calculating back-off pseudo-counts}
+\label{sec:beta_gamma_backoff}
 
 The value $c(b_d)$ needs to reflect the probability that a not explicitly allowed token follows the context. I propose the following algorithm for assigning back-off pseudo-count in the first level of back-off tree:
 %
