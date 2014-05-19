@@ -28,6 +28,10 @@
 \crefname{table}{Table}{Tables} 
 \crefname{figure}{Figure}{Figures}
 \crefname{section}{Section}{Sections}
+% Completely redefine the equation reference format to remove parentheses around equations
+\crefformat{equation}{#2Eq.~#1#3}
+\crefrangeformat{equation}{Eqs.~#3#1#4 to~#5#2#6}
+\crefmultiformat{equation}{Eqs.~#2#1#3}{ and~#2#1#3}{, #2#1#3}{ and~#2#1#3}
 
 % Use BibTeX for bibliography management, use the hyperref package to include URLs in the entries
 \usepackage{cite}
@@ -246,7 +250,7 @@ A string $\mathbf w$ can be written as a sequence of $L$ \emph{tokens} $\mathbf 
 P(\mathbf w) = \prod_{l=1}^{L} P( w_l | w_1^{l-1} ) .
 \end{equation}
 
-Even though Eq.~\ref{eq:exact_string_probability} gives a convenient formulation of language as a stochastic process, it is computationally intractable. If the conditional probabilities are stored in tables, the conditional probability table of the $l$th token has $V^l$ entries. Total size of all tables becomes prohibitively large for even small $L$.
+Even though \cref{eq:exact_string_probability} gives a convenient formulation of language as a stochastic process, it is computationally intractable. If the conditional probabilities are stored in tables, the conditional probability table of the $l$th token has $V^l$ entries. Total size of all tables becomes prohibitively large for even small $L$.
 
 \subsection{$N$-gram language models}
 
@@ -268,7 +272,7 @@ The ML (maximum likelihood) estimate of conditional probability of $w_l$ in an $
 
 where $f(\cdot)$ is the number of occurrences of a particular sequence of tokens in the training dataset.
 
-A problem with Eq.~\ref{eq:ml_conditional_token_probability} is that most $N$-gram counts will be zero. For example, a $5$-gram model with $V \approx 10^6$ will have $V^L \approx \left( 10^6 \right)^5 = 10^{30}$ distinct $N$-grams. For every possible $5$-gram sequence to occur at least once, the training set would need to consist of more than $10^{30}$ tokens. Google Books $N$-grams database \cite{googlengrams2011}, currently the largest available dataset, is based on approximately $3.6 \times 10^{11}$ English words. As a result, a large number of grammatically correct sentences would have zero probability.
+A problem with \cref{eq:ml_conditional_token_probability} is that most $N$-gram counts will be zero. For example, a $5$-gram model with $V \approx 10^6$ will have $V^L \approx \left( 10^6 \right)^5 = 10^{30}$ distinct $N$-grams. For every possible $5$-gram sequence to occur at least once, the training set would need to consist of more than $10^{30}$ tokens. Google Books $N$-grams database \cite{googlengrams2011}, currently the largest available dataset, is based on approximately $3.6 \times 10^{11}$ English words. As a result, a large number of grammatically correct sentences would have zero probability.
 
 \subsection{Limiting database size, discounting and back-off}
 
@@ -283,7 +287,7 @@ A standard way of dealing with this problem is to introduce \emph{discounting} a
 	\end{cases}
 \end{equation}
 
-where $d(\cdot)$ and $\alpha(\cdot)$ return the discount and back-off weights -- scaling factors used to ensure that Eq.~\ref{eq:conditional_token_probability_with_backoff} gives a valid \pmf. Intuitively, they reduce the mass assigned to observed $N$-grams to make space for estimates of order $N{-}1$ and lower.
+where $d(\cdot)$ and $\alpha(\cdot)$ return the discount and back-off weights -- scaling factors used to ensure that \cref{eq:conditional_token_probability_with_backoff} gives a valid \pmf. Intuitively, they reduce the mass assigned to observed $N$-grams to make space for estimates of order $N{-}1$ and lower.
 
 $d(\cdot)$ and $\alpha(\cdot)$ are hard to choose or compute -- there exist many different schemes motivated by linguistics and statistics. Examples include Good-Turing smoothing \cite{good1953}, Kneser-Ney smoothing \cite{kneserney1995}, or stupid back-off \cite{brants2007} -- all exhibit various levels of complexity. In addition, the last does not even return a valid \pmf, but this is judged acceptable for strictly scoring applications.
 
@@ -576,7 +580,7 @@ and \emph{right counts consistent} if
 \forall_{w_1^N} ~~ f(w_1^N) \ge \sum_{w_0} f(w_0^N).
 \end{equation}
 
-$N$-grams are \emph{counts consistent} if both Eq.~\ref{eq:left_counts_consistency} and Eq.~\ref{eq:right_counts_consistency} are satisfied.
+$N$-grams are \emph{counts consistent} if both \cref{eq:left_counts_consistency,eq:right_counts_consistency} are satisfied.
 
 The above equations are easy to interpret. Left counts consistency ensures that if we add the counts of all $(N{+}1)$-grams created by appending a token to the end of an $N$-gram, their sum will not be larger than the count of the $N$-gram. Right counts consistency is defined analogously. Obviously, correctly counted $N$-grams will be counts consistent. In reality, Google Books $N$-grams are not.\footnote{This may be caused by a bug in the script which downloaded the counts from Google servers. It skipped the last $N$-gram from each of 2892 files that the database is split into. Or the Google Books database may be inconsistent itself, for example due to failure of some jobs in the distributed computation.}
 
@@ -609,7 +613,7 @@ Language model fit for steganographic application using the interval algorithm n
   \item \label{lm_req:hidden_symbols} Formatted sequence of tokens uniquely identifies the tokens.
 \end{enumerate}
 
-Requirement \ref{lm_req:non_zero_probability} warrants the use of back-off. Consider the counts from \cref{tab:the_esteem_of_many_CONT} and \cref{tab:the_esteem_of_many}. In the 5-gram model, only 5 tokens are explicitly allowed to follow \ngram{the esteem of many} and their total count is 542. If we used the ML model from Eq.~\ref{eq:ml_conditional_token_probability} to calculate their probabilities, we would assign zero probability to all tokens other than those in column $w_5$ of \cref{tab:the_esteem_of_many_CONT}. Thus, we would account for only $\frac {542} {1146} \approx 0.47$ of the probability mass and also discard the vast majority of tokens. The former problem can be mitigated by upscaling the probabilities, but the latter has no solution other than back-off.
+Requirement \ref{lm_req:non_zero_probability} warrants the use of back-off. Consider the counts from \cref{tab:the_esteem_of_many_CONT} and \cref{tab:the_esteem_of_many}. In the 5-gram model, only 5 tokens are explicitly allowed to follow \ngram{the esteem of many} and their total count is 542. If we used the ML model from \cref{eq:ml_conditional_token_probability} to calculate their probabilities, we would assign zero probability to all tokens other than those in column $w_5$ of \cref{tab:the_esteem_of_many_CONT}. Thus, we would account for only $\frac {542} {1146} \approx 0.47$ of the probability mass and also discard the vast majority of tokens. The former problem can be mitigated by upscaling the probabilities, but the latter has no solution other than back-off.
 
 \begin{table}[h]
 	\centering
@@ -637,7 +641,7 @@ Requirement \ref{lm_req:non_zero_probability} warrants the use of back-off. Cons
 
 Requirement \ref{lm_req:hidden_symbols} greatly complicates the language model. If arithmetic coding is only used to compress text, it is possible to augment the sequence during encoding by inserting \emph{explicit} back-off symbols. Their purpose is to indicate during decoding that the next token's probability is to be evaluated using a lower-order model. But in a steganographic scenario, the usage of a back-off symbol would compromise innocuousness of the system. Therefore an \emph{implicit} back-off scheme is needed.
 
-The problem with implicit back-off and using Eq.~\ref{eq:conditional_token_probability_with_backoff} \emph{exactly} is that if a token has non-zero probability in \eg a 5-gram model, by counts consistency it is also included in all lower-order models. As a result, there are 5 separate probability regions corresponding to it -- one in each back-off level (\ie in models from 5-gram to 1-gram). These intervals will not be contiguous and requirement \ref{lm_req:contiguous_probability} will be violated.
+The problem with implicit back-off and using \cref{eq:conditional_token_probability_with_backoff} \emph{exactly} is that if a token has non-zero probability in \eg a 5-gram model, by counts consistency it is also included in all lower-order models. As a result, there are 5 separate probability regions corresponding to it -- one in each back-off level (\ie in models from 5-gram to 1-gram). These intervals will not be contiguous and requirement \ref{lm_req:contiguous_probability} will be violated.
 
 \subsection{Back-off tree}
 
@@ -840,7 +844,7 @@ Dealing with excluded tokens in a deeper level $d$ of the back-off tree is not d
 
 where the counts of excluded tokens are now removed.
 
-Then the calculation from Eq.~\ref{eq:backoff_pseudocount_level1} can be repeated in an analogous way
+Then the calculation from \cref{eq:backoff_pseudocount_level1} can be repeated in an analogous way
 
 \begin{equation}
 \label{eq:backoff_pseudocount_deep_levels}
