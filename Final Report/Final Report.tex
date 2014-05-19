@@ -613,7 +613,7 @@ Language model fit for steganographic application using the interval algorithm n
   \item \label{lm_req:hidden_symbols} Formatted sequence of tokens uniquely identifies the tokens.
 \end{enumerate}
 
-Requirement \ref{lm_req:non_zero_probability} warrants the use of back-off. Consider the counts from \cref{tab:the_esteem_of_many_CONT} and \cref{tab:the_esteem_of_many}. In the 5-gram model, only 5 tokens are explicitly allowed to follow \ngram{the esteem of many} and their total count is 542. If we used the ML model from \cref{eq:ml_conditional_token_probability} to calculate their probabilities, we would assign zero probability to all tokens other than those in column $w_5$ of \cref{tab:the_esteem_of_many_CONT}. Thus, we would account for only $\frac {542} {1146} \approx 0.47$ of the probability mass and also discard the vast majority of tokens. The former problem can be mitigated by upscaling the probabilities, but the latter has no solution other than back-off.
+Requirement \ref{lm_req:non_zero_probability} warrants the use of back-off. Consider the counts from \cref{tab:the_esteem_of_many_CONT,tab:the_esteem_of_many}. In the 5-gram model, only 5 tokens are explicitly allowed to follow \ngram{the esteem of many} and their total count is 542. If we used the ML model from \cref{eq:ml_conditional_token_probability} to calculate their probabilities, we would assign zero probability to all tokens other than those in column $w_5$ of \cref{tab:the_esteem_of_many_CONT}. Thus, we would account for only $\frac {542} {1146} \approx 0.47$ of the probability mass and also discard the vast majority of tokens. The former problem can be mitigated by upscaling the probabilities, but the latter has no solution other than back-off.
 
 \begin{table}[h]
 	\centering
