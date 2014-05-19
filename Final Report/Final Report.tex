@@ -588,7 +588,7 @@ Creating count consistent of $N$-grams requires counts consistent \npgrams. So $
 \subsection{Requirements}
 \label{eq:lm_requirements}
 
-Language model fit for steganographic application using the interval algorithm needs to satisfy certain requirements:
+A language model fit for steganographic application using the interval algorithm needs to satisfy certain requirements:
 
 \begin{enumerate}
   \item \label{lm_req:non_zero_probability} Every sequence of tokens has non-zero probability.
@@ -624,11 +624,11 @@ Requirement \ref{lm_req:non_zero_probability} warrants the use of back-off. Cons
 
 Requirement \ref{lm_req:hidden_symbols} greatly complicates the language model. If arithmetic coding is only used to compress text, it is possible to augment the sequence during encoding by inserting \emph{explicit} back-off symbols. Their purpose is to indicate during decoding that the next token's probability is to be evaluated using a lower-order model. But in a steganographic scenario, the usage of a back-off symbol would compromise innocuousness of the system. Therefore an \emph{implicit} back-off scheme is needed.
 
-The problem with implicit back-off and using \cref{eq:conditional_token_probability_with_backoff} \emph{exactly} is that if a token has non-zero probability in \eg a 5-gram model, by counts consistency it is also included in all lower-order models. As a result, there are 5 separate probability regions corresponding to it -- one in each back-off level (\ie in models from 5-gram to 1-gram). These intervals will not be contiguous and requirement \ref{lm_req:contiguous_probability} will be violated.
+The problem with implicit back-off and using \cref{eq:conditional_token_probability_with_backoff} \emph{exactly} is that if a token has non-zero probability in \eg a 5-gram model, by consistency it is also included in all lower-order models. As a result, there are 5 separate probability regions corresponding to it -- one in each back-off level (\ie in models from 5-gram to 1-gram). These intervals will not be contiguous and requirement \ref{lm_req:contiguous_probability} will be violated.
 
 \subsection{Back-off tree}
 
-\cref{fig:backoff_tree} shows how to construct a \emph{back-off tree} where each token is represented by a single leaf. Each leaf corresponds to a contiguous, non-zero interval. The set of all leaf intervals partitions $[0,1)$. As a result, they tree can be interpreted as giving a \pmf over all tokens that satisfies all requirements from the previous section.
+\cref{fig:backoff_tree} shows how to construct a \emph{back-off tree} where each token is represented by a single leaf. Each leaf corresponds to a contiguous, non-zero interval. The set of all leaf intervals partitions $[0,1)$. As a result, the tree can be interpreted as giving a \pmf over all tokens that satisfies all requirements from the previous section.
 
 % Define a new tikz style for drawing vertices
 \newlength{\vertexSize}
@@ -798,11 +798,11 @@ The problem with implicit back-off and using \cref{eq:conditional_token_probabil
 \caption{\label{fig:backoff_tree}Example back-off tree for context $w_{l-4}^{l-1}$, \ie with $N=5$. Leaf labels $w_l \in \left\{ 1, \dots, V \right\}$ correspond to token indices. In this example $V=22$.}
 \end{figure}
 
-A different back-off tree is defined for each context $w_{l-N+1}^{l-1}$. The first level contains leaf nodes corresponding to tokens that belong to the set $\mathcal W_1 = \left\{ w_l : f(w_{l-N+1}^l) \ge C \right\}$ and a single back-off parent node $b_1$. Each node is assigned a count $c(\cdot)$. For the leaves the count is simply $c(w_l) = f(w_{l-N+1}^l)$. Calculating the back-off pseudo-count $c(b_1)$ is covered in the next section. Nodes are arranged in the following way: leaves in order of increasing index followed by the back-off node. They partition $[0,1)$ into corresponding intervals $v(\cdot)$ with size proportional to the node count.
+A different back-off tree is defined for each context $w_{l-N+1}^{l-1}$. The first level contains leaf nodes corresponding to tokens that belong to the set $\mathcal W_1 = \left\{ w_l : f(w_{l-N+1}^l) \ge C \right\}$ and a single back-off parent node $b_1$. Each node is assigned a count $c(\cdot)$. For the leaves the count is simply $c(w_l) = f(w_{l-N+1}^l)$. Calculating the back-off pseudo-count $c(b_1)$ will be addressed later. Nodes are arranged in the following way: leaves in order of increasing index followed by the back-off node. They partition $[0,1)$ into corresponding intervals $v(\cdot)$ with size proportional to the node count.
 
-Subsequent levels of depth $d \in \left\{ 2, \dots, N \right\}$ are constructed analogously. One difference is that the set of leaf nodes is $\mathcal W_d = \left\{ w_l : f(w_{l-N+d}^l) \ge C \land f(w_{l-N+d-1}^l) < C \right\}$. Nodes do not partition $[0,1)$, but $v(b_{d-1})$ -- interval assigned to the back-off node in the previous level. There is also no back-off node in the last level.
+Subsequent levels of depth $d \in \left\{ 2, \dots, N \right\}$ are constructed analogously. One difference is that the set of leaf nodes is $\mathcal W_d = \left\{ w_l : f(w_{l-N+d}^l) \ge C \land f(w_{l-N+d-1}^l) < C \right\}$. Node counts are $c(w_l) = f(w_{l-N+d}^l)$ similar to before. But instead of $[0,1)$ the nodes partition $v(b_{d-1})$ -- interval assigned to the back-off node in the previous level. In the last level there is also no back-off node.
 
-Intuitively, level 1 tokens are the ones that give non-zero probability in an ML language model of order $N$. Level 2 tokens give non-zero probability in an ML model of order $N-1$, but do not include tokens from level 1. Tokens in levels of depth $d \ge 3$ are chosen analogously and exclude tokens from \emph{all} previous levels. By counts consistency it suffices to check that $f(w_{l-N+(d-1)}^l) \ge C$ to exclude a token from level $d$. If it satisfies the inequality, it must have appeared in \emph{some} previous level: $d-1$ or earlier.
+Intuitively, level 1 tokens are the ones that give non-zero probability in an ML language model of order $N$. Level 2 tokens give non-zero probability in an ML model of order $N-1$, but do not include tokens from level 1. Tokens in levels of depth $d \ge 3$ are chosen analogously and exclude tokens from \emph{all} previous levels. By counts consistency, it suffices to check that $f(w_{l-N+(d-1)}^l) \ge C$ to exclude a token from level $d$. If it satisfies the inequality, it must have appeared in \emph{some} previous level: $d-1$ or earlier.
 
 Sizes of intervals $v(w_l)$ are proportional to the ML estimate $\hat P(w_l | w_{l-N'+1}^{l-1})$ for highest $N' \le N$ that gives a non-zero value. The constant of proportionally is different for each level of the back-off tree and depends on the back-off pseudo-counts $c(b_1), \dots, c(b_{N-1})$.
 
