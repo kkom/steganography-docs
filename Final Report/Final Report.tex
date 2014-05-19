@@ -294,13 +294,13 @@ $d(\cdot)$ and $\alpha(\cdot)$ are hard to choose or compute -- there exist many
 
 \subsubsection{Discarding $N$-grams containing digits}
 
-The Google Books $N$-grams database is based on many books, some of which include data tables. As a result, they contain a large number of $N$-grams consisting of just numbers and punctuation marks. Randomly generated text would sometimes include long sequences of those. To avoid such possibility, I decided to create a second version of the database where $N$-grams containing digits are discarded. The only trade-off is that dates that use digits to write days of the month will no longer be a part of the language.
+The Google Books $N$-grams database is based on many books, some of which include data tables. As a result, they contain a large number of $N$-grams consisting of just numbers and punctuation marks. Randomly generated text would sometimes include long sequences of those. To avoid such a possibility, I decided to create a second version of the database where $N$-grams containing digits are discarded. The only trade-off is that dates that use digits to write days of the month will no longer be a part of the language.
 
 \subsubsection{Normalising tokens using the \texttt{unidecode} package}
 
 Google Books team made the best effort to represent each character of a token as precisely as possible using the full range of Unicode characters. This may be problematic -- equivalent words may be written in multiple ways and some characters will be impossible to represent using certain media. In addition, interpretation of text will be very sensitive to encoding -- not only the character glyph, but its underlying Unicode representation will matter.
 
-To mitigate these problem, the tokens are \emph{normalised}. The first step is to transliterate Unicode text into plain 7-bit ASCII using using the \texttt{unidecode} Python package.\cite{lib:unidecode} Following this, uppercase letters are converted to lowercase. Finally, the tokens are filtered to contain only characters from Tab.~\ref{tab:normal_characters}.
+To mitigate these problems, the tokens are \emph{normalised}. The first step is to transliterate Unicode text into plain 7-bit ASCII using using the \texttt{unidecode} Python package.\cite{lib:unidecode} Following this, uppercase letters are converted to lowercase. Finally, the tokens are filtered to contain only characters from Tab.~\ref{tab:normal_characters}.
 
 \begin{table}[h]
 	\centering
@@ -314,7 +314,7 @@ To mitigate these problem, the tokens are \emph{normalised}. The first step is t
 	\caption{\label{tab:normal_characters}Characters that can be a part of a normalised token.}
 \end{table}
 
-Tab.~\ref{tab:normalisation_examples} shows examples of the normalisation procedure. Note that some tokens are normalised to an empty string -- this is not a problem since they will be simply ignored. However, \texttt{unidecode} sometimes transliterates special symbols to \emph{[?]}. Ideally these situations should be detected and handled using an empty string, but they are rare enough not to affect the model in a considerable way.
+Tab.~\ref{tab:normalisation_examples} shows examples of the normalisation procedure. Note that some tokens are normalised to an empty string -- this is not a problem since they will be simply ignored. However, \texttt{unidecode} sometimes transliterates special symbols to a question mark in square brackets, \ie \emph{[?]}. Ideally these situations should be detected and handled using an empty string, but they are rare enough not to affect the model in a considerable way if ignored. Also, despite being understandable, the normalisation of \emph{Universitätsstraße} is strictly wrong -- in German \emph{ä} should be transliterated to \emph{ae}\cite{standard:din5007v2}.
 
 \begin{table}[h]
 	\centering
@@ -327,7 +327,7 @@ Tab.~\ref{tab:normalisation_examples} shows examples of the normalisation proced
 	Universitätsstraße & universitatsstrasse \\
 	\copyright & (c) \\
 	$\leq$ & \textless= \\
-	$\clubsuit$ & \\
+	$\clubsuit$ & \emph{empty string} \\
 	$\preccurlyeq$ & [?]
 	\end{tabular}
 	\caption{\label{tab:normalisation_examples}Example tokens containing special characters before and after normalisation.}
