@@ -232,14 +232,14 @@ The notation and theory in section \ref{sec:snlm} is mostly based on \cite{4f11:
 
 \subsection{Text as the output of a stochastic process}
 
-A string $\mathbf w$ can be regarded as a sequence of $L$ \emph{tokens} $\mathbf w = [ w_1, \dots, w_L ] \equiv w_1^L$. Tokens are atomic elements of text such as words or punctuation marks. $\mathbf w$ can be regarded as an $L$-dimensional vector of jointly distributed random variables $w_l \in \{1, \dots, V\}$, where $V$ is the number of distinct tokens. According to the chain rule of probability, we can factorise $P(\mathbf w)$ as follows
+A string $\mathbf w$ can be written as a sequence of $L$ \emph{tokens} $\mathbf w = [ w_1, \dots, w_L ] \equiv w_1^L$. Tokens are atomic elements of text such as words or punctuation marks. $w_l$ corresponds to the index of the token; for $V$ distinct tokens it takes values in $\{1, \dots, V\}$. $\mathbf w$ can be regarded as a realisation of an $L$-dimensional vector $\mathbf W$ of jointly distributed random variables $W_l$. According to the chain rule of probability, we can factorise $P(\mathbf w)$ as follows
 
 \begin{equation}
 \label{eq:exact_string_probability}
 P(\mathbf w) = \prod_{l=1}^{L} P( w_l | w_1^{l-1} ) .
 \end{equation}
 
-Even though Eq.~\ref{eq:exact_string_probability} gives a convenient formulation of language as a stochastic process, it is computationally intractable. The conditional probabilities need to be stored in tables. Conditional probability table of just the last token would have $V^L$ entries. With $V \approx 10^6$, this number becomes prohibitively large for even small $L$.
+Even though Eq.~\ref{eq:exact_string_probability} gives a convenient formulation of language as a stochastic process, it is computationally intractable. If the conditional probabilities are stored in tables, the conditional probability table of the $l$th token has $V^l$ entries. Total size of all tables becomes prohibitively large for even small $L$.
 
 \subsection{$N$-gram language models}
 
