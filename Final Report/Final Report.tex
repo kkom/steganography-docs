@@ -276,13 +276,13 @@ The ML (maximum likelihood) estimate of conditional probability of $w_l$ in an $
 \hat P( w_l | w_{l-N+1}^{l-1} ) = \frac {f(w_{l-N+1}^l)} {f(w_{l-N+1}^{l-1})},
 \end{equation}
 
-where $f(\cdot)$ is the number of occurrences of a particular sequence of tokens in the training dataset.
+where $f(\cdot)$ is the number of occurrences of a particular sequence of tokens in training data.
 
-A problem with \cref{eq:ml_conditional_token_probability} is that most $N$-gram counts will be zero. For example, a $5$-gram model with $V \approx 10^6$ will have $V^N \approx \left( 10^6 \right)^5 = 10^{30}$ distinct $N$-grams. For every possible $5$-gram sequence to occur at least once, the training set would need to consist of more than $10^{30}$ tokens. Google Books $N$-grams database \cite{googlengrams2011}, currently the largest available dataset, is based on approximately $3.6 \times 10^{11}$ English words. As a result, a large number of grammatically correct sentences will have zero probability.
+A problem with \cref{eq:ml_conditional_token_probability} is that most $N$-gram counts will be zero. For example, a $5$-gram model with $V \approx 10^6$ will have $V^N \approx \left( 10^6 \right)^5 = 10^{30}$ distinct $N$-grams. For every possible $5$-gram sequence to occur at least once, training data would need to consist of more than $10^{30}$ tokens. Google Books $N$-gram Corpus \cite{googlengrams2011}, currently the largest available dataset, is based on approximately $3.6 \times 10^{11}$ English words. As a result, a large number of grammatically correct sentences will have zero probability.
 
-\subsection{Limiting database size, discounting and back-off}
+\subsection{Limiting corpus size, discounting and back-off}
 
-A standard way of dealing with this problem is to introduce \emph{discounting} and \emph{back-off} to the model. In addition, $N$-grams with counts below a threshold $C$ are sometimes discarded from the database to conserve storage space. The conditional distribution of the $l$th token becomes
+A standard way of dealing with this problem is to introduce \emph{discounting} and \emph{back-off} to the model. In addition, $N$-grams with counts below a threshold $C$ are sometimes discarded from the corpus to conserve storage space. The conditional distribution of the $l$th token becomes
 
 \begin{equation}
 	\label{eq:conditional_token_probability_with_backoff}
@@ -311,7 +311,7 @@ $d(\cdot)$ and $\alpha(\cdot)$ are hard to choose or compute -- there exist many
 
 \subsubsection{Discarding $N$-grams containing digits}
 
-The Google Books $N$-grams database is based on many books, some of which include data tables. As a result, they contain a large number of $N$-grams consisting of just numbers and punctuation marks. Randomly generated text would sometimes include long sections of those. To avoid such a possibility, I decided to create a second version of the database where $N$-grams containing digits are discarded. The trade-off is that most dates like \emph{July~4, 1776} will no longer be a part of the language.
+The Google Books $N$-gram Corpus is based on many books, some of which include data tables. As a result, they contain a large number of $N$-grams consisting of just numbers and punctuation marks. Randomly generated text would sometimes include long sections of those. To avoid such a possibility, I decided to create a second version of the corpus where $N$-grams containing digits are discarded. The trade-off is that most dates like \emph{July~4, 1776} will no longer be a part of the language.
 
 \subsubsection{Normalising tokens using the \texttt{unidecode} package}
 
@@ -364,10 +364,10 @@ To mitigate these problems, the tokens are \emph{normalised}. The first step is 
 	2 & it & 's & & \num{78658875} \\
 	3 & it & ' & s & \num{7060268}
 	\end{tabular}
-	\caption{\label{tab:its_ngrams}Ways in which \emph{it's} is stored in Google Books $N$-grams (after normalisation).}
+	\caption{\label{tab:its_ngrams}Ways in which \emph{it's} is stored in the Google Books $N$-gram Corpus (after normalisation).}
 \end{table}
 
-The database needs to be processed in a way such that all entries from \cref{tab:its_ngrams} are absorbed into a single $N$-gram. It can be achieved through \emph{exploding tokens by punctuation}. Let us classify tokens into two groups: \emph{extended tokens} and \emph{base tokens}. A base token can consist of any number of lowercase letters and digits (\ie alphanumeric characters) or a single punctuation mark. An extended token is a concatenation of base tokens, where two alphanumeric base tokens cannot appear next to each other. Exploding a token by punctuation is defined as finding the corresponding base token sequence of an extended token.
+The corpus needs to be processed in a way such that all entries from \cref{tab:its_ngrams} are absorbed into a single $N$-gram. It can be achieved through \emph{exploding tokens by punctuation}. Let us classify tokens into two groups: \emph{extended tokens} and \emph{base tokens}. A base token can consist of any number of lowercase letters and digits (\ie alphanumeric characters) or a single punctuation mark. An extended token is a concatenation of base tokens, where two alphanumeric base tokens cannot appear next to each other. Exploding a token by punctuation is defined as finding the corresponding base token sequence of an extended token.
 
 \begin{table}[h]
 	\centering
@@ -389,11 +389,11 @@ If we explode tokens in \cref{tab:its_ngrams}, all $N$-grams will correspond to 
 
 \subsection{Induced counts of base $N$-grams}
 
-The Google Books database supplies counts of 1- to 5-grams made of unnormalised extended tokens. In order to be able to interpret and generate plain text in an unambiguous way, we need to operate on tokens that are normalised and exploded by punctuation. We know how to apply normalisation and explosion to plain text, but we do not know the statistics of the resulting tokens -- we do not have $N$-gram counts from a training dataset processed in this way. We need to induce such counts from the Google Books database.
+The Google Books $N$-gram Corpus supplies counts of 1- to 5-grams of unnormalised extended tokens. In order to be able to interpret and generate plain text in an unambiguous way, we need to operate on tokens that are normalised and exploded by punctuation. We know how to apply normalisation and explosion to plain text, but we do not know the statistics of the resulting tokens -- we do not have $N$-gram counts from training data processed in this way. We need to induce such counts from the Google Books $N$-gram Corpus.
 
 \subsubsection{Extended and base $N$-grams}
 
-\emph{Extended $N$-gram} will refer to a sequence of $N$ unnormalised extended tokens (as stored in the Google Books database). \emph{Base $N$-gram} will refer to a sequence of $N$ normalised base tokens (counts of which we wish to know). See \cref{fig:extended_and_base_ngrams} for examples of both.
+\emph{Extended $N$-gram} will refer to a sequence of $N$ unnormalised extended tokens (as stored in the Google Books $N$-gram Corpus). \emph{Base $N$-gram} will refer to a sequence of $N$ normalised base tokens (counts of which we wish to know). See \cref{fig:extended_and_base_ngrams} for examples of both.
 
 % 	ngramMark: draw a horizontal segment signifying ngram boundary
 %
@@ -567,13 +567,13 @@ and \emph{right counts consistent} if
 
 $N$-grams are \emph{counts consistent} if both \cref{eq:left_counts_consistency,eq:right_counts_consistency} are satisfied.
 
-The above equations are easy to interpret. Left counts consistency ensures that if we add the counts of all \npgrams created by appending a token to the end of an $N$-gram, their sum will not be larger than the count of the $N$-gram. Right counts consistency is defined analogously. Obviously, correctly counted $N$-grams will be counts consistent. In reality, Google Books $N$-grams are not.\footnote{This may be caused by a bug in the script which downloaded the counts from Google servers. It skipped the last $N$-gram from each of 2892 files that the database is split into. Or the Google Books database may be inconsistent itself, for example due to failure of some jobs in the distributed computation.}
+The above equations are easy to interpret. Left counts consistency ensures that if we add the counts of all \npgrams created by appending a token to the end of an $N$-gram, their sum will not be larger than the count of the $N$-gram. Right counts consistency is defined analogously. Obviously, correctly counted $N$-grams will be counts consistent. In reality, Google Books $N$-grams are not.\footnote{This may be caused by a bug in the script that processed $N$-gram counts on-the-fly from Google servers. It skipped the last $N$-gram from each of the 2892 files that the corpus is split into. Or the Google Books $N$-gram Corpus may be inconsistent itself, for example due to the failure of some jobs during its distributed creation.}
 
 \subsubsection{Ensuring counts consistency}
 
-Counts consistency is assumed in some parts of the stegosystem, for example in the $\beta{-}\gamma$ estimation in \cref{sec:beta_gamma_backoff}. Since inconsistencies are very rare (in the order of \num{1000} for the whole database of about \num{1500000000} $N$-grams), they can be forcefully corrected without visibly distorting information in the counts.
+Counts consistency is assumed in some parts of the stegosystem, for example in the $\beta{-}\gamma$ estimation in \cref{sec:beta_gamma_backoff}. Since inconsistencies are very rare (in the order of \num{1000} for the whole corpus of about \num{1500000000} $N$-grams), they can be forcefully corrected without visibly distorting information in the counts.
 
-In the case of Google Books database, 5-grams are asserted to be counts consistent, since there are no 6-grams to check with. In general, $N$-grams are made counts consistent in the following way:
+In the case of Google Books $N$-gram Corpus, 5-grams are asserted to be counts consistent, since there are no 6-grams to check with. In general, $N$-grams are made counts consistent in the following way:
 
 \begin{enumerate}
 \item \label{alg:cc_left_integration} \npgram counts are \emph{left integrated}. Last token is dropped from each \npgram to create a \emph{quasi}-$N$-gram. The counts of all identical \emph{quasi}-$N$-grams are cumulated.
@@ -811,7 +811,7 @@ Sizes of intervals $v(w_l)$ are proportional to the ML estimate $\hat P(w_l | w_
 \subsection{$\beta{-}\gamma$ back-off pseudo-count estimation}
 \label{sec:beta_gamma_backoff}
 
-Count of the back-off node $c(b_d)$ needs to reflect the probability that a not explicitly allowed token follows the context. Let us start with the first level of the tree. Context count, \ie the number of times the context was observed in the training dataset, is given by
+Count of the back-off node $c(b_d)$ needs to reflect the probability that a not explicitly allowed token follows the context. Let us start with the first level of the tree. Context count, \ie the number of times the context was observed in training data, is given by
 
 \begin{equation}
 \label{eq:context_count_level1}
@@ -842,7 +842,7 @@ Then the calculation from \cref{eq:backoff_pseudocount_level1} can be repeated i
 c(b_d) = \ceil*{ \beta \bracket*{ \overline m_d - \sum_{w_l \in \mathcal W_d} f(w_{l-N+d}^l) } + \gamma ~ \overline m_d }.
 \end{equation}
 
-The only special case to consider is when $m_1 = 0$ or $\overline m_d = 0$. This can simply occur if the context was not observed in the training dataset frequently enough to be in the database, but also in more subtle situations.\footnote{If all tokens in a level are excluded \emph{and} the context count $f(w_{l-N+d}^{l-1})$ is equal to the sum of excluded counts $\sum_{w_l \in \mathcal W_1 \cup \dots \cup \mathcal W_{d-1}} f(w_{l-N+d}^l)$ then $\overline m_d$ will be 0. This happens if the context was observed in the training dataset only followed by the excluded tokens.} Back-off pseudo-count would be then 0, however the back-off node would be the only node in its level anyway. One way to deal with this problem is to give the back-off node an arbitrary non-zero pseudo-count, for example 1.
+The only special case to consider is when $m_1 = 0$ or $\overline m_d = 0$. This can simply occur if the context was not observed in training data frequently enough to be in the corpus, but also in more subtle situations.\footnote{If all tokens in a level are excluded \emph{and} the context count $f(w_{l-N+d}^{l-1})$ is equal to the sum of excluded counts $\sum_{w_l \in \mathcal W_1 \cup \dots \cup \mathcal W_{d-1}} f(w_{l-N+d}^l)$ then $\overline m_d$ will be 0. This happens if the context was observed in training data only followed by the excluded tokens.} Back-off pseudo-count would be then 0, however the back-off node would be the only node in its level anyway. One way to deal with this problem is to give the back-off node an arbitrary non-zero pseudo-count, for example 1.
 
 \newpage
 \section{Detailed description of the stegosystem}
