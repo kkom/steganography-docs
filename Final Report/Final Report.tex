@@ -24,7 +24,9 @@
 
 % Use the cleveref package for automatic formatting of reference
 \usepackage{cleveref}
-\crefname{table}{Table}{Tables} % use capital letters for referencing tables
+% Start all references with capital letters
+\crefname{table}{Table}{Tables} 
+\crefname{figure}{Figure}{Figures}
 
 % Use BibTeX for bibliography management, use the hyperref package to include URLs in the entries
 \usepackage{cite}
@@ -172,7 +174,7 @@ The interval algorithm \cite{hanhoshi1997} provides a means of sampling from an 
 
 The sequence mapping algorithm starts by mapping the empty sequence $[~]$ to the interval $[0,1)$. For any sequence, its interval is partitioned into subintervals corresponding to the sequence extended by a single term. The size of each interval is chosen to be proportional to the probability of the last term occurring given the preceding sequence. The order of the subintervals does not matter, but needs to be consistent if reverse mapping from an interval to a sequence is to be performed. By the chain rule of probability, the size of the resulting interval is equal to the probability of observing its sequence. Consequently, only sequences of non-zero probability can be mapped. For a more detailed overview of arithmetic coding see \cite{coverthomas:sfecoding}.
 
-The interval algorithm works by continuously mapping the observed input sequence to successive intervals defined by the stochastic model of the source. In parallel, the intervals are reverse mapped to an output sequence according to the stochastic model of the target. Terms of the output sequence can be generated as long as its interval is a superinterval of the input sequence interval. See Fig.~\ref{fig:interval_algorithm} for an example of the procedure.
+The interval algorithm works by continuously mapping the observed input sequence to successive intervals defined by the stochastic model of the source. In parallel, the intervals are reverse mapped to an output sequence according to the stochastic model of the target. Terms of the output sequence can be generated as long as its interval is a superinterval of the input sequence interval. See \cref{fig:interval_algorithm} for an example of the procedure.
 
 \begin{figure}[h]
 	\centering
@@ -377,7 +379,7 @@ If we explode tokens in \cref{tab:its_ngrams}, all $N$-grams will correspond to 
 
 Google Books database contains counts of 1- to 5-grams that consist of unnormalised extended tokens. In order to be able to interpret and generate plain text in an unambiguous way, we need to operate on tokens that are normalised and exploded by punctuation. We know how to apply normalisation and explosion to plain text, but we do not have $N$-gram counts from training dataset processed in this way. We need to induce those from the original counts.
 
-\emph{Extended $N$-gram} will refer to a sequence of $N$ unnormalised extended tokens (as stored in the Google Books counts database) and \emph{base $N$-gram} -- a sequence of $N$ normalised base tokens (counts of which we wish to know). See Fig.~\ref{fig:extended_and_base_ngrams} for examples.
+\emph{Extended $N$-gram} will refer to a sequence of $N$ unnormalised extended tokens (as stored in the Google Books counts database) and \emph{base $N$-gram} -- a sequence of $N$ normalised base tokens (counts of which we wish to know). See \cref{fig:extended_and_base_ngrams} for examples.
 
 % 	ngramMark: draw a horizontal segment signifying ngram boundary
 %
@@ -506,7 +508,7 @@ Google Books database contains counts of 1- to 5-grams that consist of unnormali
 
 Inducing counts of base $N$-grams from extended 1-grams is easy. It is enough to generate base token sequences of the extended 1-grams and find all base $N$-grams in each of them -- let us call them \emph{induced $N$-grams}.
 
-Fig.~\ref{fig:extended_and_base_ngrams} should make it clear why this is the case. Base $N$-grams \ngram{cross}, \ngram{-}, \ngram{section}, \ngram{cross -}, \ngram{- section} and \ngram{cross - section} occur as many times as the extended 1-gram \ngram{cross-section}.
+\cref{fig:extended_and_base_ngrams} should make it clear why this is the case. Base $N$-grams \ngram{cross}, \ngram{-}, \ngram{section}, \ngram{cross -}, \ngram{- section} and \ngram{cross - section} occur as many times as the extended 1-gram \ngram{cross-section}.
 
 As an example, consider processing the extended 1-gram from \cref{tab:extended_1gram}. 35 base $N$-grams listed in \cref{tab:extended_1gram_induced_base_ngrams} can be induced from it. Each should be inserted in its respective counts table using the count of the extended 1-gram, in this case 58. Note that the \ngram{-} token will be inserted twice. It indeed should be assigned a total count of $2 \times 58 = 116$, as it occurs twice in the extended 1-gram.
 
@@ -638,7 +640,7 @@ The problem with implicit back-off and using Eq.~\ref{eq:conditional_token_proba
 
 \subsection{Back-off tree}
 
-Fig.~\ref{fig:backoff_tree} shows how to construct a \emph{back-off tree} where each token is represented by a single leaf. Each leaf corresponds to a contiguous, non-zero interval. The set of all leaf intervals partitions $[0,1)$. As a result, they tree can be interpreted as giving a \pmf over all tokens that satisfies all requirements from the previous section.
+\cref{fig:backoff_tree} shows how to construct a \emph{back-off tree} where each token is represented by a single leaf. Each leaf corresponds to a contiguous, non-zero interval. The set of all leaf intervals partitions $[0,1)$. As a result, they tree can be interpreted as giving a \pmf over all tokens that satisfies all requirements from the previous section.
 
 % Define a new tikz style for drawing vertices
 \newlength{\vertexSize}
