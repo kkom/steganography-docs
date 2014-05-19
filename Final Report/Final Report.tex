@@ -27,6 +27,7 @@
 % Start all references with capital letters
 \crefname{table}{Table}{Tables} 
 \crefname{figure}{Figure}{Figures}
+\crefname{section}{Section}{Sections}
 
 % Use BibTeX for bibliography management, use the hyperref package to include URLs in the entries
 \usepackage{cite}
@@ -234,7 +235,7 @@ The interval algorithm works by continuously mapping the observed input sequence
 \section{Statistical natural language models}
 \label{sec:snlm}
 
-The notation and theory in section \ref{sec:snlm} is mostly based on \cite{4f11:statistical_language_models, 4f11:smt_systems, coursera:nlp}.
+The notation and theory in \cref{sec:snlm} is mostly based on \cite{4f11:statistical_language_models, 4f11:smt_systems, coursera:nlp}.
 
 \subsection{Text as the output of a stochastic process}
 
@@ -581,7 +582,7 @@ The above equations are easy to interpret. Left counts consistency ensures that 
 
 \subsubsection{Ensuring counts consistency}
 
-Counts consistency is assumed in some parts of the stegosystem, for example by the $\beta - \gamma$ algorithm in Section \ref{sec:beta_gamma_backoff}. Since inconsistencies are very rare (in the order of \num{1000} for the whole database of about \num{1500000000} $N$-grams), they can be corrected without visibly distorting information in the counts.
+Counts consistency is assumed in some parts of the stegosystem, for example by the $\beta - \gamma$ algorithm in \cref{sec:beta_gamma_backoff}. Since inconsistencies are very rare (in the order of \num{1000} for the whole database of about \num{1500000000} $N$-grams), they can be corrected without visibly distorting information in the counts.
 
 In the case of Google Books database, 5-grams are asserted to be counts consistent, since there are no 6-grams to check with. In general, $N$-grams are made counts consistent in the following way:
 
