@@ -232,38 +232,34 @@ The notation and theory in section \ref{sec:snlm} is mostly based on \cite{4f11:
 
 \subsection{Text as the output of a stochastic process}
 
-A string $\mathbf w$ can be regarded as a sequence of $L$ \emph{tokens} $w_1, \dots, w_L$. Tokens are atomic elements of text such as words or punctuation marks:
-
-\begin{equation}
-\mathbf w = [ w_1, \dots, w_L ] \equiv w_1^L
-\end{equation}
-
-$\mathbf w$ can be regarded as an $L$-dimensional vector of jointly distributed random variables $w_l \in \{1, \dots, V\}$, where $V$ is the number of distinct tokens. According to the chain rule of probability, we can factorise $P(\mathbf w)$ in the following way:
+A string $\mathbf w$ can be regarded as a sequence of $L$ \emph{tokens} $\mathbf w = [ w_1, \dots, w_L ] \equiv w_1^L$. Tokens are atomic elements of text such as words or punctuation marks. $\mathbf w$ can be regarded as an $L$-dimensional vector of jointly distributed random variables $w_l \in \{1, \dots, V\}$, where $V$ is the number of distinct tokens. According to the chain rule of probability, we can factorise $P(\mathbf w)$ as follows
 
 \begin{equation}
 \label{eq:exact_string_probability}
-P(\mathbf w) = \prod_{l=1}^{L} P( w_l | w_1^{l-1} )
+P(\mathbf w) = \prod_{l=1}^{L} P( w_l | w_1^{l-1} ) .
 \end{equation}
 
 Even though Eq.~\ref{eq:exact_string_probability} gives a convenient formulation of language as a stochastic process, it is computationally intractable. The conditional probabilities need to be stored in tables. Conditional probability table of just the last token would have $V^L$ entries. With $V \approx 10^6$, this number becomes prohibitively large for even small $L$.
 
 \subsection{$N$-gram language models}
 
-The usual solution is to restrict the size of the context to $N-1$ previous tokens, resulting in an approximate $N$-gram language model:
+The usual solution is to restrict the size of the context to $N-1$ previous tokens, resulting in an approximate $N$-gram language model
 
 \begin{equation}
 \label{eq:ngram_string_probability}
-P(\mathbf w) \approx P_{\text{$N$-gram}}(\mathbf w) \equiv \prod_{l=1}^{L} P( w_l | w_{l-N+1}^{l-1} )
+P(\mathbf w) \approx P_{\text{$N$-gram}}(\mathbf w) \equiv \prod_{l=1}^{L} P( w_l | w_{l-N+1}^{l-1} ).
 \end{equation}
 
 \subsection{Estimating ML parameters}
 
-Eq.~\ref{eq:ml_conditional_token_probability} gives the ML (maximum likelihood) estimate of conditional probability of $w_l$ in an $N$-gram model. $f(\cdot)$ is the number of occurrences of a particular sequence of tokens in the training dataset.
+The ML (maximum likelihood) estimate of conditional probability of $w_l$ in an $N$-gram model is
 
 \begin{equation}
 \label{eq:ml_conditional_token_probability}
-\hat P( w_l | w_{l-N+1}^{l-1} ) = \frac {f(w_{l-N+1}^l)} {f(w_{l-N+1}^{l-1})}
+\hat P( w_l | w_{l-N+1}^{l-1} ) = \frac {f(w_{l-N+1}^l)} {f(w_{l-N+1}^{l-1})},
 \end{equation}
+
+where $f(\cdot)$ is the number of occurrences of a particular sequence of tokens in the training dataset.
 
 A problem with Eq.~\ref{eq:ml_conditional_token_probability} is that most $N$-gram counts will be zero. For example, a $5$-gram model with $V \approx 10^6$ will have $V^L \approx \left( 10^6 \right)^5 = 10^{30}$ distinct $N$-grams. For every possible $5$-gram sequence to occur at least once, the training set would need to consist of $\ge 10^{30}$ tokens. Currently largest available dataset is based on $\approx 3.6 \times 10^{11}$ English words. \cite{googlengrams2011} As a result, a large number of grammatically correct sentences would have zero probability.
 
@@ -276,11 +272,11 @@ A standard way of dealing with this problem is by introducing \emph{discounting}
 	P( w_l | w_{l-N+1}^{l-1} ) =
 	\begin{cases}
 		d (w_{l-N+1}^l) ~ \frac {f\left(w_{l-N+1}^l \right)} {f\left(w_{l-N+1}^{l-1} \right)} & \text{if $f(w_{l-N+1}^l) \ge C$},\\
-		\alpha (w_{l-N+1}^l) ~ P( w_l | w_{l-N+2}^{l-1} ) & \text{otherwise}.
+		\alpha (w_{l-N+1}^l) ~ P( w_l | w_{l-N+2}^{l-1} ) & \text{otherwise},
 	\end{cases}
 \end{equation}
 
-$d(\cdot)$ and $\alpha(\cdot)$ return the discount and back-off weights -- scaling factors used to ensure that Eq.~\ref{eq:conditional_token_probability_with_backoff} is a valid \pmf. Intuitively, they reduce the mass assigned to observed $N$-grams to accommodate for estimates of order $N-1$ and lower. $d(\cdot)$ and $\alpha(\cdot)$ are hard to choose or compute -- there exist many different schemes motivated by linguistics and statistics. Examples include Good-Turing smoothing,\cite{good1953} Kneser-Ney smoothing,\cite{kneserney1995} or stupid back-off.\cite{brants2007} All exhibit various levels of complexity and for example the last one does not even return a valid \pmf.
+where $d(\cdot)$ and $\alpha(\cdot)$ return the discount and back-off weights -- scaling factors used to ensure that Eq.~\ref{eq:conditional_token_probability_with_backoff} is a valid \pmf. Intuitively, they reduce the mass assigned to observed $N$-grams to accommodate for estimates of order $N-1$ and lower. $d(\cdot)$ and $\alpha(\cdot)$ are hard to choose or compute -- there exist many different schemes motivated by linguistics and statistics. Examples include Good-Turing smoothing,\cite{good1953} Kneser-Ney smoothing,\cite{kneserney1995} or stupid back-off.\cite{brants2007} All exhibit various levels of complexity and for example the last one does not even return a valid \pmf.
 
 \section{Processing and storing $N$-gram counts}
 
@@ -557,18 +553,18 @@ The above restriction can be easily stated in an equivalent way. A base $N$-gram
 
 \subsubsection{Definition}
 
-Once we have a table of sorted $N$-grams, we need to ensure that their counts are consistent. $N$-grams are defined to be \emph{left counts consistent} if:
+Once we have a table of sorted $N$-grams, we need to ensure that their counts are consistent. $N$-grams are defined to be \emph{left counts consistent} if
 
 \begin{equation}
 \label{eq:left_counts_consistency}
-\forall_{w_1^N} ~~ f(w_1^N) \ge \sum_{w_{N+1}} f(w_1^{N+1})
+\forall_{w_1^N} ~~ f(w_1^N) \ge \sum_{w_{N+1}} f(w_1^{N+1}),
 \end{equation}
 
-and \emph{right counts consistent} if:
+and \emph{right counts consistent} if
 
 \begin{equation}
 \label{eq:right_counts_consistency}
-\forall_{w_1^N} ~~ f(w_1^N) \ge \sum_{w_0} f(w_0^N)
+\forall_{w_1^N} ~~ f(w_1^N) \ge \sum_{w_0} f(w_0^N).
 \end{equation}
 
 $N$-grams are \emph{counts consistent} if both Eq.~\ref{eq:left_counts_consistency} and Eq.~\ref{eq:right_counts_consistency} are satisfied.
@@ -826,18 +822,20 @@ The value $c(b_d)$ needs to reflect the probability that a not explicitly allowe
 
 Parameter $\beta$ controls what proportion of the \emph{leftover probability mass} is used to account for the event of a back-off. $\gamma$ controls how much of the \emph{total probability mass} is added to account for back-off. To illustrate using the example from Section~\ref{eq:lm_requirements}, there the total probability mass is $m = 1146$ and the leftover probability mass is $1146-542=604$.
 
-Dealing with excluded tokens in a deeper level $d$ of the back-off tree is not difficult. It suffices to restate the total probability mass as $\overline m$ to remove counts of excluded tokens:
+Dealing with excluded tokens in a deeper level $d$ of the back-off tree is not difficult. It suffices to restate the total probability mass as
 
 \begin{equation}
 \label{eq:adjusted_total_probability_mass}
-\overline m = f(w_{l-N+d}^{l-1}) - \sum_{w_l \in \mathcal W_1 \cup \dots \cup \mathcal W_{d-1}} f(w_{l-N+d}^l)
+\overline m = f(w_{l-N+d}^{l-1}) - \sum_{w_l \in \mathcal W_1 \cup \dots \cup \mathcal W_{d-1}} f(w_{l-N+d}^l).
 \end{equation}
 
-Then the calculation from Eq.~\ref{eq:backoff_pseudocount_level1} can be repeated in an analogous way.
+where the counts of excluded tokens are now removed.
+
+Then the calculation from Eq.~\ref{eq:backoff_pseudocount_level1} can be repeated in an analogous way
 
 \begin{equation}
 \label{eq:backoff_pseudocount_deep_levels}
-c(b_d) = \ceil*{ \beta \bracket*{ \overline m - \sum_{w_l \in \mathcal W_d} f(w_{l-N+d}^l) } + \gamma ~ \overline m }
+c(b_d) = \ceil*{ \beta \bracket*{ \overline m - \sum_{w_l \in \mathcal W_d} f(w_{l-N+d}^l) } + \gamma ~ \overline m }.
 \end{equation}
 
 The only special case to consider is when $m=0$ or $\overline m = 0$. This can simply occur if the context was observed in the training dataset fewer than $C$ times, but also in more subtle situations.\footnote{If all tokens in a level are excluded \emph{and} the context count $f(w_{l-N+d}^{l-1})$ is equal to the sum of excluded counts $\sum_{w_l \in \mathcal W_1 \cup \dots \cup \mathcal W_{d-1}} f(w_{l-N+d}^l)$ then $\overline m$ will be 0. This happens if the context was observed in the training set only followed by the excluded tokens.} Back-off pseudo-count would be then 0, but the back-off node would be the only node in its level anyway. One way to deal with this problem is to give the back-off node an arbitrary non-zero pseudo-count, for example 1.
