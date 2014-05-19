@@ -526,9 +526,11 @@ Any time we observe counts of an extended 1-gram, we know that its induced $N$-g
 
 Let us introduce more nomenclature. An \emph{extended $M$-gram} is a proper substring over the extended tokens of an extended $N$-gram. For example, the extended $N$-gram \ngram{'s the \mbox{cross-section}} has extended $M$-grams \ngram{'s}, \ngram{the}, \ngram{\mbox{cross-section}}, \ngram{'s the} and \ngram{the \mbox{cross-section}}.
 
-Inducing counts from extended $N$-grams for $N>1$ is similar to the case when $N=1$. An equivalent sequence of base tokens has to be constructed as well, but \emph{not all} possible induced $N$-grams can be selected. If a base $N$-gram can be also induced from an extended $M$-gram, it \emph{cannot} be selected. If we did select it while processing the extended $N$-gram, it would be double counted -- we are guaranteed to come across its count again when processing the offending $M$-gram.
+Inducing counts from extended $N$-grams for $N>1$ is similar to the case when $N=1$. An equivalent sequence of base tokens has to be constructed as well, but \emph{not all} possible induced $N$-grams can be selected to be counted. If a base $N$-gram can be also induced from an extended $M$-gram, it \emph{cannot} be selected. If we did select it while processing the extended $N$-gram, it would be double counted -- we are guaranteed to come across its count again when processing the offending $M$-gram.
 
 The above restriction can be easily stated in an equivalent way. A base $N$-gram induced from an extended $N$-gram has to contain at least one base token from the first and last extended tokens of the extended $N$-gram. This is how we ensure that it cannot be induced from an extended $M$-gram.
+
+Using the example from the beginning of the section, we would end up counting the following induced $N$-grams: 3-gram \ngram{\underline{s} the \underline{cross}}, 4-grams \ngram{\underline{' s} the \underline{cross}}, \ngram{\underline{s} the \underline{cross -}} and 5-grams \ngram{\underline{' s} the \underline{cross -}}, \ngram{\underline{s} the \underline{cross - section}}. Base tokens that belong to the first or last extended token of the extended $N$-gram are underlined.
 
 \subsection{Sentence delimiters}
 
