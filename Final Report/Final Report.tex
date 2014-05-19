@@ -588,7 +588,7 @@ In the case of Google Books database, 5-grams are asserted to be counts consiste
 \item \label{alg:cc_full_consistency} The final counts consistent $N$-grams table is created in a similar way. This time, \emph{right integrated} $(N{+}1)$-grams are maximised with left counts consistent $N$-grams.
 \end{enumerate}
 
-Since removing the last token does not change the ordering, left integrated $(N{+}1)$-grams can be created \emph{in place} -- identical \emph{quasi}-$N$-grams will be next to each other in the $(N{+}1)$-grams table. However, creating right integrated $(N{+}1)$-grams required expensive sorting of the whole \emph{quasi}-$N$-grams table before cumulating them. Steps \ref{alg:cc_left_consistency} and \ref{alg:cc_full_consistency} can be performed simultaneously, \ie jointly maximising three tables.
+Since removing the last token does not change the ordering, left integrated $(N{+}1)$-grams can be created \emph{in place} -- identical \emph{quasi}-$N$-grams will be next to each other in the $(N{+}1)$-grams table. However, creating right integrated $(N{+}1)$-grams required expensive sorting of the whole \emph{quasi}-$N$-grams table before cumulating them. Steps \ref{alg:cc_left_integration}-\ref{alg:cc_full_consistency} can be performed simultaneously, \ie jointly maximising the three count tables.
 
 Ensuring counts consistency of $N$-grams requires access to counts consistent $(N{+}1)$-grams. So the above algorithm should be performed decrementing $N$ from 4 to 1 (in the case of the Google Books database).
 
