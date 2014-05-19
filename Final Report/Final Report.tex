@@ -534,7 +534,7 @@ As an example, consider processing the extended 1-gram from Tab.~\ref{tab:extend
 	- & - formaldehyde &  & & \\
 	formaldehyde & & & & \\
 	\end{tabular}
-	\caption{\label{tab:extended_1gram_induced_base_ngrams}Induced $N$-grams from the extended 1-gram in Tab.~\ref{tab:extended_1gram}.}
+	\caption{\label{tab:extended_1gram_induced_base_ngrams}Base $N$-grams induced from the extended 1-gram in Tab.~\ref{tab:extended_1gram}.}
 \end{table}
 
 \subsubsection{Inducing counts from extended $N$-grams ($N > 1$)}
@@ -580,7 +580,7 @@ The above equations are easy to interpret. Left counts consistency ensures that 
 
 Counts consistency is assumed in some parts of the stegosystem, for example by the $\beta - \gamma$ algorithm in Section \ref{sec:beta_gamma_backoff}. Since inconsistencies are very rare (in the order of \num{1000} for the whole database of about \num{1500000000} $N$-grams), they can be corrected without visibly distorting information in the counts.
 
-In the case of Google Books database, 5-grams are asserted to be counts consistent, since there are no 6-grams to check with. In general, $N$-grams are made left counts consistent in the following way:
+In the case of Google Books database, 5-grams are asserted to be counts consistent, since there are no 6-grams to check with. In general, $N$-grams are made counts consistent in the following way:
 
 \begin{enumerate}
 \item \label{alg:cc_left_integration} $(N{+}1)$-gram counts are \emph{left integrated}. The last token is dropped from each $(N{+}1)$-gram to create a \emph{quasi}-$N$-gram. The counts of all identical \emph{quasi}-$N$-grams are cumulated.
