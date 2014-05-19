@@ -516,39 +516,11 @@ Note that extended token boundaries are chosen by the Google Books team, not nec
 
 \subsubsection{Inducing counts from extended 1-grams}
 
-Inducing counts of base $N$-grams from extended 1-grams is easy. It is enough to generate base token sequences of the extended 1-grams and find all base $N$-grams in each of them -- let us call them \emph{induced $N$-grams}.
+We know the counts of all extended $N$-grams up to a certain order and wish to know the counts of all base $N$-grams up to the same order. Both sets of counts are on the same text.
 
-\cref{fig:extended_and_base_ngrams} should make it clear why this is the case. Base $N$-grams \ngram{cross}, \ngram{-}, \ngram{section}, \ngram{cross -}, \ngram{- section} and \ngram{cross - section} occur as many times as the extended 1-gram \ngram{cross-section}.
+Looking at \cref{fig:extended_and_base_ngrams}, it is possible to state unique correspondence between extended 1-grams and some base $N$-grams. For example, the extended 1-gram \ngram{\mbox{cross-section}} coincides with and only with the set of base 1-grams \ngram{cross}, \ngram{-}, \ngram{section}, base 2-grams \ngram{cross -}, \ngram{- section} and base 3-gram \ngram{cross - section}. Let us call the elements of this set \emph{induced $N$-grams}. Formally, induced $N$-grams are base $N$-grams that can be identified in the base token sequence of an extended 1-gram.
 
-As an example, consider processing the extended 1-gram from \cref{tab:extended_1gram}. 35 base $N$-grams listed in \cref{tab:extended_1gram_induced_base_ngrams} can be induced from it. Each should be inserted in its respective counts table using the count of the extended 1-gram, in this case 58. Note that the \ngram{-} token will be inserted twice. It indeed should be assigned a total count of $2 \times 58 = 116$, as it occurs twice in the extended 1-gram.
-
-\begin{table}[h]
-	\centering
-	\begin{tabular}{c | c}
-	$w_1$ & $f(w_1)$ \\
-	\hline
-	d:diazo-oxide/phenol-formaldehyde & \num{58}
-	\end{tabular}
-	\caption{\label{tab:extended_1gram}Extended 1-gram count.}
-\end{table}
-
-\begin{table}[h]
-	\centering
-	\begin{tabular}{c | c | c | c | c}
-	1-grams & 2-grams & 3-grams & 4-grams & 5-grams \\
-	\hline
-	\scriptsize d & \scriptsize d : & \scriptsize d : diazo & \scriptsize d : diazo - & \scriptsize d : diazo - oxide \\
-	\scriptsize : & \scriptsize : diazo & \scriptsize : diazo - & \scriptsize : diazo - oxide & \scriptsize : diazo - oxide / \\
-	\scriptsize diazo & \scriptsize diazo - & \scriptsize diazo - oxide & \scriptsize diazo - oxide / & \scriptsize diazo - oxide / phenol \\
-	\scriptsize - & \scriptsize - oxide & \scriptsize - oxide / & \scriptsize - oxide / phenol & \scriptsize - oxide / phenol - \\
-	\scriptsize oxide & \scriptsize oxide / & \scriptsize oxide / phenol & \scriptsize oxide / phenol - & \scriptsize oxide / phenol - formaldehyde \\
-	\scriptsize / & \scriptsize / phenol & \scriptsize / phenol - & \scriptsize / phenol - formaldehyde & \\
-	\scriptsize phenol & \scriptsize phenol - & \scriptsize phenol - formaldehyde & & \\
-	\scriptsize - & \scriptsize - formaldehyde & \scriptsize  & & \\
-	\scriptsize formaldehyde & \scriptsize & & & \\
-	\end{tabular}
-	\caption{\label{tab:extended_1gram_induced_base_ngrams}Base $N$-grams induced from the extended 1-gram from \cref{tab:extended_1gram}.}
-\end{table}
+Any time we observe counts of an extended 1-gram, we know that its induced $N$-grams occurred the same number of times. It is not a problem if we end up with multiple counts of the same induced $N$-gram. It means that this base $N$-gram occurs in many contexts and its counts need to be cumulated. Duplicates can come from the same extended 1-gram or different extended 1-grams. In the former case, \ngram{!!} gives \ngram{!} and \ngram{!}. In the latter, \ngram{mr.} gives \ngram{mr} and \ngram{.}, while \ngram{mrs.} gives \ngram{mrs} and \ngram{.} again.
 
 \subsubsection{Inducing counts from extended $N$-grams ($N > 1$)}
 
