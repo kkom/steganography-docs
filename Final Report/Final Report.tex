@@ -551,7 +551,7 @@ Using the example from the beginning of the section, we would end up counting th
 
 \subsubsection{Definition}
 
-Once we have a table of sorted $N$-grams, we need to ensure that their counts are consistent. $N$-grams are defined to be \emph{left counts consistent} if
+$N$-grams are defined to be \emph{left counts consistent} if
 
 \begin{equation}
 \label{eq:left_counts_consistency}
@@ -565,25 +565,27 @@ and \emph{right counts consistent} if
 \forall_{w_1^N} ~~ f(w_1^N) \ge \sum_{w_0} f(w_0^N).
 \end{equation}
 
-$N$-grams are \emph{counts consistent} if both \cref{eq:left_counts_consistency,eq:right_counts_consistency} are satisfied.
+$N$-grams are \emph{counts consistent} if they are both left and right counts consistent. If there is no cutoff for including an $N$-gram in the corpus, the equations become equalities.
 
-The above equations are easy to interpret. Left counts consistency ensures that if we add the counts of all \npgrams created by appending a token to the end of an $N$-gram, their sum will not be larger than the count of the $N$-gram. Right counts consistency is defined analogously. Obviously, correctly counted $N$-grams will be counts consistent. In reality, Google Books $N$-grams are not.\footnote{This may be caused by a bug in the script that processed $N$-gram counts on-the-fly from Google servers. It skipped the last $N$-gram from each of the 2892 files that the corpus is split into. Or the Google Books $N$-gram Corpus may be inconsistent itself, for example due to the failure of some jobs during its distributed creation.}
+\Cref{eq:left_counts_consistency,eq:right_counts_consistency} are easy to interpret. Left counts consistency ensures that if we add the counts of all \npgrams created by appending a token to the end of an $N$-gram, their sum will not be larger than the count of the $N$-gram. Right counts consistency is analogous. Obviously, $N$-grams that are correctly counted will be counts consistent.
 
 \subsubsection{Ensuring counts consistency}
 
-Counts consistency is assumed in some parts of the stegosystem, for example in the $\beta{-}\gamma$ estimation in \cref{sec:beta_gamma_backoff}. Since inconsistencies are very rare (in the order of \num{1000} for the whole corpus of about \num{1500000000} $N$-grams), they can be forcefully corrected without visibly distorting information in the counts.
+The Google Books $N$-grams Corpus is not counts consistent. This may be caused by a bug in the script that processed $N$-gram counts on-the-fly from Google servers. It skipped the last $N$-gram from each of the 2892 files that the corpus is split into. The corpus may also be inconsistent itself, for example due to the failure of some jobs during its distributed creation.
 
-In the case of Google Books $N$-gram Corpus, 5-grams are asserted to be counts consistent, since there are no 6-grams to check with. In general, $N$-grams are made counts consistent in the following way:
+Counts consistency is assumed in some parts of the stegosystem, for example in $\beta{-}\gamma$ estimation in \cref{sec:beta_gamma_backoff}. Since inconsistencies are very rare (in the order of $10^3$ for the whole corpus of about $1.5 \times 10^9$ base $N$-grams), they can be forcefully corrected without visibly distorting information in the counts.
+
+The highest order $N$-grams are asserted to be counts consistent, since there are no \npgrams to check with. In general, $N$-grams are made counts consistent in the following way:
 
 \begin{enumerate}
 \item \label{alg:cc_left_integration} \npgram counts are \emph{left integrated}. Last token is dropped from each \npgram to create a \emph{quasi}-$N$-gram. The counts of all identical \emph{quasi}-$N$-grams are cumulated.
-\item \label{alg:cc_left_consistency} Left counts consistent $N$-grams are created by \emph{maximising} $N$-gram and \emph{quasi}-$N$-gram counts. Maximisation is performed as follows: both tables are simultaneously iterated over starting from the first row. Whenever a \emph{quasi}-$N$-gram has a higher count than the same $N$-gram, the $N$-gram count is updated. If there is \emph{quasi}-$N$-gram without a corresponding $N$-gram, a new $N$-gram is created. Otherwise, the original $N$-grams are copied.
+\item \label{alg:cc_left_consistency} Left counts consistent $N$-grams are created by \emph{maximising} $N$-gram and \emph{quasi}-$N$-gram counts. Maximisation is performed as follows: both tables are simultaneously iterated over, starting from the first row. Whenever a \emph{quasi}-$N$-gram has a higher count than the same $N$-gram, the $N$-gram count is updated. If there is \emph{quasi}-$N$-gram without a corresponding $N$-gram, a new $N$-gram is created. Otherwise, the original $N$-grams are copied.
 \item \label{alg:cc_full_consistency} Final counts consistent $N$-grams are created in a similar way. This time, \emph{right integrated} \npgrams are maximised with left counts consistent $N$-grams from the previous step.
 \end{enumerate}
 
 Steps \ref{alg:cc_left_consistency}-\ref{alg:cc_full_consistency} can be performed simultaneously, \ie jointly maximising all three tables of $N$-gram counts. In addition, since removing the last token does not change ordering, left integrated \npgrams can be created \emph{in place} -- identical \emph{quasi}-$N$-grams will be next to each other in the \npgrams table. However, creating right integrated \npgrams requires expensive sorting of the whole \emph{quasi}-$N$-grams table before cumulating them -- ordering is not preserved after removing the first token.
 
-Creating count consistent of $N$-grams requires counts consistent \npgrams. So $N$-gram tables need to be created sequentially from the highest $N$ down to $N=1$.
+Creating count consistent of $N$-grams requires counts consistent \npgrams. So $N$-gram tables need to be created sequentially from the highest $N$ down to 1.
 
 \section{Language model}
 
