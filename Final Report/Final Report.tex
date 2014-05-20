@@ -561,7 +561,7 @@ Inducing counts from extended $N$-grams for $N>1$ is similar to the case when $N
 
 The above restriction can be easily stated in an equivalent way. A base $N$-gram induced from an extended $N$-gram has to contain at least one base token from the first and last extended tokens of the extended $N$-gram. This is how we ensure that it cannot be induced from an extended $M$-gram.
 
-Using the example from the beginning of the section, we would end up counting the following induced $N$-grams: 3-gram \ngram{\underline{s} the \underline{cross}}, 4-grams \ngram{\underline{' s} the \underline{cross}}, \ngram{\underline{s} the \underline{cross -}} and 5-grams \ngram{\underline{' s} the \underline{cross -}}, \ngram{\underline{s} the \underline{cross - section}}. Base tokens that belong to the first or last extended token of the extended $N$-gram are underlined.
+Using the example from the beginning of the section, \ngram{\underline{'s} the \mbox{\underline{cross-section}}} corresponds to the base token sequence \ngram{\underline{' s} the \underline{cross - section}}. The following induced $N$-grams can be selected from it: 3-gram \ngram{\underline{s} the \underline{cross}}, 4-grams \ngram{\underline{' s} the \underline{cross}}, \ngram{\underline{s} the \underline{cross -}} and 5-grams \ngram{\underline{' s} the \underline{cross -}}, \ngram{\underline{s} the \underline{cross - section}}. In all examples, base tokens that belong to the first or last extended token of the extended $N$-gram are underlined.
 
 \subsection{Sentence delimiters}
 
