@@ -297,6 +297,7 @@ where $d(\cdot)$ and $\alpha(\cdot)$ return the discount and back-off weights --
 
 $d(\cdot)$ and $\alpha(\cdot)$ are hard to choose or compute -- there exist many different schemes motivated by linguistics and statistics. Examples include Good-Turing smoothing \cite{good1953}, Kneser-Ney smoothing \cite{kneserney1995}, or stupid back-off \cite{brants2007} -- all exhibit various levels of complexity. In addition, the last does not even return a valid \pmf, but this is judged acceptable for strictly scoring applications.
 
+\newpage
 \section{Processing and storing $N$-gram counts}
 
 \subsection{Sources of natural language statistical data}
@@ -605,6 +606,7 @@ Steps \ref{alg:cc_left_consistency}-\ref{alg:cc_full_consistency} can be perform
 
 Creating count consistent of $N$-grams requires counts consistent \npgrams. So $N$-gram tables need to be created sequentially from the highest $N$ down to 1.
 
+\newpage
 \section{Language model}
 
 \subsection{Requirements}
