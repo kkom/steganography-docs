@@ -245,7 +245,7 @@ The interval algorithm works by continuously mapping the observed input sequence
 \section{Statistical natural language models}
 \label{sec:snlm}
 
-The notation and theory in \cref{sec:snlm} is mostly based on \cite{4f11:statistical_language_models, 4f11:smt_systems, coursera:nlp}.
+In this section I will introduce basic principles of statistical natural language models. I will start by interpreting text as the output of a stochastic process and then apply simplifications to make evaluating sentence probabilities computationally tractable. This is mainly a review of \cite{4f11:statistical_language_models, 4f11:smt_systems, coursera:nlp}.
 
 \subsection{Text as the output of a stochastic process}
 
@@ -300,9 +300,13 @@ $d(\cdot)$ and $\alpha(\cdot)$ are hard to choose or compute -- there exist many
 \newpage
 \section{Processing and storing $N$-gram counts}
 
-\subsection{Sources of natural language statistical data}
+I have shown that under certain assumptions $N$-gram counts are a sufficient statistic needed to evaluate probabilities of natural language sentences. In this section I will describe processing and efficient storage of these counts.
 
-\cref{sec:snlm} shows that $N$-gram counts are sufficient statistics needed to evaluate probabilities of natural languages sentences. I investigated two potential sources of large-scale $N$-gram counts for English.
+I will first describe two sources of $N$-gram counts that I investigated, Google Books $N$-gram Corpus and Corpus of Contemporary American English $N$-grams, and motivate why I chose the former. I will then explain in detail processing that is needed to make the $N$-gram counts corpus fit for a steganographic application.
+
+Firstly, all $N$-grams that contain digits are removed from the corpus. This is because they are frequently associated with illegible fragments of text generated based on data tables. Token strings of the remaining $N$-grams are then transliterated from Unicode to 7-bit ASCII, followed by conversion to lowercase letters and filtering only a set of allowed characters. The desired result is to remove noise from the system and make token representations unambiguous. Following this, extended tokens like \ngram{it's} are split into multiple base tokens such as \ngram{it}, \ngram{'} and \ngram{s}. The aim is to ensure that a fragment of text has only one corresponding sequence of tokens. An algorithm is described to induce $N$-gram counts of base tokens from the $N$-gram counts of extended tokens.
+
+\subsection{Sources of natural language statistical data}
 
 \subsubsection{Google Books $N$-gram Corpus}
 
