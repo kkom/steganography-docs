@@ -565,10 +565,6 @@ The above restriction can be easily stated in an equivalent way. A base $N$-gram
 
 Using the example from the beginning of the section, \ngram{\underline{'s} the \mbox{\underline{cross-section}}} corresponds to the base token sequence \ngram{\underline{' s} the \underline{cross - section}}. The following induced $N$-grams can be selected from it: 3-gram \ngram{\underline{s} the \underline{cross}}, 4-grams \ngram{\underline{' s} the \underline{cross}}, \ngram{\underline{s} the \underline{cross -}} and 5-grams \ngram{\underline{' s} the \underline{cross -}}, \ngram{\underline{s} the \underline{cross - section}}. In all examples, base tokens that belong to the first or last extended token of the extended $N$-gram are underlined.
 
-\subsection{Sentence delimiters}
-
-Google Books $N$-grams contain \ngram{\_START\_} and \ngram{\_END\_} tokens to identify beginning and end of a sentence. If text is \emph{generated} using the language model, it will inevitably contain these tokens (for example any sequence will start with \ngram{\_START\_}). As a result some kind of convention needs to be adopted as to how sentence delimiters are identified in formatted output text. I decided that sentences will be delimited with multiple whitespace characters, for example a double space. I will return to this issue in the discussion section, as it has non-trivial consequences for practical application of the system.
-
 \subsection{BinDB file format}
 
 \noteSelf{Quickly describe the BinDB format -- binary storage of $N$-grams, format of each line, tokens are stored using their indices, $N$-grams are sorted.}
@@ -884,6 +880,10 @@ Lorem ipsum.
 \subsection{Target -- English language model}
 
 \subsection{Storing length of plaintext}
+
+\subsection{Sentence delimiters}
+
+Google Books $N$-grams contain \ngram{\_START\_} and \ngram{\_END\_} tokens to identify beginning and end of a sentence. If text is \emph{generated} using the language model, it will inevitably contain these tokens (for example any sequence will start with \ngram{\_START\_}). As a result some kind of convention needs to be adopted as to how sentence delimiters are identified in formatted output text. I decided that sentences will be delimited with multiple whitespace characters, for example a double space. I will return to this issue in the discussion section, as it has non-trivial consequences for practical application of the system.
 
 \subsubsection{Universal coding of plaintext length}
 
