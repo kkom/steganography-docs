@@ -613,6 +613,10 @@ Creating count consistent of $N$-grams requires counts consistent \npgrams. So $
 \newpage
 \section{Language model}
 
+In this section I will describe the language model created for the purpose of the stegosystem. For the needs of arithmetic coding, which is the backbone of the stegosystem, it is necessary to have a model that returns probability of a token given its predecessors. Moreover, the tokens have to be ordered so that each corresponds to a unique subinterval of $[0,1)$ of size equal to the conditional probability of the token.
+
+I will first state all the requirements formally and analyse their implications. I will then propose a model where all tokes are arranged in an $N$ level \emph{back-off tree}. The tree allows efficient calculation of conditional probability interval for a token without having to explicitly compute intervals of all other tokens.
+
 \subsection{Requirements}
 \label{eq:lm_requirements}
 
@@ -620,7 +624,7 @@ A language model fit for steganographic application using the interval algorithm
 
 \begin{enumerate}
   \item \label{lm_req:non_zero_probability} Every sequence of tokens has non-zero probability.
-  \item \label{lm_req:contiguous_probability} Every token extending a sequence is assigned a contiguous probability region.
+  \item \label{lm_req:contiguous_probability} Every token extending any sequence is assigned a contiguous probability region.
   \item \label{lm_req:hidden_symbols} Formatted sequence of tokens uniquely identifies the tokens.
 \end{enumerate}
 
@@ -656,7 +660,7 @@ The problem with implicit back-off and using \cref{eq:conditional_token_probabil
 
 \subsection{Back-off tree}
 
-\cref{fig:backoff_tree} shows how to construct a \emph{back-off tree} where each token is represented by a single leaf. Each leaf corresponds to a contiguous, non-zero interval. The set of all leaf intervals partitions $[0,1)$. As a result, the tree can be interpreted as giving a \pmf over all tokens that satisfies all requirements from the previous section.
+\cref{fig:backoff_tree} shows how to construct a \emph{back-off tree} where each token is represented by a single leaf. Each leaf corresponds to a contiguous, non-zero interval. The set of all leaf intervals partitions $[0,1)$. As a result, the tree can be interpreted as giving a \pmf over all tokens that satisfies every requirement from the previous section.
 
 % Define a new tikz style for drawing vertices
 \newlength{\vertexSize}
