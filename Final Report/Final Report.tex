@@ -838,6 +838,8 @@ Intuitively, level 1 tokens are the ones that give non-zero probability in an ML
 
 Sizes of intervals $v(w_l)$ are proportional to the ML estimate $\hat P(w_l | w_{l-N'+1}^{l-1})$ for highest $N' \le N$ that gives a non-zero value. The constant of proportionally is different for each level of the back-off tree and depends on the back-off pseudo-counts $c(b_1), \dots, c(b_{N-1})$.
 
+Note how in order to calculate the interval $v(w_l)$ of a token in level $d$ of the tree it is only necessary to know the counts of tokens in levels $1, \dots, d$ and the back-off pseudo-counts $c(b_1), \dots, c(b_d)$.
+
 \subsection{$\beta{-}\gamma$ back-off pseudo-count estimation}
 \label{sec:beta_gamma_backoff}
 
