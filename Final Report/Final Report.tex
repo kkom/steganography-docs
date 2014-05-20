@@ -305,17 +305,19 @@ $d(\cdot)$ and $\alpha(\cdot)$ are hard to choose or compute -- there exist many
 
 \subsubsection{Google Books $N$-gram Corpus}
 
-Google has published $N$-gram counts for up to $N=5$ compiled from 4.5 million scanned English books that contain 468 million tokens \cite{googlengrams2011, lin2012paper}. Their counts are divided by years of publishing the books. The cutoff for including an $N$-gram in the corpus is $40$ occurrences in all books over all years. The tokens include part-of-speech (POS) annotations for words.
+Google has published $N$-gram counts, for up to $N=5$, compiled from 4.5 million scanned English books that contain 468 million tokens \cite{googlengrams2011, lin2012paper}. Their counts are given over different years when the books were published. The cutoff for including an $N$-gram in the corpus is $40$ occurrences in all books over all years. The tokens include part-of-speech (POS) annotations for words.
 
-Currently, there are two version of the corpus -- 2009 and 2012. $N$-grams from the second version include special tokens for the beginning and end of sentence markers and the cannot span sentence boundaries. The first version of the corpus does not have these markers and the $N$-grams can span multiple sentences, but not pages.
+Currently, there are two version of the corpus -- 2009 and 2012. $N$-grams from the second version include special tokens for the beginning and end of sentence markers and cannot span sentence boundaries. Sentences across pages are detected. The first version of the corpus does not have these markers and the $N$-grams can span multiple sentences, but not pages. For higher accuracy, I decided to use the newer corpus.
 
 All $N$-grams are stored in plain text files in the following format:
 
 \centerline{\texttt{ngram TAB year TAB match\_count TAB volume\_count NEWLINE}}
 
-where the \texttt{ngram} field is also tab-separated into $N$ tokens. \texttt{match\_count} gives the total number of occurrences of an $N$-gram in the whole corpus in a given year, and \texttt{volume\_count} tells how many different books published in that year it was found in.
+where the \texttt{ngram} field is tab-separated into $N$ token strings. \texttt{match\_count} gives the total number of occurrences of an $N$-gram in the whole corpus in a given year, and \texttt{volume\_count} tells in how many different books published in that year it was found.
 
-Many versions of the same $N$-gram are stored --
+Tokens can be pure plain text strings (\eg \texttt{burnt}), part-of-speech annotated strings (\eg \texttt{burnt\_VERB}) or just the POS tags (\eg \texttt{\_VERB\_}). The first case corresponds to the existence of a particular string regardless of its role in the sentence. These are then broken down into finer categories, which indicate the syntactic role of a particular token, producing POS-annotated strings. The last class of tokens allows us to answer more general questions, for example the count of \mbox{\texttt{he \_VERB\_}} tells us how many times the word \emph{he} is followed by any verb.
+
+In the stegosystem, we need to have no ambiguity as to the identity of the token. Outputting text with POS tags would be a very strong indication that the system was used to generate it, so would compromise innocuousness. As a result, we are forced to use the unannotated tokens. We will operate on a less precise language model, where sequences of tokens are less likely to be grammatically correct.
 
 \subsubsection{Corpus of Contemporary American English $N$-grams}
 
