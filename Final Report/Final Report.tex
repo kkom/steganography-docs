@@ -278,7 +278,7 @@ The ML (maximum likelihood) estimate of conditional probability of $w_l$ in an $
 
 where $f(\cdot)$ is the number of occurrences of a particular sequence of tokens in training data.
 
-A problem with \cref{eq:ml_conditional_token_probability} is that most $N$-gram counts will be zero. For example, a $5$-gram model with $V \approx 10^6$ will have $V^N \approx \left( 10^6 \right)^5 = 10^{30}$ distinct $N$-grams. For every possible $5$-gram sequence to occur at least once, training data would need to consist of more than $10^{30}$ tokens. Google Books $N$-gram Corpus \cite{googlengrams2011}, currently the largest available dataset, is based on approximately $3.6 \times 10^{11}$ English words. As a result, a large number of grammatically correct sentences will have zero probability.
+A problem with \cref{eq:ml_conditional_token_probability} is that most $N$-gram counts will be zero. For example, a $5$-gram model with $V \approx 10^6$ will have $V^N \approx \left( 10^6 \right)^5 = 10^{30}$ distinct $N$-grams. For every possible $5$-gram sequence to occur at least once, training data would need to consist of more than $10^{30}$ tokens. Google Books $N$-gram Corpus \cite{googlengrams2011}, currently the largest available dataset, is based on $4.7 \times 10^{8}$ tokens. As a result, a large number of grammatically correct sentences will have zero probability.
 
 \subsection{Limiting corpus size, discounting and back-off}
 
@@ -301,11 +301,25 @@ $d(\cdot)$ and $\alpha(\cdot)$ are hard to choose or compute -- there exist many
 
 \subsection{Sources of natural language statistical data}
 
-\noteSelf{Make a table comparing COCA and Google Books $N$-grams. Indicate that I've chosen Google Books $N$-grams because they are free and have a higher order.}
+\cref{sec:snlm} shows that $N$-gram counts are sufficient statistics needed to evaluate probabilities of natural languages sentences. I investigated two potential sources of large-scale $N$-gram counts for English.
 
-\subsection{Google Books $N$-grams format}
+\subsubsection{Google Books $N$-gram Corpus}
 
-\noteSelf{Briefly explain how the Google Books $N$-grams are given -- year-by-year counts, syntactic annotations. How detailed should it be?}
+Google has published $N$-gram counts for up to $N=5$ compiled from 4.5 million scanned English books that contain 468 million tokens \cite{googlengrams2011, lin2012paper}. Their counts are divided by years of publishing the books. The cutoff for including an $N$-gram in the corpus is $40$ occurrences in all books over all years. The tokens include part-of-speech (POS) annotations for words.
+
+Currently, there are two version of the corpus -- 2009 and 2012. $N$-grams from the second version include special tokens for the beginning and end of sentence markers and the cannot span sentence boundaries. The first version of the corpus does not have these markers and the $N$-grams can span multiple sentences, but not pages.
+
+All $N$-grams are stored in plain text files in the following format:
+
+\centerline{\texttt{ngram TAB year TAB match\_count TAB volume\_count NEWLINE}}
+
+where the \texttt{ngram} field is also tab-separated into $N$ tokens. \texttt{match\_count} gives the total number of occurrences of an $N$-gram in the whole corpus in a given year, and \texttt{volume\_count} tells how many different books published in that year it was found in.
+
+Many versions of the same $N$-gram are stored --
+
+\subsubsection{Corpus of Contemporary American English $N$-grams}
+
+Mark Davies has compiled $N$-gram frequencies \cite{web:byu_ngrams} from the Corpus of Contemporary American English (COCA) \cite{coca2010}. COCA is based on 0.2 million texts that contain a total of 440 million tokens. The tokens include POS-annotated words or punctuation, but not sentence markers. Free version of the database contains 1 million most frequent $N$-grams for each $N$ up to 5. Paid version has no cutoff and has all $N$-grams up to $N=4$.
 
 \subsection{Normalising tokens}
 
@@ -518,7 +532,7 @@ The Google Books $N$-gram Corpus supplies counts of 1- to 5-grams of unnormalise
 \caption{\label{fig:extended_and_base_ngrams}Finding extended and base $N$-grams in the fragment of text \emph{what's the \mbox{cross-section} area?} Solid vertical lines denote boundaries between extended tokens, dotted vertical lines -- boundaries between base tokens. All $N$-grams up to $N=3$ are shown in the figure. Each is represented by a single thick horizontal segment. Extended $N$-grams are located above text, base $N$-grams -- below it.}
 \end{figure}
 
-Note that extended token boundaries are chosen by the Google Books team, not necessarily in a consistent way. \Cref{fig:extended_and_base_ngrams} shows an example way in which extended token boundaries could be chosen in a sentence. Base token boundaries are created using the algorithm from \cref{sec:exploding_tokens}.
+Note that extended token boundaries are chosen by the Google Books team using a custom rule-based system \cite{lin2012thesis}, not necessarily in a way consistent for the same phonological word. \Cref{fig:extended_and_base_ngrams} shows an example way of how token boundaries could be found in a sentence. Base token boundaries are created using the algorithm from \cref{sec:exploding_tokens}.
 
 \subsubsection{Inducing counts from extended 1-grams}
 
