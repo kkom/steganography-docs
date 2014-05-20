@@ -318,13 +318,15 @@ where the \texttt{ngram} field is tab-separated into $N$ token strings. \texttt{
 
 Tokens can be pure plain text strings (\eg \texttt{burnt}), part-of-speech annotated strings (\eg \texttt{burnt\_VERB}) or just the POS tags (\eg \texttt{\_VERB\_}). The first case corresponds to the existence of a particular string regardless of its role in the sentence. These are then broken down into finer categories, which indicate the syntactic role of a particular token, producing POS-annotated strings. The last class of tokens allows us to answer more general questions, for example the count of \mbox{\texttt{he \_VERB\_}} tells us how many times the word \emph{he} is followed by any verb.
 
-In the stegosystem, we need to have no ambiguity as to the identity of the token. Outputting text with POS tags would be a very strong indication that the system was used to generate it, so would compromise innocuousness. As a result, we are forced to use the unannotated tokens. We will operate on a less precise language model, where sequences of tokens are less likely to be grammatically correct.
+$N$-grams up to $N=3$ are constructed by mixing tokens of all kinds, making it possible to ask all possible questions about counts. For $N \ge 4$ there are some restrictions to limit combinatorial explosion of corpus size. But $N$-grams consisting of plain string tokens are always available for every order $N$.
+
+In the stegosystem, we need to have no ambiguity as to the identity of the token. Outputting text with POS tags would be a very strong indication that the system was used to generate it, so would compromise innocuousness. As a result, we are forced to use the unannotated tokens. Thus we will operate on a less precise language model, where sequences of tokens are less likely to be grammatically correct.
 
 \subsubsection{Corpus of Contemporary American English $N$-grams}
 
 Mark Davies has compiled $N$-gram frequencies \cite{web:byu_ngrams} from the Corpus of Contemporary American English (COCA) \cite{coca2010}. COCA is based on 0.2 million texts that contain a total of 440 million tokens. The tokens include POS-annotated words or punctuation, but not sentence markers. Free version of the database contains 1 million most frequent $N$-grams for each $N$ up to 5. Paid version has no cutoff and has counts of all $N$-grams up to $N=4$.
 
-Prior to processing Google Books data, I experimented with using the free version of COCA $N$-grams to create the language model. I finally decided to use the Google Books $N$-grams Corpus because of free access its full version and the fact that it contains counts up to $N=5$. Since COCA $N$-grams are not a part of the final outcome of the project, I will not discussing in detail their processing and storage.
+Prior to processing Google Books data, I experimented with using the free version of COCA $N$-grams to create the language model. I finally decided to use the Google Books $N$-grams Corpus because of free access its full version and the fact that it contains counts up to $N=5$. Since COCA $N$-grams are not a part of the final outcome of the project, I will not be discussing in detail their processing and storage.
 
 \subsection{Normalising tokens}
 
