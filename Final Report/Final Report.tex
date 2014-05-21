@@ -164,12 +164,12 @@ Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor 
 % Contents
 \pagestyle{plain}
 
-\newpage
+\clearpage
 \section{Technical abstract}
 
 Lorem ipsum.
 
-\newpage
+\clearpage
 \section{Introduction}
 
 Lorem ipsum.
@@ -180,7 +180,7 @@ Lorem ipsum.
 
 \subsection{High level description of the stegosystem}
 
-\newpage
+\clearpage
 \section{The interval algorithm}
 \label{sec:interval_algorithm}
 
@@ -244,7 +244,7 @@ The interval algorithm works by continuously mapping the observed input sequence
 
 \end{figure}
 
-\newpage
+\clearpage
 \section{Statistical natural language models}
 \label{sec:snlm}
 
@@ -300,7 +300,7 @@ where $d(\cdot)$ and $\alpha(\cdot)$ return the discount and back-off weights --
 
 $d(\cdot)$ and $\alpha(\cdot)$ are hard to choose or compute -- there exist many different schemes motivated by linguistics and statistics. Examples include Good-Turing smoothing \cite{good1953}, Kneser-Ney smoothing \cite{kneserney1995}, or stupid back-off \cite{brants2007} -- all exhibit various levels of complexity. In addition, the last does not even return a valid \pmf, but this is judged acceptable for strict scoring applications.
 
-\newpage
+\clearpage
 \section{Processing and storing $N$-gram counts}
 
 I have shown that under certain assumptions, $N$-gram counts provide a practically adequate statistic for evaluating the probabilities of natural language text. In this section I will describe processing and efficient storage of these counts.
@@ -615,7 +615,7 @@ Steps \ref{alg:cc_left_consistency}-\ref{alg:cc_full_consistency} can be perform
 
 Creating count consistent $N$-grams requires counts consistent \npgrams. So $N$-gram tables need to be created sequentially from the highest $N$ down to 1.
 
-\newpage
+\clearpage
 \section{Language model}
 \label{sec:language_model}
 
@@ -884,7 +884,7 @@ c(b_d) = \ceil*{ \beta \bracket*{ \overline m_d - \sum_{w_l \in \mathcal W_d} f(
 
 The only special case to consider is when $m_1 = 0$ or $\overline m_d = 0$. This can simply occur if the context was not observed in training data frequently enough to be in the corpus, but also in more subtle situations.\footnote{If all tokens in a level are excluded \emph{and} the context count $f(w_{l-N+d}^{l-1})$ is equal to the sum of excluded counts $\sum_{w_l \in \mathcal W_1 \cup \dots \cup \mathcal W_{d-1}} f(w_{l-N+d}^l)$ then $\overline m_d$ will be 0. This happens if the context was observed in training data only followed by the excluded tokens.} Back-off pseudo-count would then be 0. However, the back-off node would be the only node in its level anyway. One way to deal with the problem elegantly is to give the back-off node an arbitrary non-zero pseudo-count, for example 1.
 
-\newpage
+\clearpage
 \section{Stegosystem}
 
 \subsection{Innocuous transmission of the output of a stochastic process}
@@ -1014,87 +1014,82 @@ Since $\mathbf I$ extends $\mathbf P$, $\mathbf i \subseteq \mathbf p$. Since $\
 
 \end{figure}
 
-\newpage
-\section{Detailed description of the stegosystem}
+%\clearpage
+%\section{Detailed description of the stegosystem}
+%
+%Lorem ipsum.
+%
+%\subsection{Source -- plaintext concatenated with randomness}
+%
+%Blah blah.
+%
+%\subsection{Target -- English language model}
+%
+%Blah blah.
+%
+%\subsection{Storing length of plaintext}
+%
+%Blah blah.
+%
+%\subsection{Sentence delimiters}
+%
+%Google Books $N$-grams contain \ngram{\_START\_} and \ngram{\_END\_} tokens to identify beginning and end of a sentence. If text is \emph{generated} using the language model, it will inevitably contain these tokens (for example any sequence will start with \ngram{\_START\_}). As a result some kind of convention needs to be adopted as to how sentence delimiters are identified in formatted output text. I decided that sentences will be delimited with multiple whitespace characters, for example a double space. I will return to this issue in the discussion section, as it has non-trivial consequences for practical application of the system.
+%
+%\subsubsection{Universal coding of plaintext length}
+%
+%Blah blah.
+%
+%\subsubsection{EOF symbol}
+%
+%Blah blah.
+%
+%\subsection{Sufficient length of the output interval}
+%
+%Blah blah.
+%
+%\subsection{Secrecy}
+%
+%\clearpage
+%\section{Implementation}
+%
+%Lorem ipsum.
+%
+%\clearpage
+%\section{Security vulnerabilities}
+%
+%Lorem ipsum.
+%
+%\subsection{Telling stegotext from covertext}
+%
+%\subsubsection{Plaintext length declaration incompatible with interval size}
+%
+%If the plaintext length declaration is longer than the maximum length of plaintext that can be recovered from the potential stegotext, we know the message was covertext.
+%
+%Conversely -- how often does a compatible length declaration indicate stegotext? If almost always, then the system is flawed.
+%
+%\clearpage
+%\section{Theoretical considerations}
+%
+%Lorem ipsum.
+%
+%\subsection{Rate of the system}
+%
+%\subsection{Entropy of the language model and its effect on stegotext length}
+%
+%Use the bounds from Han \& Hoshi's paper.
+%
+%\clearpage
+%\section{Interesting questions}
+%
+%Lorem ipsum.
+%
+%\subsection{How many bits of information stored per word, sentence, tweet?}
+%
+%\subsubsection{Dependence on the entropy of the language model}
 
-Lorem ipsum.
-
-\subsection{Source -- plaintext concatenated with randomness}
-
-Blah blah.
-
-\subsection{Target -- English language model}
-
-Blah blah.
-
-\subsection{Storing length of plaintext}
-
-Blah blah.
-
-\subsection{Sentence delimiters}
-
-Google Books $N$-grams contain \ngram{\_START\_} and \ngram{\_END\_} tokens to identify beginning and end of a sentence. If text is \emph{generated} using the language model, it will inevitably contain these tokens (for example any sequence will start with \ngram{\_START\_}). As a result some kind of convention needs to be adopted as to how sentence delimiters are identified in formatted output text. I decided that sentences will be delimited with multiple whitespace characters, for example a double space. I will return to this issue in the discussion section, as it has non-trivial consequences for practical application of the system.
-
-\subsubsection{Universal coding of plaintext length}
-
-Blah blah.
-
-\subsubsection{EOF symbol}
-
-Blah blah.
-
-\subsection{Sufficient length of the output interval}
-
-Blah blah.
-
-\subsection{Secrecy}
-
-\newpage
-\section{Implementation}
-
-Lorem ipsum.
-
-\newpage
-\section{Security vulnerabilities}
-
-Lorem ipsum.
-
-\subsection{Telling stegotext from covertext}
-
-\subsubsection{Plaintext length declaration incompatible with interval size}
-
-If the plaintext length declaration is longer than the maximum length of plaintext that can be recovered from the potential stegotext, we know the message was covertext.
-
-Conversely -- how often does a compatible length declaration indicate stegotext? If almost always, then the system is flawed.
-
-\newpage
-\section{Theoretical considerations}
-
-Lorem ipsum.
-
-\subsection{Rate of the system}
-
-\subsection{Entropy of the language model and its effect on stegotext length}
-
-Use the bounds from Han \& Hoshi's paper.
-
-\newpage
-\section{Interesting questions}
-
-Lorem ipsum.
-
-\subsection{How many bits of information stored per word, sentence, tweet?}
-
-\subsubsection{Dependence on the entropy of the language model}
-
-\newpage
+\clearpage
 \footnotesize
 \bibliographystyle{unsrt}
 \bibliography{../bibliography}
-
-\newpage
-\appendix
-
-\section{First appendix}
 
 \end{document}
