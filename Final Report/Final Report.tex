@@ -70,13 +70,14 @@
 \DeclarePairedDelimiter{\bracket}{(}{)}
 
 % Define macros for correct spacing after abbreviations, source: http://tex.stackexchange.com/a/15017
-\newcommand*{\eg}{e.g.\@\xspace}
-\newcommand*{\ie}{i.e.\@\xspace}
+\DeclareRobustCommand*{\eg}{e.g.\@\xspace}
+\DeclareRobustCommand*{\ie}{i.e.\@\xspace}
 
 % Abbreviations which can occur at the end of the sentence cannot duplicate the following dot
 \makeatletter
 \DeclareRobustCommand*{\AbbreviationWithDot}[1]{\@ifnextchar{.}{#1}{#1.\@\xspace}}
 \DeclareRobustCommand*{\pmf}{\AbbreviationWithDot{p.m.f}}
+\DeclareRobustCommand*{\iid}{\AbbreviationWithDot{i.i.d}}
 \makeatother
 
 % Placeholder for parts of the report to be finished later
@@ -180,6 +181,7 @@ Lorem ipsum.
 
 \newpage
 \section{The interval algorithm}
+\label{sec:interval_algorithm}
 
 The interval algorithm \cite{hanhoshi1997} provides a means of sampling from an arbitrary stochastic process (target) given an input sequence from a different arbitrary stochastic process (source). The algorithm is very similar to arithmetic coding -- it also uses successive refinements of the $[0,1)$ interval to map sequences.
 
@@ -612,6 +614,7 @@ Creating count consistent of $N$-grams requires counts consistent \npgrams. So $
 
 \newpage
 \section{Language model}
+\label{sec:language_model}
 
 In this section I will describe the language model created for the purpose of the stegosystem. For the needs of arithmetic coding, which is the backbone of the stegosystem, it is necessary to have a model that returns probability of a token given its predecessors. Moreover, the tokens have to be ordered so that each corresponds to a unique subinterval of $[0,1)$ of size equal to the conditional probability of the token.
 
@@ -875,6 +878,17 @@ c(b_d) = \ceil*{ \beta \bracket*{ \overline m_d - \sum_{w_l \in \mathcal W_d} f(
 \end{equation}
 
 The only special case to consider is when $m_1 = 0$ or $\overline m_d = 0$. This can simply occur if the context was not observed in training data frequently enough to be in the corpus, but also in more subtle situations.\footnote{If all tokens in a level are excluded \emph{and} the context count $f(w_{l-N+d}^{l-1})$ is equal to the sum of excluded counts $\sum_{w_l \in \mathcal W_1 \cup \dots \cup \mathcal W_{d-1}} f(w_{l-N+d}^l)$ then $\overline m_d$ will be 0. This happens if the context was observed in training data only followed by the excluded tokens.} Back-off pseudo-count would be then 0, however the back-off node would be the only node in its level anyway. One way to deal with this problem is to give the back-off node an arbitrary non-zero pseudo-count, for example 1.
+
+\newpage
+\section{Stegosystem}
+
+\subsection{Innocuous transmission of the output of a stochastic process}
+
+The interval algorithm described in \cref{sec:interval_algorithm} can be used to construct a system that generates \emph{stegotext} from \emph{plaintext}\footnote{Note that \emph{plaintext} has a very precise meaning in this context -- the unencrypted message. \emph{Plain text} written separately simply refers to an unformatted sequence of characters.}. Input plaintext sequence $\mathbf P$ on alphabet $\mathfrak P$ needs to have been generated according to a known stochastic process $\mathcal P$. Then, output stegotext sequence $\mathbf S$ on alphabet $\mathfrak S$ will be deterministically generated from $\mathbf P$ according to the statistics of an arbitrarily chosen stochastic process $\mathcal S$. Knowledge of $\mathbf S$ will allow to recover $\mathbf{P'}$ -- a sequence on $\mathfrak P$ whose prefix is $\mathbf P$.
+
+For example, if we want to transmit information which is optimally compressed to binary, $\mathcal P$ will be a sequence of \iid uniform bits. If we want the stegotext to be English text, we will use the English language model from \cref{sec:language_model} as $\mathcal S$.
+
+Note that it is necessary to terminate $\mathbf P$ with an end-of-message symbol, or otherwise transmit its length, if we want to be able to uniquely recover $\mathbf P$ from $\mathbf{P'}$. This issue will not be addressed in this section.
 
 \newpage
 \section{Detailed description of the stegosystem}
