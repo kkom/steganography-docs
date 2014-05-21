@@ -240,7 +240,7 @@ The interval algorithm works by continuously mapping the observed input sequence
 
 	\end{tikzpicture}
 
-	\caption{\label{fig:interval_algorithm}Example run of the interval algorithm. The source returns symbols over the alphabet $\{a,b,c,d\}$, the target -- $\{\alpha,\beta,\gamma\}$. On the left, an input sequence $[c,c,a]$ from the source process gets mapped to $[0.39,0.47)$. On the right, this interval allows to generate up to 2 terms of an output sequence from the target process, \ie $[\beta,\alpha]$, which corresponds to $[0.19,0.53)$. Note that it is not possible to generate more terms of the output sequence, as neither $[0.19,0.29)$ nor $[0.29,0.43)$ nor $[0.43,0.53)$ is a superinterval of $[0.39,0.47)$.}
+	\caption{\label{fig:interval_algorithm}Example run of the interval algorithm. The source emits symbols over the alphabet $\{a,b,c,d\}$, the target -- $\{\alpha,\beta,\gamma\}$. On the left, an input sequence $[c,c,a]$ from the source process gets mapped to $[0.39,0.47)$. On the right, this interval allows to generate up to 2 terms of an output sequence from the target process, \ie $[\beta,\alpha]$, which corresponds to $[0.19,0.53)$. Note that it is not possible to generate more terms of the output sequence, as neither $[0.19,0.29)$ nor $[0.29,0.43)$ nor $[0.43,0.53)$ is a superinterval of $[0.39,0.47)$.}
 
 \end{figure}
 
@@ -259,7 +259,7 @@ A string $\mathbf w$ can be written as a sequence of $L$ \emph{tokens} $\mathbf 
 P(\mathbf w) = \prod_{l=1}^{L} P( w_l | w_1^{l-1} ) .
 \end{equation}
 
-Even though \cref{eq:exact_string_probability} gives a convenient formulation of language as a stochastic process, it is computationally intractable. If the conditional probabilities are stored in tables, the conditional probability table of the $l$th token has $V^l$ entries. Total size of all tables becomes prohibitively large for even small $L$.
+Even though \cref{eq:exact_string_probability} gives a convenient formulation of language as a stochastic process, it is computationally intractable. If the conditional probabilities are stored in tables, the conditional probability table of the $l$th token has $V^l$ entries. The total size of all tables becomes prohibitively large for even small $L$.
 
 \subsection{$N$-gram language models}
 
@@ -272,7 +272,7 @@ P(\mathbf w) \approx P_{\text{$N$-gram}}(\mathbf w) \equiv \prod_{l=1}^{L} P( w_
 
 \subsection{Estimating ML parameters}
 
-The ML (maximum likelihood) estimate of conditional probability of $w_l$ in an $N$-gram model is
+The ML (maximum likelihood) estimate of the conditional probability of $w_l$ in an $N$-gram model is
 
 \begin{equation}
 \label{eq:ml_conditional_token_probability}
@@ -298,18 +298,18 @@ A standard way of dealing with this problem is to introduce \emph{discounting} a
 
 where $d(\cdot)$ and $\alpha(\cdot)$ return the discount and back-off weights -- scaling factors used to ensure that \cref{eq:conditional_token_probability_with_backoff} gives a valid \pmf. Intuitively, they reduce the mass assigned to observed $N$-grams to make space for estimates of order $N{-}1$ and lower.
 
-$d(\cdot)$ and $\alpha(\cdot)$ are hard to choose or compute -- there exist many different schemes motivated by linguistics and statistics. Examples include Good-Turing smoothing \cite{good1953}, Kneser-Ney smoothing \cite{kneserney1995}, or stupid back-off \cite{brants2007} -- all exhibit various levels of complexity. In addition, the last does not even return a valid \pmf, but this is judged acceptable for strictly scoring applications.
+$d(\cdot)$ and $\alpha(\cdot)$ are hard to choose or compute -- there exist many different schemes motivated by linguistics and statistics. Examples include Good-Turing smoothing \cite{good1953}, Kneser-Ney smoothing \cite{kneserney1995}, or stupid back-off \cite{brants2007} -- all exhibit various levels of complexity. In addition, the last does not even return a valid \pmf, but this is judged acceptable for strict scoring applications.
 
 \newpage
 \section{Processing and storing $N$-gram counts}
 
-I have shown that under certain assumptions $N$-gram counts are a sufficient statistic needed to evaluate probabilities of natural language text. In this section I will describe processing and efficient storage of these counts.
+I have shown that under certain assumptions, $N$-gram counts provide a practically adequate statistic for evaluating the probabilities of natural language text. In this section I will describe processing and efficient storage of these counts.
 
-I will first describe two sources of data that I investigated, Google Books $N$-gram Corpus and Corpus of Contemporary American English $N$-grams, motivating why I chose the former. I will then explain in detail processing required to make the $N$-gram counts corpus fit for a steganographic application.
+I will first describe two sources of data that I investigated, Google Books $N$-gram Corpus and Corpus of Contemporary American English $N$-grams, motivating why I chose the former. I will then explain in detail the processing required to make the $N$-gram counts corpus fit for a steganographic application.
 
-Firstly, all $N$-grams that contain digits are removed from the corpus. This is because they are frequently associated with illegible fragments of text from various data tables. Token strings of the remaining $N$-grams are then transliterated from Unicode to 7-bit ASCII, followed by conversion to lowercase letters and filtering only a set of allowed characters. The desired result is to remove noise from the system and make token representations unambiguous. Following this, extended tokens like \ngram{it's} are split into multiple base tokens such as \ngram{it}, \ngram{'} and \ngram{s}. The aim is to ensure that a fragment of text has a unique sequence of corresponding tokens. An algorithm to induce counts of base tokens from counts of the extended tokens is illustrated. Lastly, a procedure to enforce the $N$-gram counts to be self-consistent is described. Counts self-consistency is required by the language model from the next section.
+Firstly, all $N$-grams that contain digits are removed from the corpus. This is because they are frequently associated with illegible fragments of text from various data tables. Token strings of the remaining $N$-grams are then transliterated from Unicode to 7-bit ASCII, followed by conversion to lowercase letters and filtering only a set of allowed characters. The desired result is to remove noise from the system and make token representations unambiguous. Following this, extended tokens like \ngram{it's} are split into multiple base tokens such as \ngram{it}, \ngram{'} and \ngram{s}. The aim is to ensure that a fragment of text has a unique sequence of corresponding tokens. An algorithm to induce counts of base tokens from counts of the extended tokens is illustrated. Lastly, a procedure to enforce the $N$-gram counts to be self-consistent is described.
 
-Final counts are stored using a binary storage format referred to as BinDB (binary database). BinDB files store $N$-grams in sorted order, what allows efficient binary search. Additionally, $N$-grams with a common prefix will be adjacent to each other.
+Final counts are stored using a binary storage format referred to as BinDB (binary database). BinDB files store $N$-grams in sorted order. This allows efficient binary search. Additionally, $N$-grams with a common prefix will be adjacent to each other.
 
 \subsection{Sources of natural language statistical data}
 
@@ -323,7 +323,7 @@ All $N$-grams are stored in plain text files in the following format:
 
 \centerline{\texttt{ngram TAB year TAB match\_count TAB volume\_count NEWLINE}}
 
-where the \texttt{ngram} field is tab-separated into $N$ token strings. \texttt{match\_count} gives the total number of occurrences of an $N$-gram in the whole corpus in a given year, and \texttt{volume\_count} tells in how many different books published in that year it was found.
+where the \texttt{ngram} field is tab-separated into $N$ token strings. \texttt{match\_count} gives the total number of occurrences of an $N$-gram in the whole corpus in a given year, and \texttt{volume\_count} tells how many different books published in that year it was found in.
 
 Tokens can be pure plain text strings (\eg \texttt{burnt}), part-of-speech annotated strings (\eg \texttt{burnt\_VERB}) or just the POS tags (\eg \texttt{\_VERB\_}). The first case corresponds to the existence of a particular string regardless of its role in the sentence. These are then broken down into finer categories, which indicate the syntactic role of a particular token, producing POS-annotated strings. The last class of tokens allows us to answer more general questions, for example the count of \mbox{\texttt{he \_VERB\_}} tells us how many times the word \emph{he} is followed by any verb.
 
@@ -335,7 +335,7 @@ In the stegosystem, there can be no ambiguity as to the identity of the token. T
 
 Mark Davies has compiled $N$-gram frequencies \cite{web:byu_ngrams} from the Corpus of Contemporary American English (COCA) \cite{coca2010}. COCA is based on 0.2 million texts that contain a total of 440 million tokens. The tokens include POS-annotated words or punctuation, but not sentence markers. Free version of the database contains 1 million most frequent $N$-grams for each order $N$ up to 5. Paid version has no cutoff and has counts of all $N$-grams up to $N=4$.
 
-Prior to processing Google Books data, I experimented with using the free version of COCA $N$-grams to create the language model. I finally decided to use the Google Books $N$-grams Corpus because of free access its full version and the fact that it contains counts up to $N=5$. Since COCA $N$-grams are not a part of the final outcome of the project, I will not be discussing in detail their processing and storage.
+Prior to processing Google Books data, I experimented with using the free version of COCA $N$-grams to create the language model. I finally decided to use the Google Books $N$-grams Corpus because of free access its full version and the fact that it contains counts up to $N=5$. Since COCA $N$-grams are not a part of the final outcome of the project, I will not be discussing their processing or storage.
 
 \subsection{Normalising tokens}
 
@@ -397,7 +397,7 @@ To mitigate these problems, the tokens are \emph{normalised}. The first step is 
 	\caption{\label{tab:its_ngrams}Ways in which \emph{it's} is stored in the Google Books $N$-gram Corpus (after normalisation).}
 \end{table}
 
-The corpus needs to be processed in a way such that all entries from \cref{tab:its_ngrams} are absorbed into a single $N$-gram. It can be achieved through \emph{exploding tokens by punctuation}. Let us classify tokens into two groups: \emph{extended tokens} and \emph{base tokens}. A base token can consist of any number of lowercase letters and digits (\ie alphanumeric characters) or a single punctuation mark. An extended token is a concatenation of base tokens, where two alphanumeric base tokens cannot appear next to each other. Exploding a token by punctuation is defined as finding the corresponding base token sequence of an extended token.
+The corpus needs to be processed so that all entries from \cref{tab:its_ngrams} are absorbed into a single $N$-gram. It can be achieved through \emph{exploding tokens by punctuation}. Let us classify tokens into two groups: \emph{extended tokens} and \emph{base tokens}. A base token can consist of any number of lowercase letters and digits (\ie alphanumeric characters) or a single punctuation mark. An extended token is a concatenation of base tokens, where two alphanumeric base tokens cannot appear next to each other. Exploding a token by punctuation is defined as finding the corresponding base token sequence of an extended token.
 
 \begin{table}[h]
 	\centering
@@ -548,15 +548,17 @@ The Google Books $N$-gram Corpus supplies counts of 1- to 5-grams of unnormalise
 \caption{\label{fig:extended_and_base_ngrams}Finding extended and base $N$-grams in the fragment of text \emph{what's the \mbox{cross-section} area?} Solid vertical lines denote boundaries between extended tokens, dotted vertical lines -- boundaries between base tokens. All $N$-grams up to $N=3$ are shown in the figure. Each is represented by a single thick horizontal segment. Extended $N$-grams are located above text, base $N$-grams -- below it.}
 \end{figure}
 
-Note that extended token boundaries are chosen by the Google Books team using a custom rule-based system \cite{lin2012thesis}, not necessarily in a way consistent for the same phonological word. \Cref{fig:extended_and_base_ngrams} shows an example way of how token boundaries could be found in a sentence. Base token boundaries are created using the algorithm from \cref{sec:exploding_tokens}.
+Note that extended token boundaries are chosen by the Google Books team using a custom rule-based system \cite{lin2012thesis}, not necessarily in a way consistent for the same phonological word. \Cref{fig:extended_and_base_ngrams} shows an example way of how token boundaries could be found in a sentence. Base token boundaries are created using the method from \cref{sec:exploding_tokens}.
 
 \subsubsection{Inducing counts from extended 1-grams}
 
 We know the counts of all extended $N$-grams up to a certain order and wish to know the counts of all base $N$-grams up to the same order. Both sets of counts are on the same text.
 
-Looking at \cref{fig:extended_and_base_ngrams}, it is possible to state unique correspondence between extended 1-grams and some base $N$-grams. For example, the extended 1-gram \ngram{\mbox{cross-section}} coincides with and only with the set of base 1-grams \ngram{cross}, \ngram{-}, \ngram{section}, base 2-grams \ngram{cross -}, \ngram{- section} and base 3-gram \ngram{cross - section}. Let us call the elements of this set \emph{induced $N$-grams}. Formally, induced $N$-grams are base $N$-grams that can be identified in the base token sequence of an extended 1-gram.
+Looking at \cref{fig:extended_and_base_ngrams}, it is possible to state a unique correspondence between extended 1-grams and some base $N$-grams. For example, the extended 1-gram \ngram{\mbox{cross-section}} coincides with and only with the set of base 1-grams \ngram{cross}, \ngram{-}, \ngram{section}, base 2-grams \ngram{cross -}, \ngram{- section} and base 3-gram \ngram{cross - section}. Let us call the elements of this set \emph{induced $N$-grams}. Formally, induced $N$-grams are base $N$-grams that can be identified in the base token sequence of an extended 1-gram.
 
-Any time we observe counts of an extended 1-gram, we know that its induced $N$-grams occurred the same number of times. It is not a problem if we end up with multiple counts of the same induced $N$-gram. It means that this base $N$-gram occurs in many contexts and its counts need to be cumulated. Duplicates can come from the same extended 1-gram or different extended 1-grams. In the former case, \ngram{!!} gives \ngram{!} and \ngram{!}. In the latter, \ngram{mr.} gives \ngram{mr} and \ngram{.}, while \ngram{mrs.} gives \ngram{mrs} and \ngram{.} again.
+Any time we observe counts of an extended 1-gram, we know that its induced $N$-grams occurred the same number of times. It is not a problem if we end up with multiple counts of the same induced $N$-gram. It means that this base $N$-gram occurs in many contexts and its counts need to be cumulated. Duplicates can come from the same extended 1-gram or different extended 1-grams.
+
+Take as an example two extended 1-grams that both contain the base 1-gram \ngram{section}: \ngram{cross-section} with count 42 and simply \ngram{section} with count 173. The final count of the base 1-gram \ngram{section} will be $42+173=215$.
 
 \subsubsection{Inducing counts from extended $N$-grams ($N > 1$)}
 
@@ -611,15 +613,15 @@ The highest order $N$-grams are asserted to be counts consistent, since there ar
 
 Steps \ref{alg:cc_left_consistency}-\ref{alg:cc_full_consistency} can be performed simultaneously, \ie jointly maximising all three tables of $N$-gram counts. In addition, since removing the last token does not change ordering, left integrated \npgrams can be created \emph{in place} -- identical \emph{quasi}-$N$-grams will be next to each other in the \npgrams table. However, creating right integrated \npgrams requires expensive sorting of the whole \emph{quasi}-$N$-grams table before cumulating them -- ordering is not preserved after removing the first token.
 
-Creating count consistent of $N$-grams requires counts consistent \npgrams. So $N$-gram tables need to be created sequentially from the highest $N$ down to 1.
+Creating count consistent $N$-grams requires counts consistent \npgrams. So $N$-gram tables need to be created sequentially from the highest $N$ down to 1.
 
 \newpage
 \section{Language model}
 \label{sec:language_model}
 
-In this section I will describe the language model created for the purpose of the stegosystem. For the needs of arithmetic coding, which is the backbone of the stegosystem, it is necessary to have a model that returns probability of a token given its predecessors. Moreover, the tokens have to be ordered so that each corresponds to a unique subinterval of $[0,1)$ of size equal to the conditional probability of the token.
+In this section I will describe the language model created for the purpose of the stegosystem. For arithmetic coding, which is the backbone of the stegosystem, it is necessary to have a model that returns the probability of a token given its predecessors. Moreover, the tokens have to be ordered so that each corresponds to a unique subinterval of $[0,1)$ of size equal to the conditional probability of the token.
 
-I will first state all the requirements formally and analyse their implications. I will then propose a model where all tokes are arranged in an $N$ level \emph{back-off tree}. The tree allows efficient calculation of conditional probability interval for a token without having to explicitly compute intervals of all other tokens.
+I will first state all the requirements formally and analyse their implications. I will then propose a model where all tokens are arranged in an $N$ level \emph{back-off tree}. The tree allows efficient calculation of the conditional probability interval for a token without having to explicitly compute intervals of all other tokens.
 
 \subsection{Requirements}
 \label{eq:lm_requirements}
@@ -856,15 +858,17 @@ m_1 = f(w_{l-N+1}^{l-1}) .
 
 By counts consistency, it will be larger than the total count of tokens in the first level of the tree. The leftover context count, \ie $m_1 - \sum_{w_l \in \mathcal W_1} f(w_{l-N+1}^l)$, is then a good indication of how likely it is that a token $w_l \notin \mathcal W_1$ follows the context.
 
-Keeping this in mind, $\beta{-}\gamma$ estimation gives a back-off pseudo-count of
+Keeping this in mind, I propose to use a back-off pseudo-count of
 
 \begin{equation}
 \label{eq:backoff_pseudocount_level1} c(b_1) = \ceil*{ \beta \bracket*{ m_1 - \sum_{w_l \in \mathcal W_1} f(w_{l-N+1}^l) } + \gamma ~ m_1 },
 \end{equation}
 
-where $\beta$ controls what proportion of the \emph{leftover context count} is used to account for the event of a back-off, and $\gamma$ controls how much of the \emph{total context count} is added extra to account for back-off as well. To illustrate using the example from Section~\ref{eq:lm_requirements}, there the total context count is $m_1 = 1146$ and the leftover context count is $1146-542=604$.
+where $\beta$ controls what proportion of the \emph{leftover context count} is used to account for the event of a back-off, and $\gamma$ controls how much of the \emph{total context count} is added extra to account for back-off as well. In the following, I will refer to the back-off pseudo-count expression I proposed in \cref{eq:backoff_pseudocount_level1} as \emph{$\beta{-}\gamma$ estimation}.
 
-Dealing with excluded tokens in a deeper level $d$ of the back-off tree is not difficult. It suffices to remove excluded token counts from the total context count as follows
+To illustrate using the example from Section~\ref{eq:lm_requirements}, there the total context count is $m_1 = 1146$ and the leftover context count is $1146-542=604$. Using parameter values $\beta = 0.5$ and $\gamma = 0.1$, the back-off pseudo-count is estimated to be $c(b_1) = \ceil*{ 0.5 \times 604 + 0.1 \times 1146 } = 417$.
+
+Dealing with excluded tokens in a deeper level $d$ of the back-off tree is similar. It suffices to remove excluded token counts from the total context count as follows
 
 \begin{equation}
 \label{eq:adjusted_context_count}
@@ -878,7 +882,7 @@ Then the calculation from \cref{eq:backoff_pseudocount_level1} can be repeated i
 c(b_d) = \ceil*{ \beta \bracket*{ \overline m_d - \sum_{w_l \in \mathcal W_d} f(w_{l-N+d}^l) } + \gamma ~ \overline m_d }.
 \end{equation}
 
-The only special case to consider is when $m_1 = 0$ or $\overline m_d = 0$. This can simply occur if the context was not observed in training data frequently enough to be in the corpus, but also in more subtle situations.\footnote{If all tokens in a level are excluded \emph{and} the context count $f(w_{l-N+d}^{l-1})$ is equal to the sum of excluded counts $\sum_{w_l \in \mathcal W_1 \cup \dots \cup \mathcal W_{d-1}} f(w_{l-N+d}^l)$ then $\overline m_d$ will be 0. This happens if the context was observed in training data only followed by the excluded tokens.} Back-off pseudo-count would be then 0, however the back-off node would be the only node in its level anyway. One way to deal with this problem is to give the back-off node an arbitrary non-zero pseudo-count, for example 1.
+The only special case to consider is when $m_1 = 0$ or $\overline m_d = 0$. This can simply occur if the context was not observed in training data frequently enough to be in the corpus, but also in more subtle situations.\footnote{If all tokens in a level are excluded \emph{and} the context count $f(w_{l-N+d}^{l-1})$ is equal to the sum of excluded counts $\sum_{w_l \in \mathcal W_1 \cup \dots \cup \mathcal W_{d-1}} f(w_{l-N+d}^l)$ then $\overline m_d$ will be 0. This happens if the context was observed in training data only followed by the excluded tokens.} Back-off pseudo-count would then be 0. However, the back-off node would be the only node in its level anyway. One way to deal with the problem elegantly is to give the back-off node an arbitrary non-zero pseudo-count, for example 1.
 
 \newpage
 \section{Stegosystem}
@@ -887,7 +891,7 @@ The only special case to consider is when $m_1 = 0$ or $\overline m_d = 0$. This
 
 The interval algorithm described in \cref{sec:interval_algorithm} can be used to construct a system that generates \emph{stegotext} from \emph{plaintext}\footnote{Note that \emph{plaintext} has a very precise meaning in this context -- the unencrypted message. \emph{Plain text} written separately simply refers to an unformatted sequence of characters.}. Input plaintext sequence $\mathbf P$ on alphabet $\mathfrak P$ needs to have been generated according to a known stochastic process $\mathcal P$. Then, output stegotext sequence $\mathbf S$ on alphabet $\mathfrak S$ will be deterministically generated from $\mathbf P$ according to the statistics of an arbitrarily chosen stochastic process $\mathcal S$. Knowledge of $\mathbf S$ will allow to recover $\mathbf{P'}$ -- a sequence on $\mathfrak P$ whose prefix is $\mathbf P$.
 
-For example, if we want to transmit information which is optimally compressed to binary, $\mathcal P$ will be a sequence of \iid uniform bits. If we want the stegotext to be English text, we will use the English language model from \cref{sec:language_model} as $\mathcal S$.
+For example, if we want to transmit information that is optimally compressed to binary, $\mathcal P$ will be \iid uniform. If we want the stegotext to be English text, we will use the English language model from \cref{sec:language_model} as $\mathcal S$.
 
 Note that it is necessary to terminate $\mathbf P$ with an end-of-message symbol, or otherwise transmit its length, if we want to be able to uniquely recover $\mathbf P$ from $\mathbf{P'}$. This issue will be addressed later.
 
