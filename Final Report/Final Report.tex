@@ -46,6 +46,9 @@
 % Use the package for declaring paired delimiters
 \usepackage{mathtools}
 
+% Make the \FloatBarrier command available
+\usepackage{placeins}
+
 % Sets 1.5 line spacing
 \usepackage{setspace}
 \onehalfspacing
@@ -174,10 +177,13 @@ Lorem ipsum.
 
 Lorem ipsum.
 
+\FloatBarrier
 \subsection{Aim}
 
+\FloatBarrier
 \subsection{Overview of steganography}
 
+\FloatBarrier
 \subsection{High level description of the stegosystem}
 
 \clearpage
@@ -250,6 +256,7 @@ The interval algorithm works by continuously mapping the observed input sequence
 
 I will introduce basic principles of statistical natural language models. I will start by interpreting text as the output of a stochastic process and then apply approximations to make evaluating sentence probabilities computationally tractable. This section is mainly a review of \cite{4f11:statistical_language_models, 4f11:smt_systems, coursera:nlp}.
 
+\FloatBarrier
 \subsection{Text as the output of a stochastic process}
 
 A string $\mathbf w$ can be written as a sequence of $L$ \emph{tokens} $\mathbf w = [ w_1, \dots, w_L ] \equiv w_1^L$. Tokens are atomic elements of text such as words or punctuation marks. $w_l$ corresponds to the index of the token; for $V$ distinct tokens it takes values in $\{1, \dots, V\}$. $\mathbf w$ can be regarded as a realisation of an $L$-dimensional vector $\mathbf W$ of jointly distributed random variables $W_l$. According to the chain rule of probability, we can factorise $P(\mathbf w)$ as follows
@@ -261,6 +268,7 @@ P(\mathbf w) = \prod_{l=1}^{L} P( w_l | w_1^{l-1} ) .
 
 Even though \cref{eq:exact_string_probability} gives a convenient formulation of language as a stochastic process, it is computationally intractable. If the conditional probabilities are stored in tables, the conditional probability table of the $l$th token has $V^l$ entries. The total size of all tables becomes prohibitively large for even small $L$.
 
+\FloatBarrier
 \subsection{$N$-gram language models}
 
 The usual solution is to restrict the size of the context to $N{-}1$ previous tokens, resulting in an approximate $N$-gram language model
@@ -270,6 +278,7 @@ The usual solution is to restrict the size of the context to $N{-}1$ previous to
 P(\mathbf w) \approx P_{\text{$N$-gram}}(\mathbf w) \equiv \prod_{l=1}^{L} P( w_l | w_{l-N+1}^{l-1} ).
 \end{equation}
 
+\FloatBarrier
 \subsection{Estimating ML parameters}
 
 The ML (maximum likelihood) estimate of the conditional probability of $w_l$ in an $N$-gram model is
@@ -283,6 +292,7 @@ where $f(\cdot)$ is the number of occurrences of a particular sequence of tokens
 
 A problem with \cref{eq:ml_conditional_token_probability} is that most $N$-gram counts will be zero. For example, a $5$-gram model with $V \approx 10^6$ will have $V^N \approx \left( 10^6 \right)^5 = 10^{30}$ distinct $N$-grams. For every possible $5$-gram sequence to occur at least once, training data would need to consist of more than $10^{30}$ tokens. Google Books $N$-gram Corpus \cite{googlengrams2011}, currently the largest available dataset, is based on $4.7 \times 10^{8}$ tokens. As a result, a large number of grammatically correct sentences will have zero probability.
 
+\FloatBarrier
 \subsection{Limiting corpus size, discounting and back-off}
 
 A standard way of dealing with this problem is to introduce \emph{discounting} and \emph{back-off} to the model. In addition, $N$-grams with counts below a threshold $C$ are sometimes discarded from the corpus to conserve storage space. The conditional distribution of the $l$th token becomes
@@ -311,6 +321,7 @@ Firstly, all $N$-grams that contain digits are removed from the corpus. This is 
 
 Final counts are stored using a binary storage format referred to as BinDB (binary database). BinDB files store $N$-grams in sorted order. This allows efficient binary search. Additionally, $N$-grams with a common prefix will be adjacent to each other.
 
+\FloatBarrier
 \subsection{Sources of natural language statistical data}
 
 \subsubsection{Google Books $N$-gram Corpus}
@@ -337,6 +348,7 @@ Mark Davies has compiled $N$-gram frequencies \cite{web:byu_ngrams} from the Cor
 
 Prior to processing Google Books data, I experimented with using the free version of COCA $N$-grams to create the language model. I finally decided to use the Google Books $N$-grams Corpus because of free access its full version and the fact that it contains counts up to $N=5$. Since COCA $N$-grams are not a part of the final outcome of the project, I will not be discussing their processing or storage.
 
+\FloatBarrier
 \subsection{Normalising tokens}
 
 \subsubsection{Discarding $N$-grams containing digits}
@@ -417,6 +429,7 @@ The corpus needs to be processed so that all entries from \cref{tab:its_ngrams} 
 
 If we explode tokens in \cref{tab:its_ngrams}, all $N$-grams will correspond to the same sequence of base tokens: \ngram{it ' s}. More generally, any phonological word that can be ambiguously split into multiple tokens because of internal punctuation can be uniquely identified by its sequence of base tokens.
 
+\FloatBarrier
 \subsection{Induced counts of base $N$-grams}
 
 The Google Books $N$-gram Corpus supplies counts of 1- to 5-grams of unnormalised extended tokens. In order to be able to interpret and generate plain text in an unambiguous way, we need to operate on tokens that are normalised and exploded by punctuation. We know how to apply normalisation and explosion to plain text, but we do not know the statistics of the resulting tokens -- we do not have $N$-gram counts from training data processed in this way. We need to induce such counts from the Google Books $N$-gram Corpus.
@@ -570,10 +583,12 @@ The above restriction can be easily stated in an equivalent way. A base $N$-gram
 
 Using the example from the beginning of the section, \ngram{\underline{'s} the \mbox{\underline{cross-section}}} corresponds to the base token sequence \ngram{\underline{' s} the \underline{cross - section}}. The following induced $N$-grams can be selected from it: 3-gram \ngram{\underline{s} the \underline{cross}}, 4-grams \ngram{\underline{' s} the \underline{cross}}, \ngram{\underline{s} the \underline{cross -}} and 5-grams \ngram{\underline{' s} the \underline{cross -}}, \ngram{\underline{s} the \underline{cross - section}}. In all examples, base tokens that belong to the first or last extended token of the extended $N$-gram are underlined.
 
+\FloatBarrier
 \subsection{BinDB file format}
 
 \noteSelf{Quickly describe the BinDB format -- binary storage of $N$-grams, format of each line, tokens are stored using their indices, $N$-grams are sorted.}
 
+\FloatBarrier
 \subsection{Counts consistency}
 \label{sec:counts_consistency}
 
@@ -623,6 +638,7 @@ In this section I will describe the language model created for the purpose of th
 
 I will first state all the requirements formally and analyse their implications. I will then propose a model where all tokens are arranged in an $N$ level \emph{back-off tree}. The tree allows efficient calculation of the conditional probability interval for a token without having to explicitly compute intervals of all other tokens.
 
+\FloatBarrier
 \subsection{Requirements}
 \label{eq:lm_requirements}
 
@@ -664,6 +680,7 @@ Requirement \ref{lm_req:hidden_symbols} greatly complicates the language model. 
 
 The problem with implicit back-off and using \cref{eq:conditional_token_probability_with_backoff} \emph{exactly} is that if a token has non-zero probability in \eg a 5-gram model, by consistency it is also included in all lower-order models. As a result, there are 5 separate probability regions corresponding to it -- one in each back-off level (\ie in models from 5-gram to 1-gram). These intervals will not be contiguous and requirement \ref{lm_req:contiguous_probability} will be violated.
 
+\FloatBarrier
 \subsection{Back-off tree}
 
 \cref{fig:backoff_tree} shows how to construct a \emph{back-off tree} where each token is represented by a single leaf. Each leaf corresponds to a contiguous, non-zero interval. The set of all leaf intervals partitions $[0,1)$. As a result, the tree can be interpreted as giving a \pmf over all tokens that satisfies every requirement from the previous section.
@@ -846,6 +863,7 @@ Sizes of intervals $v(w_l)$ are proportional to the ML estimate $\hat P(w_l | w_
 
 Note how in order to calculate the interval $v(w_l)$ of a token in level $d$ of the tree it is only necessary to know the counts of tokens in levels $1, \dots, d$ and the back-off pseudo-counts $c(b_1), \dots, c(b_d)$.
 
+\FloatBarrier
 \subsection{$\beta{-}\gamma$ back-off pseudo-count estimation}
 \label{sec:beta_gamma_backoff}
 
@@ -887,7 +905,9 @@ The only special case to consider is when $m_1 = 0$ or $\overline m_d = 0$. This
 \clearpage
 \section{Stegosystem}
 
+\FloatBarrier
 \subsection{Innocuous transmission of the output of a stochastic process}
+\label{sec:arbitrary_source_stego}
 
 The interval algorithm described in \cref{sec:interval_algorithm} can be used to construct a system that generates \emph{stegotext} from \emph{plaintext}\footnote{Note that \emph{plaintext} has a very precise meaning in this context -- the unencrypted message. \emph{Plain text} written separately simply refers to an unformatted sequence of characters.}. Input plaintext sequence $\mathbf P$ on alphabet $\mathfrak P$ needs to have been generated according to a known stochastic process $\mathcal P$. Then, output stegotext sequence $\mathbf S$ on alphabet $\mathfrak S$ will be deterministically generated from $\mathbf P$ according to the statistics of an arbitrarily chosen stochastic process $\mathcal S$. Knowledge of $\mathbf S$ will allow to recover $\mathbf{P'}$ -- a sequence on $\mathfrak P$ whose prefix is $\mathbf P$.
 
@@ -895,7 +915,7 @@ For example, if we want to transmit information that is optimally compressed to 
 
 Note that it is necessary to terminate $\mathbf P$ with an end-of-message symbol, or otherwise transmit its length, if we want to be able to uniquely recover $\mathbf P$ from $\mathbf{P'}$. This issue will be addressed later.
 
-\subsubsection{Description of the system}
+\subsubsection{Detailed description of the system}
 
 The stegosystem requires a source of randomness $\mathcal R$ that outputs an infinite sequence $\mathbf R$ on alphabet $\mathfrak R$. $\mathcal R$ can be an arbitrary stochastic process with known statistics, for example a sequence of \iid uniform bits.
 
@@ -905,7 +925,7 @@ Using the interval algorithm, based on $\mathbf I$ we can deterministically gene
 
 To recover $\mathbf P$ from $\mathbf S$, we can run the interval algorithm in reverse. The only requirement to correctly decode all symbols of $\mathbf P$ is that $\mathbf s \subseteq \mathbf p$. This is the reason we use the process $\mathcal R$ during generation of $\mathbf S$ -- we keeping refining the input interval $\mathbf i$ until it gets small enough that $\mathbf s \subseteq \mathbf p$. $\mathbf s$ is guaranteed to decrease every time a new symbol is appended to $\mathbf S$ since the conditional probabilities are always less than 1.\footnote{Each symbol has a non-zero probability and the alphabet size of obviously more than 1.} \cref{fig:stegosystem_encoding} illustrates this with a concrete example.
 
-The problem is that we have no control over how small the interval $\mathbf s$ that satisfies $\mathbf s \subseteq \mathbf p$ gets. We don't know when to switch from the alphabet $\mathfrak P$ to $\mathfrak R$, so we keep using the statistics of the stochastic process $\mathcal P$ to decode $\mathbf{P'}$ from $\mathbf S$ for as long as possible. It may happen that even the largest of the intervals satisfying this condition will allow us to decode \emph{more} than just $\mathbf P$. This is why the sequence we decode is $\mathbf{P'}$, not just $\mathbf P$. See \cref{fig:stegosystem_decoding} for an example of such a situation.
+The problem is that we have no control over how small the interval $\mathbf s$ that satisfies $\mathbf s \subseteq \mathbf p$ gets. Since we do not know how long $\mathbf P$ is, we do not know when to stop generating symbols from $\mathcal P$. It may happen that even the largest of the intervals satisfying this condition will allow us to decode \emph{more} than just $\mathbf P$. This is why the sequence we decode is $\mathbf{P'}$, not $\mathbf P$. See \cref{fig:stegosystem_decoding} for an example of such a situation.
 
 \begin{figure}[h]
 	\centering
@@ -957,7 +977,7 @@ The problem is that we have no control over how small the interval $\mathbf s$ t
 
 	\end{tikzpicture}
 
-	\caption{\label{fig:stegosystem_encoding}Generating $\mathbf S$ (right) from $\mathbf P$ (left). Both $\mathcal P$ and $\mathcal S$ are arbitrary stochastic processes defined over the alphabets $\mathfrak P = \{a,b,c\}$ and $\mathfrak S = \{\alpha,\beta,\gamma,\delta\}$. $\mathcal R$ emits \iid uniform bits. We are given $\mathbf P = [b,c]$ and we wish to generate $\mathbf S$ from it. $\mathbf P$ corresponds to the light grey region $\mathbf p = [0.34,0.69)$, which only allows to generate $\mathbf S$ up to $[\gamma]$. Since $[0.30,0.87) \nsubseteq [0.34,0.69)$, $[\gamma]$ is not enough to identify a sequence with prefix $\mathbf P$. However, if we use $\mathcal R$ to extend $\mathbf P$ to $\mathbf I = [b,c,0,1]$, we obtain the refined input interval $\mathbf i = [0.45, 0.53)$ shown in dark grey. $\mathbf i$ allows us to generate $\mathbf S = [\gamma,\beta]$ with the required property that $\mathbf s \subseteq \mathbf p$.}
+	\caption{\label{fig:stegosystem_encoding}Generating $\mathbf S$ (right) from $\mathbf P$ (left). Both $\mathcal P$ and $\mathcal S$ are arbitrary stochastic processes defined over the alphabets $\mathfrak P = \{a,b,c\}$ and $\mathfrak S = \{\alpha,\beta,\gamma,\delta\}$. $\mathcal R$ emits \iid uniform bits. Statistics of the corresponding processes are used to provide mappings between sequences and intervals. We are given $\mathbf P = [b,c]$ and we wish to generate $\mathbf S$ from it. $\mathbf P$ corresponds to the light grey region $\mathbf p = [0.34,0.69)$, which only allows to generate $\mathbf S$ up to $[\gamma]$. Since $[0.30,0.87) \nsubseteq [0.34,0.69)$, $[\gamma]$ is not enough to identify a sequence with prefix $\mathbf P$. However, if we use $\mathcal R$ to extend $\mathbf P$ to $\mathbf I = [b,c,0,1]$, we obtain the refined input interval $\mathbf i = [0.45, 0.53)$ shown in dark grey. $\mathbf i$ allows us to generate $\mathbf S = [\gamma,\beta]$ with the required property that $\mathbf s \subseteq \mathbf p$.}
 
 \end{figure}
 
@@ -1010,27 +1030,42 @@ The problem is that we have no control over how small the interval $\mathbf s$ t
 
 	\end{tikzpicture}
 
-	\caption{\label{fig:stegosystem_decoding}Generating $\mathbf{P'}$ (right) from $\mathbf S$ (left). We use the statistics of $\mathcal S$ to find the interval $\mathbf s = [0.42,0.59)$ that corresponds to $\mathbf S$. We then use the interval algorithm to generate $\mathbf{P'}$. Since we don't know how long the original sequence $\mathbf P$ was, we keep generating terms according to the statistics of $\mathcal P$ for as long as possible. In this case we decode $\mathbf{P'} = [b,c,b]$. $\mathbf P = [b,c]$ is a prefix of $\mathbf{P'}$, but the latter also contains an extra symbol $b$.}
+	\caption{\label{fig:stegosystem_decoding}Generating $\mathbf{P'}$ (right) from $\mathbf S$ (left). We use the statistics of $\mathcal S$ to find the interval $\mathbf s = [0.42,0.59)$. We then use the interval algorithm to generate $\mathbf{P'}$. Since we don't know how long the original sequence $\mathbf P$ was, we keep generating terms according to the statistics of $\mathcal P$ for as long as possible. In this case we decode $\mathbf{P'} = [b,c,b]$. $\mathbf{P'}$ has the prefix $\mathbf P = [b,c]$, but also contains an extra symbol $b$.}
 
 \end{figure}
+
+\FloatBarrier
+\subsection{Innocuous transmission of text with deniable encryption}
+
+The system described in \cref{sec:arbitrary_source_stego} can be used as a part of a bigger system, which \emph{securely} and \emph{innocuously} transmits arbitrary English text $\mathbf P$ using different English text $\mathbf K$ as a \emph{key}. I will describe a modular stegosystem in which both the \emph{plaintext} and the \emph{key} are first converted to binary sequences $\mathbf{P_2}$ and $\mathbf{K_2}$. The conversion is achieved using the interval algorithm with the English language model, so the resulting binary sequences can be made \iid uniform.
+
+The binary representation of plaintext $\mathbf{P_2}$ is then encrypted to binary \emph{ciphertext} $\mathbf{C_2}$ using a stream cipher and $\mathbf{K_2}$. The particular cipher used in this project maintains $\mathbf{C_2}$ as \iid uniform. $\mathbf{C_2}$ is then used as an input to the system from \cref{sec:arbitrary_source_stego}, producing pseudo-random English \emph{stegotext} $\mathbf S$. Provided that the language model is correct, the stegotext is statistically indistinguishable from any random English text.
+
+Running the system from \cref{sec:arbitrary_source_stego} in reverse, $\mathbf S$ allows us to recover a binary sequence $\mathbf{C'_2}$ whose prefix is the ciphertext $\mathbf{C_2}$. Knowing the key and its binary representation $\mathbf{K_2}$, we can recover the original binary plaintext sequence, potentially followed by more bits, \ie $\mathbf{P'_2}$. Using the language model, we can now recover $\mathbf{P'}$ -- the original plaintext potentially followed by extra tokens.
+
+An important feature of a stegosystem constructed in this way is \emph{deniable encryption}. Assume that an enemy with full knowledge of the system is told that a particular fragment of text $\mathbf S$ is indeed stegotext. Using the knowledge of the system (\ie the language model), they can reconstruct $\mathbf {C'_2}$ -- the binary ciphertext sequence with trailing bits. However, the recovery of plaintext requires knowledge of the key. If a \emph{false key} $\mathbf {\overline K}$ is supplied in text form, it will still be correctly converted to some binary sequence $\mathbf {\overline K_2}$. It will then allow to decipher without failure ciphertext $\mathbf{C'_2}$ into an \emph{incorrect} binary sequence $\mathbf {\overline {P'}_2}$. $\mathbf {\overline {P'}_2}$ will then be mapped to some incorrect plaintext $\mathbf {\overline {P'}}$, generated according to the stochastic process $\mathcal P$. So it will be a fragment of text randomly drawn from all English sentences. As a result, a user asked to supply the key may give $\mathbf {\overline K}$ instead and claim that $\mathbf {\overline {P'}}$ contains the plaintext message as a prefix. If the enemy does not know $\mathbf P$ but expects it to be just a random sentence, \ie one generated according to the same statistics as $\mathcal P$, $\mathbf {\overline {P'}}$ is just as likely to contain $\mathbf P$ as a prefix as is the real $\mathbf{P'}$.
 
 %\clearpage
 %\section{Detailed description of the stegosystem}
 %
 %Lorem ipsum.
 %
+%\FloatBarrier
 %\subsection{Source -- plaintext concatenated with randomness}
 %
 %Blah blah.
 %
+%\FloatBarrier
 %\subsection{Target -- English language model}
 %
 %Blah blah.
 %
+%\FloatBarrier
 %\subsection{Storing length of plaintext}
 %
 %Blah blah.
 %
+%\FloatBarrier
 %\subsection{Sentence delimiters}
 %
 %Google Books $N$-grams contain \ngram{\_START\_} and \ngram{\_END\_} tokens to identify beginning and end of a sentence. If text is \emph{generated} using the language model, it will inevitably contain these tokens (for example any sequence will start with \ngram{\_START\_}). As a result some kind of convention needs to be adopted as to how sentence delimiters are identified in formatted output text. I decided that sentences will be delimited with multiple whitespace characters, for example a double space. I will return to this issue in the discussion section, as it has non-trivial consequences for practical application of the system.
@@ -1043,10 +1078,12 @@ The problem is that we have no control over how small the interval $\mathbf s$ t
 %
 %Blah blah.
 %
+%\FloatBarrier
 %\subsection{Sufficient length of the output interval}
 %
 %Blah blah.
 %
+%\FloatBarrier
 %\subsection{Secrecy}
 %
 %\clearpage
@@ -1059,6 +1096,7 @@ The problem is that we have no control over how small the interval $\mathbf s$ t
 %
 %Lorem ipsum.
 %
+%\FloatBarrier
 %\subsection{Telling stegotext from covertext}
 %
 %\subsubsection{Plaintext length declaration incompatible with interval size}
@@ -1072,8 +1110,10 @@ The problem is that we have no control over how small the interval $\mathbf s$ t
 %
 %Lorem ipsum.
 %
+%\FloatBarrier
 %\subsection{Rate of the system}
 %
+%\FloatBarrier
 %\subsection{Entropy of the language model and its effect on stegotext length}
 %
 %Use the bounds from Han \& Hoshi's paper.
@@ -1083,6 +1123,7 @@ The problem is that we have no control over how small the interval $\mathbf s$ t
 %
 %Lorem ipsum.
 %
+%\FloatBarrier
 %\subsection{How many bits of information stored per word, sentence, tweet?}
 %
 %\subsubsection{Dependence on the entropy of the language model}
