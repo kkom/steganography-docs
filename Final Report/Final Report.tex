@@ -1037,13 +1037,101 @@ The problem is that we have no control over how small the interval $\mathbf s$ t
 \FloatBarrier
 \subsection{Innocuous transmission of text with deniable encryption}
 
-The system described in \cref{sec:arbitrary_source_stego} can be used as a part of a bigger system, which \emph{securely} and \emph{innocuously} transmits arbitrary English text $\mathbf P$ using different English text $\mathbf K$ as a \emph{key}. I will describe a modular stegosystem in which both the \emph{plaintext} and the \emph{key} are first converted to binary sequences $\mathbf{P_2}$ and $\mathbf{K_2}$. The conversion is achieved using the interval algorithm with the English language model, so the resulting binary sequences can be made \iid uniform.
+The system described in \cref{sec:arbitrary_source_stego} can be used as a part of a bigger system, which \emph{securely} and \emph{innocuously} transmits arbitrary English text $\mathbf P$ using different English text $\mathbf K$ as a \emph{key}. I will describe a modular stegosystem in which both the \emph{plaintext} and the \emph{key} are first converted to binary sequences $\mathbf{P_2}$ and $\mathbf{K_2}$. \noteSelf{The conversion of the key is achieved using the interval algorithm with the English language model, so the resulting binary sequences can be made \iid uniform.}
 
-The binary representation of plaintext $\mathbf{P_2}$ is then encrypted to binary \emph{ciphertext} $\mathbf{C_2}$ using a stream cipher and $\mathbf{K_2}$. The particular cipher used in this project maintains $\mathbf{C_2}$ as \iid uniform. $\mathbf{C_2}$ is then used as an input to the system from \cref{sec:arbitrary_source_stego}, producing pseudo-random English \emph{stegotext} $\mathbf S$. Provided that the language model is correct, the stegotext is statistically indistinguishable from any random English text.
+The binary representation of plaintext $\mathbf{P_2}$ is then encrypted to binary \emph{ciphertext} $\mathbf{C_2}$ using a stream cipher with key $\mathbf{K_2}$. If $\mathbf{K_2}$ is longer than $\mathbf{P_2}$ (\ie has higher entropy), we achieve perfect secrecy.\cite{shannon1949communication} The cipher needs to ensure that $\mathbf{C_2}$ is \iid uniform. $\mathbf{C_2}$ is then used as an input to the system from \cref{sec:arbitrary_source_stego}, producing pseudo-random English \emph{stegotext} $\mathbf S$. Provided that the language model is correct, the stegotext is statistically indistinguishable from any random English text.
 
 Running the system from \cref{sec:arbitrary_source_stego} in reverse, $\mathbf S$ allows us to recover a binary sequence $\mathbf{C'_2}$ whose prefix is the ciphertext $\mathbf{C_2}$. Knowing the key and its binary representation $\mathbf{K_2}$, we can recover the original binary plaintext sequence, potentially followed by more bits, \ie $\mathbf{P'_2}$. Using the language model, we can now recover $\mathbf{P'}$ -- the original plaintext potentially followed by extra tokens.
 
 An important feature of a stegosystem constructed in this way is \emph{deniable encryption}. Assume that an enemy with full knowledge of the system is told that a particular fragment of text $\mathbf S$ is indeed stegotext. Using the knowledge of the system (\ie the language model), they can reconstruct $\mathbf {C'_2}$ -- the binary ciphertext sequence with trailing bits. However, the recovery of plaintext requires knowledge of the key. If a \emph{false key} $\mathbf {\overline K}$ is supplied in text form, it will still be correctly converted to some binary sequence $\mathbf {\overline K_2}$. It will then allow to decipher without failure ciphertext $\mathbf{C'_2}$ into an \emph{incorrect} binary sequence $\mathbf {\overline {P'}_2}$. $\mathbf {\overline {P'}_2}$ will then be mapped to some incorrect plaintext $\mathbf {\overline {P'}}$, generated according to the stochastic process $\mathcal P$. So it will be a fragment of text randomly drawn from all English sentences. As a result, a user asked to supply the key may give $\mathbf {\overline K}$ instead and claim that $\mathbf {\overline {P'}}$ contains the plaintext message as a prefix. If the enemy does not know $\mathbf P$ but expects it to be just a random sentence, \ie one generated according to the same statistics as $\mathcal P$, $\mathbf {\overline {P'}}$ is just as likely to contain $\mathbf P$ as a prefix as is the real $\mathbf{P'}$.
+
+Note that this is a special case where both \emph{plaintext} and \emph{stegotext} are generated according to the same model. So transmitting stegotext has the same innocuousness as transmitting plaintext. However, the system still implements secrecy without \emph{compromising} innocuousness. Conversely, standard text encryption gives a sequence of \iid uniform bits, not just different plausible text. Also, one can easily imagine modifying the system to use a completely different stochastic process for plaintext, \eg French text. Plaintext source could be also much more elaborate, for example it could be a custom format for storing some intelligence information. If $\mathcal P$ is designed to emit plausible outputs, we have deniable encryption.
+
+\subsubsection{Example}
+
+Assume that the language contains three tokens $\{ \alpha, \beta, \gamma \}$ and both plaintext and stegotext are generated according to the stochastic process $\mathcal E$. The plaintext we wish to securely and innocuously transmit is $\mathbf P = [\beta,\gamma]$. For this purpose we use the key $\mathbf K = [\beta,\alpha]$.
+
+\begin{figure}[h]
+	\centering
+
+	\begin{tikzpicture}[scale=0.05]
+		% Show that the binary interval is a subinterval of plaintext interval
+		\fill [opacity=0.1] (-30,0.500*100) rectangle (30,0.635*100);
+
+		% Input side
+		\intervalBothLabels{-90}{0}{100}{0}{1}{solid}{left}
+		\node[below] at (-90,-5) {\footnotesize $[~]$};
+
+		\intervalBothLabels{-60}{0}{100}{0.69}{1.00}{densely dotted}{left}
+		\intervalBottomLabel{-60}{0}{100}{0.28}{0.69}{solid}{left}
+		\intervalBottomLabel{-60}{0}{100}{0.00}{0.28}{densely dotted}{left}
+		\node[below] at (-60,-5) {\footnotesize $[\beta]$};
+
+		\intervalBothLabels{-30}{0}{100}{0.49}{0.69}{solid}{left}
+		\intervalBottomLabel{-30}{0}{100}{0.39}{0.49}{densely dotted}{left}
+		\intervalBottomLabel{-30}{0}{100}{0.28}{0.39}{densely dotted}{left}
+		\node[below] at (-30,-5) {\footnotesize $[\beta,\gamma]$};
+
+		% Output side
+		\intervalBothLabels{120}{0}{100}{0}{1}{solid}{right}
+		\node[below] at (120,-5) {\footnotesize $[~]$};
+
+		\intervalBothLabels{90}{0}{100}{0.50}{1.00}{solid}{right}
+		\intervalBottomLabel{90}{0}{100}{0.00}{0.50}{densely dotted}{right}
+		\node[below] at (90,-5) {\footnotesize $[1]$};
+
+		\intervalBothLabels{60}{0}{100}{0.75}{1.00}{densely dotted}{right}
+		\intervalBottomLabel{60}{0}{100}{0.50}{0.75}{solid}{right}
+		\node[below] at (60,-5) {\footnotesize $[1,0]$};
+
+		\intervalBothLabels{30}{0}{100}{0.625}{0.750}{densely dotted}{right}
+		\intervalBottomLabel{30}{0}{100}{0.500}{0.625}{solid}{right}
+		\node[below] at (30,-5) {\footnotesize $[1,0,0]$};
+
+	\end{tikzpicture}
+
+	\caption{\label{fig:plaintext_to_binary}Finding a \emph{binary subinterval sequence} of $\mathbf P$ (left), \ie the shortest sequence $\mathbf{P_2}$ (right) such that $\mathbf {p_2} \subseteq \mathbf p$. Mapping between binary sequences and intervals is achieved in the usual way -- by successive refinements of the $[0,1)$ interval by its upper or lower half. Mapping between $\mathbf P$ and $\mathbf p$ is achieved using arithmetic coding and the process $\mathcal E$. Note that there may be more than one valid binary subinterval sequence.}
+
+\end{figure}
+
+\begin{figure}[h]
+	\centering
+
+	\begin{tikzpicture}[scale=0.05]
+		% Show that the binary interval is a subinterval of plaintext interval
+		\fill [opacity=0.1] (-30,0.28*100) rectangle (30,0.39*100);
+
+		% Input side
+		\intervalBothLabels{-90}{0}{100}{0}{1}{solid}{left}
+		\node[below] at (-90,-5) {\footnotesize $[~]$};
+
+		\intervalBothLabels{-60}{0}{100}{0.69}{1.00}{densely dotted}{left}
+		\intervalBottomLabel{-60}{0}{100}{0.28}{0.69}{solid}{left}
+		\intervalBottomLabel{-60}{0}{100}{0.00}{0.28}{densely dotted}{left}
+		\node[below] at (-60,-5) {\footnotesize $[\beta]$};
+
+		\intervalBothLabels{-30}{0}{100}{0.49}{0.69}{densely dotted}{left}
+		\intervalBottomLabel{-30}{0}{100}{0.39}{0.49}{densely dotted}{left}
+		\intervalBottomLabel{-30}{0}{100}{0.28}{0.39}{solid}{left}
+		\node[below] at (-30,-5) {\footnotesize $[\beta,\gamma]$};
+
+		% Output side
+		\intervalBothLabels{90}{0}{100}{0}{1}{solid}{right}
+		\node[below] at (90,-5) {\footnotesize $[~]$};
+
+		\intervalBothLabels{60}{0}{100}{0.50}{1.00}{densely dotted}{right}
+		\intervalBottomLabel{60}{0}{100}{0.00}{0.50}{solid}{right}
+		\node[below] at (60,-5) {\footnotesize $[0]$};
+
+		\intervalBothLabels{30}{0}{100}{0.25}{0.50}{solid}{right}
+		\intervalBottomLabel{30}{0}{100}{0.00}{0.25}{densely dotted}{right}
+		\node[below] at (30,-5) {\footnotesize $[0,1]$};
+
+	\end{tikzpicture}
+
+	\caption{\label{fig:key_to_binary}Finding the \emph{binary superinterval sequence} of $\mathbf K$ (left), \ie the longest sequence $\mathbf{K_2}$ (right) such that $\mathbf k \subseteq \mathbf {k_2}$. The procedure is equivalent to generating $\mathbf{K_2}$ from $\mathbf K$ using the interval algorithm, so $\mathbf{K_2}$ is \iid uniform by construction. There is also a single $\mathbf{K_2}$.}
+
+\end{figure}
 
 %\clearpage
 %\section{Detailed description of the stegosystem}
