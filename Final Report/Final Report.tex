@@ -71,10 +71,12 @@
 % Declare paired delimiters
 \DeclarePairedDelimiter{\ceil}{\lceil}{\rceil}
 \DeclarePairedDelimiter{\bracket}{(}{)}
+\DeclarePairedDelimiter{\angled}{\langle}{\rangle}
 
 % Define macros for correct spacing after abbreviations, source: http://tex.stackexchange.com/a/15017
 \DeclareRobustCommand*{\eg}{e.g.\@\xspace}
 \DeclareRobustCommand*{\ie}{i.e.\@\xspace}
+\DeclareRobustCommand*{\st}{s.t.\@\xspace}
 
 % Abbreviations which can occur at the end of the sentence cannot duplicate the following dot
 \makeatletter
@@ -83,6 +85,9 @@
 \DeclareRobustCommand*{\iid}{\AbbreviationWithDot{i.i.d}}
 \DeclareRobustCommand*{\pmf}{\AbbreviationWithDot{p.m.f}}
 \makeatother
+
+% Interval algorithm configured for specific stochastic processes
+\DeclareRobustCommand{\intervalAlgorithm}[2]{$\angled{\mathcal{#1} / \mathcal{#2}}$\@\xspace}
 
 % Placeholder for parts of the report to be finished later
 \DeclareRobustCommand{\later}{\textcolor{red}{\textbf{(?)}}\@\xspace}
@@ -185,70 +190,6 @@ Lorem ipsum.
 
 \FloatBarrier
 \subsection{High level description of the stegosystem}
-
-\clearpage
-\section{The interval algorithm}
-\label{sec:interval_algorithm}
-
-The interval algorithm \cite{hanhoshi1997} provides a means of sampling from an arbitrary stochastic process (target) given an input sequence from a different arbitrary stochastic process (source). The algorithm is very similar to arithmetic coding -- it also uses successive refinements of the $[0,1)$ interval to map sequences.
-
-The sequence mapping algorithm starts by mapping the empty sequence $[~]$ to the interval $[0,1)$. For any sequence, its interval is partitioned into subintervals corresponding to the sequence extended by a single term. The size of each interval is chosen to be proportional to the probability of the last term occurring given the preceding sequence. The order of the subintervals does not matter, but needs to be consistent if reverse mapping from an interval to a sequence is to be performed. By the chain rule of probability, the size of the resulting interval is equal to the probability of observing its sequence. Consequently, only sequences of non-zero probability can be mapped. For a more detailed overview of arithmetic coding see \cite{coverthomas:sfecoding}.
-
-The interval algorithm works by continuously mapping the observed input sequence to successive intervals defined by the stochastic model of the source. In parallel, the intervals are reverse mapped to an output sequence according to the stochastic model of the target. Terms of the output sequence can be generated as long as its interval is a superinterval of the input sequence interval. See \cref{fig:interval_algorithm} for an example of the procedure.
-
-\begin{figure}[h]
-	\centering
-
-	\begin{tikzpicture}[scale=0.05]
-		% Final interval range
-		\fill [opacity=0.1] (-30,0.39*100) rectangle (120,0.47*100);
-
-		% Input side
-		\intervalBothLabels{-120}{0}{100}{0}{1}{solid}{left}
-		\node[below] at (-120,-5) {\footnotesize $[~]$};
-
-		\intervalBothLabels{-90}{0}{100}{0.81}{1.00}{densely dotted}{left}
-		\intervalBottomLabel{-90}{0}{100}{0.17}{0.81}{solid}{left}
-		\intervalBottomLabel{-90}{0}{100}{0.08}{0.17}{densely dotted}{left}
-		\intervalBottomLabel{-90}{0}{100}{0.00}{0.08}{densely dotted}{left}
-		\node[below] at (-90,-5) {\footnotesize $[c]$};
-
-		\intervalBothLabels{-60}{0}{100}{0.69}{0.81}{densely dotted}{left}
-		\intervalBottomLabel{-60}{0}{100}{0.39}{0.69}{solid}{left}
-		\intervalBottomLabel{-60}{0}{100}{0.27}{0.39}{densely dotted}{left}
-		\intervalBottomLabel{-60}{0}{100}{0.17}{0.27}{densely dotted}{left}
-		\node[below] at (-60,-5) {\footnotesize $[c,c]$};
-
-		\intervalBottomLabel{-30}{0}{100}{0.39}{0.47}{solid}{left}
-		\intervalBottomLabel{-30}{0}{100}{0.47}{0.54}{densely dotted}{left}
-		\intervalBottomLabel{-30}{0}{100}{0.54}{0.63}{densely dotted}{left}
-		\intervalBothLabels{-30}{0}{100}{0.63}{0.69}{densely dotted}{left}
-		\node[below] at (-30,-5) {\footnotesize $[c,c,a]$};
-
-		% Output side
-		\intervalBothLabels{120}{0}{100}{0}{1}{solid}{right}
-		\node[below] at (120,-5) {\footnotesize $[~]$};
-
-		\intervalBothLabels{90}{0}{100}{0.87}{1.00}{densely dotted}{right}
-		\intervalBottomLabel{90}{0}{100}{0.19}{0.87}{solid}{right}
-		\intervalBottomLabel{90}{0}{100}{0.00}{0.19}{densely dotted}{right}
-		\node[below] at (90,-5) {\footnotesize $[\beta]$};
-
-		\intervalBothLabels{60}{0}{100}{0.72}{0.87}{densely dotted}{right}
-		\intervalBottomLabel{60}{0}{100}{0.53}{0.72}{densely dotted}{right}
-		\intervalBottomLabel{60}{0}{100}{0.19}{0.53}{solid}{right}
-		\node[below] at (60,-5) {\footnotesize $[\beta,\alpha]$};
-
-		\intervalBothLabels{30}{0}{100}{0.43}{0.53}{densely dotted}{right}
-		\intervalBottomLabel{30}{0}{100}{0.29}{0.43}{densely dotted}{right}
-		\intervalBottomLabel{30}{0}{100}{0.19}{0.29}{densely dotted}{right}
-		\node[below] at (30,-5) {\footnotesize $[\beta,\alpha,-]$};
-
-	\end{tikzpicture}
-
-	\caption{\label{fig:interval_algorithm}Example run of the interval algorithm. The source emits symbols over the alphabet $\{a,b,c,d\}$, the target -- $\{\alpha,\beta,\gamma\}$. On the left, an input sequence $[c,c,a]$ from the source process gets mapped to $[0.39,0.47)$. On the right, this interval allows to generate up to 2 terms of an output sequence from the target process, \ie $[\beta,\alpha]$, which corresponds to $[0.19,0.53)$. Note that it is not possible to generate more terms of the output sequence, as neither $[0.19,0.29)$ nor $[0.29,0.43)$ nor $[0.43,0.53)$ is a superinterval of $[0.39,0.47)$.}
-
-\end{figure}
 
 \clearpage
 \section{Statistical natural language models}
@@ -903,7 +844,81 @@ c(b_d) = \ceil*{ \beta \bracket*{ \overline m_d - \sum_{w_l \in \mathcal W_d} f(
 The only special case to consider is when $m_1 = 0$ or $\overline m_d = 0$. This can simply occur if the context was not observed in training data frequently enough to be in the corpus, but also in more subtle situations.\footnote{If all tokens in a level are excluded \emph{and} the context count $f(w_{l-N+d}^{l-1})$ is equal to the sum of excluded counts $\sum_{w_l \in \mathcal W_1 \cup \dots \cup \mathcal W_{d-1}} f(w_{l-N+d}^l)$ then $\overline m_d$ will be 0. This happens if the context was observed in training data only followed by the excluded tokens.} Back-off pseudo-count would then be 0. However, the back-off node would be the only node in its level anyway. One way to deal with the problem elegantly is to give the back-off node an arbitrary non-zero pseudo-count, for example 1.
 
 \clearpage
+\section{The interval algorithm}
+\label{sec:interval_algorithm}
+
+The interval algorithm \cite{hanhoshi1997} provides a means of sampling from an arbitrary stochastic process (target) given an input sequence from a different arbitrary stochastic process (source). The algorithm is very similar to arithmetic coding -- it also uses successive refinements of the $[0,1)$ interval to map sequences.
+
+The sequence mapping algorithm starts by mapping the empty sequence $[~]$ to the interval $[0,1)$. For any sequence, its interval is partitioned into subintervals corresponding to the sequence extended by a single term. The size of each interval is chosen to be proportional to the probability of the last term occurring given the preceding sequence. The order of the subintervals does not matter, but needs to be consistent if reverse mapping from an interval to a sequence is to be performed. By the chain rule of probability, the size of the resulting interval is equal to the probability of observing its sequence. Consequently, only sequences of non-zero probability can be mapped. For a more detailed overview of arithmetic coding see \cite{coverthomas:sfecoding}.
+
+The interval algorithm works by continuously mapping the observed input sequence to successive intervals defined by the stochastic model of the source. In parallel, the intervals are reverse mapped to an output sequence according to the stochastic model of the target. Terms of the output sequence can be generated as long as its interval is a superinterval of the input sequence interval. See \cref{fig:interval_algorithm} for an example of the procedure.
+
+\begin{figure}[h]
+	\centering
+
+	\begin{tikzpicture}[scale=0.05]
+		% Final interval range
+		\fill [opacity=0.1] (-30,0.39*100) rectangle (120,0.47*100);
+
+		% Input side
+		\intervalBothLabels{-120}{0}{100}{0}{1}{solid}{left}
+		\node[below] at (-120,-5) {\footnotesize $[~]$};
+
+		\intervalBothLabels{-90}{0}{100}{0.81}{1.00}{densely dotted}{left}
+		\intervalBottomLabel{-90}{0}{100}{0.17}{0.81}{solid}{left}
+		\intervalBottomLabel{-90}{0}{100}{0.08}{0.17}{densely dotted}{left}
+		\intervalBottomLabel{-90}{0}{100}{0.00}{0.08}{densely dotted}{left}
+		\node[below] at (-90,-5) {\footnotesize $[c]$};
+
+		\intervalBothLabels{-60}{0}{100}{0.69}{0.81}{densely dotted}{left}
+		\intervalBottomLabel{-60}{0}{100}{0.39}{0.69}{solid}{left}
+		\intervalBottomLabel{-60}{0}{100}{0.27}{0.39}{densely dotted}{left}
+		\intervalBottomLabel{-60}{0}{100}{0.17}{0.27}{densely dotted}{left}
+		\node[below] at (-60,-5) {\footnotesize $[c,c]$};
+
+		\intervalBottomLabel{-30}{0}{100}{0.39}{0.47}{solid}{left}
+		\intervalBottomLabel{-30}{0}{100}{0.47}{0.54}{densely dotted}{left}
+		\intervalBottomLabel{-30}{0}{100}{0.54}{0.63}{densely dotted}{left}
+		\intervalBothLabels{-30}{0}{100}{0.63}{0.69}{densely dotted}{left}
+		\node[below] at (-30,-5) {\footnotesize $[c,c,a]$};
+
+		% Output side
+		\intervalBothLabels{120}{0}{100}{0}{1}{solid}{right}
+		\node[below] at (120,-5) {\footnotesize $[~]$};
+
+		\intervalBothLabels{90}{0}{100}{0.87}{1.00}{densely dotted}{right}
+		\intervalBottomLabel{90}{0}{100}{0.19}{0.87}{solid}{right}
+		\intervalBottomLabel{90}{0}{100}{0.00}{0.19}{densely dotted}{right}
+		\node[below] at (90,-5) {\footnotesize $[\beta]$};
+
+		\intervalBothLabels{60}{0}{100}{0.72}{0.87}{densely dotted}{right}
+		\intervalBottomLabel{60}{0}{100}{0.53}{0.72}{densely dotted}{right}
+		\intervalBottomLabel{60}{0}{100}{0.19}{0.53}{solid}{right}
+		\node[below] at (60,-5) {\footnotesize $[\beta,\alpha]$};
+
+		\intervalBothLabels{30}{0}{100}{0.43}{0.53}{densely dotted}{right}
+		\intervalBottomLabel{30}{0}{100}{0.29}{0.43}{densely dotted}{right}
+		\intervalBottomLabel{30}{0}{100}{0.19}{0.29}{densely dotted}{right}
+		\node[below] at (30,-5) {\footnotesize $[\beta,\alpha,-]$};
+
+	\end{tikzpicture}
+
+	\caption{\label{fig:interval_algorithm}Example run of the interval algorithm. The source emits symbols over the alphabet $\{a,b,c,d\}$, the target -- $\{\alpha,\beta,\gamma\}$. On the left, an input sequence $[c,c,a]$ from the source process gets mapped to $[0.39,0.47)$. On the right, this interval allows to generate up to 2 terms of an output sequence from the target process, \ie $[\beta,\alpha]$, which corresponds to $[0.19,0.53)$. Note that it is not possible to generate more terms of the output sequence, as neither $[0.19,0.29)$ nor $[0.29,0.43)$ nor $[0.43,0.53)$ is a superinterval of $[0.39,0.47)$.}
+
+\end{figure}
+
+I will denote by \intervalAlgorithm{I}{O} an instance of the interval algorithm configured for an input stochastic process $\mathcal I$ and an output stochastic process $\mathcal O$.
+
+\subsection{Extension to multiple input processes}
+
+It is possible to extend the interval algorithm to a scenario where the input sequence is a concatenation of sequences emitted by $N$ stochastic processes $\mathcal I_1, \dots, \mathcal I_N$. The input processes need to be defined over different alphabets $\mathfrak I_1, \dots, \mathfrak I_N$. We can see that this extension does not pose any problems as long as the alphabets are different. When mapping input sequence to an interval, it is clear which process a given term was emitted by, thus the appropriate conditional probability subintervals can be found. The rest of the algorithm proceeds as before. I will denote by $\angled{\mathcal I_1, \dots, \mathcal I_N / \mathcal O}$ an instance of the interval algorithm modified in such a way.
+
+Note that if the processes are infinite, it is not possible to do the opposite, \ie define an interval algorithm $\angled{\mathcal I / \mathcal O_1, \dots, \mathcal O_N}$. It would end up being equivalent to simply $\angled{\mathcal I / \mathcal O_1}$.
+
+\clearpage
 \section{Stegosystem}
+
+In this section I will describe a general stegosystem which allows to disguise an output sequence from one arbitrary stochastic process as a sequence which appears to have been generated by another arbitrary stochastic process. I will then describe how it is possible to construct a secure stegosystem with deniable encryption.
 
 \FloatBarrier
 \subsection{Innocuous transmission of the output of a stochastic process}
@@ -919,20 +934,16 @@ Note that it is necessary to terminate $\mathbf P$ with an end-of-message symbol
 
 The stegosystem requires a source of randomness $\mathcal R$ that outputs an infinite sequence $\mathbf R$ on alphabet $\mathfrak R$. $\mathcal R$ can be an arbitrary stochastic process with known statistics, for example a sequence of \iid uniform bits.
 
-The sequence $\mathbf P$ is concatenated with $\mathbf R$ to create an infinite sequence $\mathbf I$, which is initially on the alphabet $\mathfrak P$. For that time, the conditional probabilities of elements of $\mathbf I$ are evaluated using the model $\mathcal P$. When $\mathbf P$ ends, $\mathbf R$ starts and $\mathbf I$ becomes on the alphabet $\mathfrak R$. Conditional symbol probabilities can still be evaluated, this time using the model $\mathcal R$.
+The sequence $\mathbf P$ is concatenated with $\mathbf R$ to create an infinite sequence $\mathbf I$. With \intervalAlgorithm{P,R}{S} we can use $\mathbf I$ to deterministically generate an arbitrarily long output sequence $\mathbf S$. It remains to show that a sufficiently long $\mathbf S$ allows us to find a correct sequence $\mathbf P'$. Remember that $\mathbf{P'}$ is defined as a sequence on $\mathfrak P$ whose prefix is $\mathbf P$.
 
-Using the interval algorithm, based on $\mathbf I$ we can deterministically generate an arbitrarily long sequence $\mathbf S$ from the stegotext source $\mathcal S$. It remains to show that a sufficiently long $\mathbf S$ allows us to find a correct sequence $\mathbf P'$. Remember that $\mathbf{P'}$ is defined as a sequence on $\mathfrak P$ whose prefix is $\mathbf P$.
-
-To recover $\mathbf P$ from $\mathbf S$, we can run the interval algorithm in reverse. The only requirement to correctly decode all symbols of $\mathbf P$ is that $\mathbf s \subseteq \mathbf p$. This is the reason we use the process $\mathcal R$ during generation of $\mathbf S$ -- we keeping refining the input interval $\mathbf i$ until it gets small enough that $\mathbf s \subseteq \mathbf p$. $\mathbf s$ is guaranteed to decrease every time a new symbol is appended to $\mathbf S$ since the conditional probabilities are always less than 1.\footnote{Each symbol has a non-zero probability and the alphabet size of obviously more than 1.} \cref{fig:stegosystem_encoding} illustrates this with a concrete example.
-
-The problem is that we have no control over how small the interval $\mathbf s$ that satisfies $\mathbf s \subseteq \mathbf p$ gets. Since we do not know how long $\mathbf P$ is, we do not know when to stop generating symbols from $\mathcal P$. It may happen that even the largest of the intervals satisfying this condition will allow us to decode \emph{more} than just $\mathbf P$. This is why the sequence we decode is $\mathbf{P'}$, not $\mathbf P$. See \cref{fig:stegosystem_decoding} for an example of such a situation.
+To recover $\mathbf P$ from $\mathbf S$, we can run the interval algorithm \intervalAlgorithm{S}{P} with $\mathbf S$ as input. The only requirement to correctly decode all symbols of $\mathbf P$ is that $\mathbf s \subseteq \mathbf p$. This is the reason we used the process $\mathcal R$ during generation of $\mathbf S$ -- we kept refining the input interval $\mathbf i$ until it got small enough that $\mathbf s \subseteq \mathbf p$. $\mathbf s$ was guaranteed to decrease every time a new symbol is appended to $\mathbf S$ since the conditional probabilities are always less than 1.\footnote{Each symbol has a non-zero probability and the alphabet size of obviously more than 1.} \cref{fig:stegosystem_encoding} illustrates the procedure with a concrete example.
 
 \begin{figure}[h]
 	\centering
 
 	\begin{tikzpicture}[scale=0.05]
 		% P interval range
-		\fill [opacity=0.04] (-60,0.34*100) rectangle (120,0.69*100);
+		\fill [opacity=0.04] (-60,0.37*100) rectangle (120,0.69*100);
 		
 		% I interval range
 		\fill [opacity=0.1] (0,0.45*100) rectangle (120,0.53*100);
@@ -946,17 +957,17 @@ The problem is that we have no control over how small the interval $\mathbf s$ t
 		\intervalBottomLabel{-90}{0}{100}{0.00}{0.13}{densely dotted}{left}
 		\node[below] at (-90,-5) {\footnotesize $[b]$};
 
-		\intervalBothLabels{-60}{0}{100}{0.34}{0.69}{solid}{left}
-		\intervalBottomLabel{-60}{0}{100}{0.24}{0.34}{densely dotted}{left}
+		\intervalBothLabels{-60}{0}{100}{0.37}{0.69}{solid}{left}
+		\intervalBottomLabel{-60}{0}{100}{0.24}{0.37}{densely dotted}{left}
 		\intervalBottomLabel{-60}{0}{100}{0.13}{0.24}{densely dotted}{left}
 		\node[below] at (-60,-5) {\footnotesize $[b,c]$};
 
 		\intervalBothLabels{-30}{0}{100}{0.53}{0.69}{densely dotted}{left}
-		\intervalBottomLabel{-30}{0}{100}{0.34}{0.53}{solid}{left}
+		\intervalBottomLabel{-30}{0}{100}{0.37}{0.53}{solid}{left}
 		\node[below] at (-30,-5) {\footnotesize $[b,c,0]$};
 
 		\intervalBothLabels{0}{0}{100}{0.45}{0.53}{solid}{left}
-		\intervalBottomLabel{0}{0}{100}{0.34}{0.45}{densely dotted}{left}
+		\intervalBottomLabel{0}{0}{100}{0.37}{0.45}{densely dotted}{left}
 		\node[below] at (0,-5) {\footnotesize $[b,c,0,1]$};
 
 		% Output side
@@ -977,9 +988,11 @@ The problem is that we have no control over how small the interval $\mathbf s$ t
 
 	\end{tikzpicture}
 
-	\caption{\label{fig:stegosystem_encoding}Generating $\mathbf S$ (right) from $\mathbf P$ (left). Both $\mathcal P$ and $\mathcal S$ are arbitrary stochastic processes defined over the alphabets $\mathfrak P = \{a,b,c\}$ and $\mathfrak S = \{\alpha,\beta,\gamma,\delta\}$. $\mathcal R$ emits \iid uniform bits. Statistics of the corresponding processes are used to provide mappings between sequences and intervals. We are given $\mathbf P = [b,c]$ and we wish to generate $\mathbf S$ from it. $\mathbf P$ corresponds to the light grey region $\mathbf p = [0.34,0.69)$, which only allows to generate $\mathbf S$ up to $[\gamma]$. Since $[0.30,0.87) \nsubseteq [0.34,0.69)$, $[\gamma]$ is not enough to identify a sequence with prefix $\mathbf P$. However, if we use $\mathcal R$ to extend $\mathbf P$ to $\mathbf I = [b,c,0,1]$, we obtain the refined input interval $\mathbf i = [0.45, 0.53)$ shown in dark grey. $\mathbf i$ allows us to generate $\mathbf S = [\gamma,\beta]$ with the required property that $\mathbf s \subseteq \mathbf p$.}
+	\caption{\label{fig:stegosystem_encoding}Generating $\mathbf S$ (right) from $\mathbf P$ (left). Both $\mathcal P$ and $\mathcal S$ are arbitrary stochastic processes defined over the alphabets $\mathfrak P = \{a,b,c\}$ and $\mathfrak S = \{\alpha,\beta,\gamma,\delta\}$. $\mathcal R$ emits \iid uniform bits. Statistics of the corresponding processes are used to provide mappings between sequences and intervals. We are given $\mathbf P = [b,c]$ and we wish to generate $\mathbf S$ from it. $\mathbf P$ corresponds to the light grey region $\mathbf p = [0.37,0.69)$, which only allows to generate $\mathbf S$ up to $[\gamma]$. Since $[0.30,0.87) \nsubseteq [0.37,0.69)$, $[\gamma]$ is not enough to identify a sequence with prefix $\mathbf P$. However, if we use $\mathcal R$ to extend $\mathbf P$ to $\mathbf I = [b,c,0,1]$, we obtain the refined input interval $\mathbf i = [0.45, 0.53)$ shown in dark grey. $\mathbf i$ allows us to generate $\mathbf S = [\gamma,\beta]$ with the required property that $\mathbf s \subseteq \mathbf p$.}
 
 \end{figure}
+
+The problem is that we have no control over how small the interval $\mathbf s$ that satisfies $\mathbf s \subseteq \mathbf p$ gets. Since we do not know how long $\mathbf P$ is, we do not know when to stop generating symbols from $\mathcal P$. It may happen that even the largest of the intervals satisfying this condition will allow us to decode \emph{more} than just $\mathbf P$. This is why the sequence we decode is $\mathbf{P'}$, not $\mathbf P$. See \cref{fig:stegosystem_decoding} for an example of such a situation.
 
 \begin{figure}[h]
 	\centering
@@ -1013,24 +1026,24 @@ The problem is that we have no control over how small the interval $\mathbf s$ t
 		\intervalBottomLabel{120}{0}{100}{0.00}{0.13}{densely dotted}{right}
 		\node[below] at (120,-5) {\footnotesize $[b]$};
 
-		\intervalBothLabels{90}{0}{100}{0.34}{0.69}{solid}{right}
-		\intervalBottomLabel{90}{0}{100}{0.24}{0.34}{densely dotted}{right}
+		\intervalBothLabels{90}{0}{100}{0.37}{0.69}{solid}{right}
+		\intervalBottomLabel{90}{0}{100}{0.24}{0.37}{densely dotted}{right}
 		\intervalBottomLabel{90}{0}{100}{0.13}{0.24}{densely dotted}{right}
 		\node[below] at (90,-5) {\footnotesize $[b,c]$};
 
-		\intervalBothLabels{60}{0}{100}{0.60}{0.69}{densely dotted}{right}
-		\intervalBottomLabel{60}{0}{100}{0.40}{0.60}{solid}{right}
-		\intervalBottomLabel{60}{0}{100}{0.34}{0.40}{densely dotted}{right}
-		\node[below] at (60,-5) {\footnotesize $[b,c,b]$};
+		\intervalBothLabels{60}{0}{100}{0.63}{0.69}{densely dotted}{right}
+		\intervalBottomLabel{60}{0}{100}{0.57}{0.63}{densely dotted}{right}
+		\intervalBottomLabel{60}{0}{100}{0.37}{0.57}{solid}{right}
+		\node[below] at (60,-5) {\footnotesize $[b,c,a]$};
 
-		\intervalBothLabels{30}{0}{100}{0.53}{0.60}{densely dotted}{right}
-		\intervalBottomLabel{30}{0}{100}{0.46}{0.53}{densely dotted}{right}
-		\intervalBottomLabel{30}{0}{100}{0.40}{0.46}{densely dotted}{right}
-		\node[below] at (30,-5) {\footnotesize $[b,c,b,-]$};
+		\intervalBothLabels{30}{0}{100}{0.50}{0.57}{densely dotted}{right}
+		\intervalBottomLabel{30}{0}{100}{0.44}{0.50}{densely dotted}{right}
+		\intervalBottomLabel{30}{0}{100}{0.37}{0.44}{densely dotted}{right}
+		\node[below] at (30,-5) {\footnotesize $[b,c,a,-]$};
 
 	\end{tikzpicture}
 
-	\caption{\label{fig:stegosystem_decoding}Generating $\mathbf{P'}$ (right) from $\mathbf S$ (left). We use the statistics of $\mathcal S$ to find the interval $\mathbf s = [0.42,0.59)$. We then use the interval algorithm to generate $\mathbf{P'}$. Since we don't know how long the original sequence $\mathbf P$ was, we keep generating terms according to the statistics of $\mathcal P$ for as long as possible. In this case we decode $\mathbf{P'} = [b,c,b]$. $\mathbf{P'}$ has the prefix $\mathbf P = [b,c]$, but also contains an extra symbol $b$.}
+	\caption{\label{fig:stegosystem_decoding}Generating $\mathbf{P'}$ (right) from $\mathbf S$ (left). We use the statistics of $\mathcal S$ to find the interval $\mathbf s = [0.42,0.56)$. We then use the interval algorithm to generate $\mathbf{P'}$. Since we don't know how long the original sequence $\mathbf P$ was, we keep generating terms according to the statistics of $\mathcal P$ for as long as possible. In this case we decode $\mathbf{P'} = [b,c,a]$. $\mathbf{P'}$ has the prefix $\mathbf P = [b,c]$, but also contains an extra symbol $a$.}
 
 \end{figure}
 
@@ -1041,9 +1054,9 @@ The system described in \cref{sec:arbitrary_source_stego} can be used as a part 
 
 I will describe a modular stegosystem in which the \emph{plaintext} and the \emph{key} are first mapped to intervals $\mathbf p$ and $\mathbf k$ in the usual way and then to binary sequences $\mathbf{P_2}$ and $\mathbf{K_2}$. $\mathbf{P_2}$ is a \emph{binary subinterval sequence} of $\mathbf p$ and $\mathbf{K_2}$ is a \emph{binary superinterval sequence} of $\mathbf k$ -- see \cref{fig:plaintext_to_binary,fig:key_to_binary} for definitions and examples.
 
-The binary representation of plaintext $\mathbf{P_2}$ is then encrypted to binary \emph{ciphertext} $\mathbf{C_2}$ using a stream cipher with key $\mathbf{K_2}$. If $\mathbf{K_2}$ is not shorter than $\mathbf{P_2}$, we achieve perfect secrecy \cite{shannon1949communication}. The cipher needs to ensure that $\mathbf{C_2}$ is \iid uniform. $\mathbf{C_2}$ is then used as an input to the system from \cref{sec:arbitrary_source_stego}, producing pseudo-random English \emph{stegotext} $\mathbf S$. Provided that the language model is correct, the stegotext is statistically indistinguishable from any random English text.
+The binary representation of plaintext $\mathbf{P_2}$ is then encrypted to binary \emph{ciphertext} $\mathbf{C_2}$ using a stream cipher with key $\mathbf{K_2}$. If $\mathbf{K_2}$ is at least as long as $\mathbf{P_2}$, we achieve perfect secrecy \cite{shannon1949communication}. The cipher needs to ensure that $\mathbf{C_2}$ is \iid uniform. $\mathbf{C_2}$ is then used as an input to the system from \cref{sec:arbitrary_source_stego}, producing pseudo-random English \emph{stegotext} $\mathbf S$. Provided that the language model is correct, the stegotext is statistically indistinguishable from any random English text.
 
-Running the system from \cref{sec:arbitrary_source_stego} in reverse, $\mathbf S$ allows us to recover a binary sequence $\mathbf{C'_2}$ whose prefix is the ciphertext $\mathbf{C_2}$. Knowing the key and its binary representation $\mathbf{K_2}$, we can recover the original binary plaintext sequence potentially followed by more bits, \ie $\mathbf{P'_2}$. Using the language model, we can now recover $\mathbf{P'}$ -- the original plaintext potentially followed by extra tokens.
+Using the system from \cref{sec:arbitrary_source_stego} again, $\mathbf S$ allows us to recover a binary sequence $\mathbf{C'_2}$ whose prefix is the ciphertext $\mathbf{C_2}$. Knowing the key and its binary representation $\mathbf{K_2}$, we can recover the original binary plaintext sequence potentially followed by more bits, \ie $\mathbf{P'_2}$. The following relationship clearly applies: $\mathbf {p'_2} \subseteq \mathbf {p_2} \subseteq \mathbf p$. Using the language model, we can now recover $\mathbf{P'}$ -- the original plaintext potentially followed by extra tokens.
 
 An important feature of a stegosystem constructed in this way is \emph{deniable encryption}. Assume that an enemy with full knowledge of the system is told that a particular fragment of text $\mathbf S$ is indeed stegotext. Using the knowledge of the system (\ie the language model), they can reconstruct $\mathbf {C'_2}$ -- the binary ciphertext sequence with trailing bits. However, the recovery of plaintext requires knowledge of the key. If a \emph{false key} $\mathbf {\overline K}$ is supplied in text form, it will still be correctly converted to some binary sequence $\mathbf {\overline K_2}$. It will then allow to decipher without failure ciphertext $\mathbf{C'_2}$ into an \emph{incorrect} binary sequence $\mathbf {\overline {P'}_2}$. $\mathbf {\overline {P'}_2}$ will then be mapped to some incorrect plaintext $\mathbf {\overline {P'}}$, generated according to the stochastic process $\mathcal P$. So it will be a fragment of text randomly drawn from all English sentences. As a result, a user asked to supply the key may give $\mathbf {\overline K}$ instead and claim that $\mathbf {\overline {P'}}$ contains the plaintext message as a prefix. If the enemy does not know $\mathbf P$ but expects it to be just a random sentence, \ie one generated according to the same statistics as $\mathcal P$, $\mathbf {\overline {P'}}$ is just as likely to contain $\mathbf P$ as a prefix as is the real $\mathbf{P'}$.
 
@@ -1139,7 +1152,62 @@ Assume that the language contains three tokens $\{ \alpha, \beta, \gamma \}$ and
 
 Ciphertext $\mathbf {C_2}$ is constructed by the \emph{exclusive or} operation on streams of $\mathbf{P_2}$ and the cycled key $\mathbf{K_2^+} = [0,1,0,1,0,1,\dots]$. Thus, it is the simplest and least secure implementation of a stream cipher. The ciphertext becomes $\mathbf {C_2} = [1,1,0]$.
 
-Ciphertext $\mathbf {C_2}$ is converted to stegotext $\mathbf S$ using the system from \cref{sec:arbitrary_source_stego} as shown in
+Ciphertext $\mathbf {C_2}$ is converted to stegotext $\mathbf S$ as shown in \cref{fig:ciphertext_to_stegotext}.
+
+\begin{figure}[h]
+	\centering
+
+	\begin{tikzpicture}[scale=0.05]
+		% C_2 interval range
+		\fill [opacity=0.1] (-30,0.750*100) rectangle (120,0.875*100);
+
+		% I interval range
+		\fill [opacity=0.1] (-30,0.7500*100) rectangle (120,0.8125*100);
+
+		% C_2
+		\intervalBothLabels{-150}{0}{100}{0}{1}{solid}{left}
+		\node[below] at (-150,-5) {\footnotesize $[~]$};
+
+		\intervalBothLabels{-120}{0}{100}{0.50}{1.00}{solid}{left}
+		\intervalBottomLabel{-120}{0}{100}{0.00}{0.50}{densely dotted}{left}
+		\node[below] at (-120,-5) {\footnotesize $[1]$};
+
+		\intervalBothLabels{-90}{0}{100}{0.75}{1.00}{solid}{left}
+		\intervalBottomLabel{-90}{0}{100}{0.50}{0.75}{densely dotted}{left}
+		\node[below] at (-90,-5) {\footnotesize $[1,1]$};
+
+		\intervalBothLabels{-60}{0}{100}{0.875}{1.000}{densely dotted}{left}
+		\intervalBottomLabel{-60}{0}{100}{0.750}{0.875}{solid}{left}
+		\node[below] at (-60,-5) {\footnotesize $[1,1,0]$};
+
+		\intervalBothLabels{-30}{0}{100}{0.8125}{0.8750}{densely dotted}{left}
+		\intervalBottomLabel{-30}{0}{100}{0.7500}{0.8125}{solid}{left}
+		\node[below] at (-30,-5) {\footnotesize $[1,1,0,0]$};
+
+		% S
+		\intervalBothLabels{120}{0}{100}{0}{1}{solid}{right}
+		\node[below] at (120,-5) {\footnotesize $[~]$};
+
+		\intervalBothLabels{90}{0}{100}{0.69}{1.00}{solid}{right}
+		\intervalBottomLabel{90}{0}{100}{0.28}{0.69}{densely dotted}{right}
+		\intervalBottomLabel{90}{0}{100}{0.00}{0.28}{densely dotted}{right}
+		\node[below] at (90,-5) {\footnotesize $[\gamma]$};
+
+		\intervalBothLabels{60}{0}{100}{0.94}{1.00}{densely dotted}{right}
+		\intervalBottomLabel{60}{0}{100}{0.88}{0.94}{densely dotted}{right}
+		\intervalBottomLabel{60}{0}{100}{0.69}{0.88}{solid}{right}
+		\node[below] at (60,-5) {\footnotesize $[\gamma,\alpha]$};
+
+		\intervalBothLabels{30}{0}{100}{0.82}{0.88}{densely dotted}{right}
+		\intervalBottomLabel{30}{0}{100}{0.75}{0.82}{solid}{right}
+		\intervalBottomLabel{30}{0}{100}{0.69}{0.75}{densely dotted}{right}
+		\node[below] at (30,-5) {\footnotesize $[\gamma,\alpha,\beta]$};
+
+	\end{tikzpicture}
+
+	\caption{\label{fig:ciphertext_to_stegotext}Generating stegotext $\mathbf S = [\gamma,\alpha,\beta]$ from ciphertext $\mathbf{C_2} = [1,1,0]$. Ciphertext needs to extended to $\mathbf I = [1,1,0,0]$ so that $\mathbf s \subseteq \mathbf{c_2}$.}
+
+\end{figure}
 
 %\clearpage
 %\section{Detailed description of the stegosystem}
