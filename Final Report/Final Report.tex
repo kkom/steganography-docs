@@ -1039,11 +1039,11 @@ The problem is that we have no control over how small the interval $\mathbf s$ t
 
 The system described in \cref{sec:arbitrary_source_stego} can be used as a part of a bigger system, which \emph{securely} and \emph{innocuously} transmits arbitrary English text $\mathbf P$ using different English text $\mathbf K$ as a \emph{key}.
 
-I will describe a modular stegosystem in which the \emph{plaintext} and the \emph{key} are first converted to binary sequences $\mathbf{P_2}$ and $\mathbf{K_2}$. $\mathbf{P_2}$ is a \emph{binary subinterval sequence} of $\mathbf{P_2}$ and $\mathbf{K_2}$ is a \emph{binary superinterval sequence} of $\mathbf{K_2}$ -- see \cref{fig:plaintext_to_binary,fig:key_to_binary} for definitions and examples.
+I will describe a modular stegosystem in which the \emph{plaintext} and the \emph{key} are first mapped to intervals $\mathbf p$ and $\mathbf k$ in the usual way and then to binary sequences $\mathbf{P_2}$ and $\mathbf{K_2}$. $\mathbf{P_2}$ is a \emph{binary subinterval sequence} of $\mathbf p$ and $\mathbf{K_2}$ is a \emph{binary superinterval sequence} of $\mathbf k$ -- see \cref{fig:plaintext_to_binary,fig:key_to_binary} for definitions and examples.
 
-The binary representation of plaintext $\mathbf{P_2}$ is then encrypted to binary \emph{ciphertext} $\mathbf{C_2}$ using a stream cipher with key $\mathbf{K_2}$. If $\mathbf{K_2}$ is not shorter than $\mathbf{P_2}$ (\ie has higher entropy), we achieve perfect secrecy \cite{shannon1949communication}. The cipher needs to ensure that $\mathbf{C_2}$ is \iid uniform. $\mathbf{C_2}$ is then used as an input to the system from \cref{sec:arbitrary_source_stego}, producing pseudo-random English \emph{stegotext} $\mathbf S$. Provided that the language model is correct, the stegotext is statistically indistinguishable from any random English text.
+The binary representation of plaintext $\mathbf{P_2}$ is then encrypted to binary \emph{ciphertext} $\mathbf{C_2}$ using a stream cipher with key $\mathbf{K_2}$. If $\mathbf{K_2}$ is not shorter than $\mathbf{P_2}$, we achieve perfect secrecy \cite{shannon1949communication}. The cipher needs to ensure that $\mathbf{C_2}$ is \iid uniform. $\mathbf{C_2}$ is then used as an input to the system from \cref{sec:arbitrary_source_stego}, producing pseudo-random English \emph{stegotext} $\mathbf S$. Provided that the language model is correct, the stegotext is statistically indistinguishable from any random English text.
 
-Running the system from \cref{sec:arbitrary_source_stego} in reverse, $\mathbf S$ allows us to recover a binary sequence $\mathbf{C'_2}$ whose prefix is the ciphertext $\mathbf{C_2}$. Knowing the key and its binary representation $\mathbf{K_2}$, we can recover the original binary plaintext sequence, potentially followed by more bits, \ie $\mathbf{P'_2}$. Using the language model, we can now recover $\mathbf{P'}$ -- the original plaintext potentially followed by extra tokens.
+Running the system from \cref{sec:arbitrary_source_stego} in reverse, $\mathbf S$ allows us to recover a binary sequence $\mathbf{C'_2}$ whose prefix is the ciphertext $\mathbf{C_2}$. Knowing the key and its binary representation $\mathbf{K_2}$, we can recover the original binary plaintext sequence potentially followed by more bits, \ie $\mathbf{P'_2}$. Using the language model, we can now recover $\mathbf{P'}$ -- the original plaintext potentially followed by extra tokens.
 
 An important feature of a stegosystem constructed in this way is \emph{deniable encryption}. Assume that an enemy with full knowledge of the system is told that a particular fragment of text $\mathbf S$ is indeed stegotext. Using the knowledge of the system (\ie the language model), they can reconstruct $\mathbf {C'_2}$ -- the binary ciphertext sequence with trailing bits. However, the recovery of plaintext requires knowledge of the key. If a \emph{false key} $\mathbf {\overline K}$ is supplied in text form, it will still be correctly converted to some binary sequence $\mathbf {\overline K_2}$. It will then allow to decipher without failure ciphertext $\mathbf{C'_2}$ into an \emph{incorrect} binary sequence $\mathbf {\overline {P'}_2}$. $\mathbf {\overline {P'}_2}$ will then be mapped to some incorrect plaintext $\mathbf {\overline {P'}}$, generated according to the stochastic process $\mathcal P$. So it will be a fragment of text randomly drawn from all English sentences. As a result, a user asked to supply the key may give $\mathbf {\overline K}$ instead and claim that $\mathbf {\overline {P'}}$ contains the plaintext message as a prefix. If the enemy does not know $\mathbf P$ but expects it to be just a random sentence, \ie one generated according to the same statistics as $\mathcal P$, $\mathbf {\overline {P'}}$ is just as likely to contain $\mathbf P$ as a prefix as is the real $\mathbf{P'}$.
 
@@ -1092,7 +1092,7 @@ Assume that the language contains three tokens $\{ \alpha, \beta, \gamma \}$ and
 
 	\end{tikzpicture}
 
-	\caption{\label{fig:plaintext_to_binary}Finding a \emph{binary subinterval sequence} of $\mathbf P$ (left), \ie the shortest sequence $\mathbf{P_2}$ (right) such that $\mathbf {p_2} \subseteq \mathbf p$. Mapping between binary sequences and intervals is achieved in the usual way -- by successive refinements of the $[0,1)$ interval by its upper or lower half. Mapping between $\mathbf P$ and $\mathbf p$ is achieved using arithmetic coding and the process $\mathcal E$. Note that there may be more than one valid binary subinterval sequence.}
+	\caption{\label{fig:plaintext_to_binary}Finding a \emph{binary subinterval sequence} of $\mathbf p$ (left), \ie the shortest sequence $\mathbf{P_2}$ (right) such that $\mathbf {p_2} \subseteq \mathbf p$. Mapping between binary sequences and intervals is achieved in the usual way -- by successive refinements of the $[0,1)$ interval by its upper or lower half. Mapping between $\mathbf P$ and $\mathbf p$ is achieved using arithmetic coding and the process $\mathcal E$. Note that there may be more than one valid binary subinterval sequence. In this example $\mathbf p = [0.49,0.69)$ and $\mathbf{P_2} = [1,0,0]$.}
 
 \end{figure}
 
@@ -1115,7 +1115,7 @@ Assume that the language contains three tokens $\{ \alpha, \beta, \gamma \}$ and
 		\intervalBothLabels{-30}{0}{100}{0.49}{0.69}{densely dotted}{left}
 		\intervalBottomLabel{-30}{0}{100}{0.39}{0.49}{densely dotted}{left}
 		\intervalBottomLabel{-30}{0}{100}{0.28}{0.39}{solid}{left}
-		\node[below] at (-30,-5) {\footnotesize $[\beta,\gamma]$};
+		\node[below] at (-30,-5) {\footnotesize $[\beta,\alpha]$};
 
 		% Output side
 		\intervalBothLabels{90}{0}{100}{0}{1}{solid}{right}
@@ -1131,11 +1131,15 @@ Assume that the language contains three tokens $\{ \alpha, \beta, \gamma \}$ and
 
 	\end{tikzpicture}
 
-	\caption{\label{fig:key_to_binary}Finding the \emph{binary superinterval sequence} of $\mathbf K$ (left), \ie the longest sequence $\mathbf{K_2}$ (right) such that $\mathbf k \subseteq \mathbf {k_2}$. The procedure is equivalent to generating $\mathbf{K_2}$ from $\mathbf K$ using the interval algorithm, so $\mathbf{K_2}$ is \iid uniform by construction. There is also a single $\mathbf{K_2}$.}
+	\caption{\label{fig:key_to_binary}Finding the \emph{binary superinterval sequence} of $\mathbf k$ (left), \ie the longest sequence $\mathbf{K_2}$ (right) such that $\mathbf k \subseteq \mathbf {k_2}$. The procedure is equivalent to generating $\mathbf{K_2}$ from $\mathbf K$ using the interval algorithm, so $\mathbf{K_2}$ is \iid uniform by construction. There is a single possible binary superinterval sequence. In this example $\mathbf k = [0.28,0.39)$ and $\mathbf{K_2} = [0,1]$.}
 
 \end{figure}
 
-\cref{fig:plaintext_to_binary,fig:key_to_binary} demonstrate converting plaintext $\mathbf P$ and key $\mathbf K$ to their binary representations. $\mathbf{P_2}$ is a binary \emph{subinterval} because it needs to uniquely identify the prefix $\mathbf P$.\footnote{Again, the longest sequence it identifies might be longer than $\mathbf P$, but it is guaranteed to contain $\mathbf P$ as a prefix.} Conversely, $\mathbf{K_2}$ is a binary \emph{superinterval} of $\mathbf K$ because it needs to be uniquely identified from the key (we share $\mathbf K$ so there there can be no ambiguity to its binary representation).
+\cref{fig:plaintext_to_binary,fig:key_to_binary} demonstrate converting plaintext $\mathbf P$ and key $\mathbf K$ to their binary representations. $\mathbf{P_2} = [1,0,0]$ is a binary \emph{subinterval} sequence of $\mathbf p = [0.49,0.69)$ because it needs to uniquely identify the prefix $\mathbf P$.\footnote{Again, the longest sequence it identifies might be longer than $\mathbf P$, but it is guaranteed to contain $\mathbf P$ as a prefix.} Conversely, $\mathbf{K_2} = [0,1]$ is a binary \emph{superinterval} sequence of $\mathbf k = [0.28,0.39)$ because it needs to be uniquely identified using the key $\mathbf K$.
+
+Ciphertext $\mathbf {C_2}$ is constructed by the \emph{exclusive or} operation on streams of $\mathbf{P_2}$ and the cycled key $\mathbf{K_2^+} = [0,1,0,1,0,1,\dots]$. Thus, it is the simplest and least secure implementation of a stream cipher. The ciphertext becomes $\mathbf {C_2} = [1,1,0]$.
+
+Ciphertext $\mathbf {C_2}$ is converted to stegotext $\mathbf S$ using the system from \cref{sec:arbitrary_source_stego} as shown in
 
 %\clearpage
 %\section{Detailed description of the stegosystem}
