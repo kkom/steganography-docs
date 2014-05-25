@@ -849,7 +849,7 @@ The only special case to consider is when $m_1 = 0$ or $\overline m_d = 0$. This
 
 The interval algorithm \cite{hanhoshi1997} provides a means of sampling from an arbitrary stochastic process (target) given an input sequence from a different arbitrary stochastic process (source). The algorithm is very similar to arithmetic coding -- it also uses successive refinements of the $[0,1)$ interval to map sequences.
 
-The sequence mapping algorithm starts by mapping the empty sequence $[~]$ to the interval $[0,1)$. For any sequence, its interval is partitioned into subintervals corresponding to the sequence extended by a single term. The size of each interval is chosen to be proportional to the probability of the last term occurring given the preceding sequence. The order of the subintervals does not matter, but needs to be consistent if reverse mapping from an interval to a sequence is to be performed. By the chain rule of probability, the size of the resulting interval is equal to the probability of observing its sequence. Consequently, only sequences of non-zero probability can be mapped. For a more detailed overview of arithmetic coding see \cite{coverthomas:sfecoding}.
+The sequence mapping algorithm starts by mapping the empty sequence $[~]$ to the interval $[0,1)$. For any sequence, its interval is partitioned into subintervals corresponding to the sequence extended by a single term. The size of each interval is chosen to be proportional to the probability of the last term occurring given the preceding sequence. The order of the subintervals does not matter, but needs to be consistent if reverse mapping from an interval to a sequence is to be performed. By the chain rule of probability, the size of the resulting interval is equal to the probability of observing its sequence. Consequently, only sequences of non-zero probability can be mapped. For a more detailed overview of arithmetic coding see \cite{coverthomas:sfecoding,said2004introduction}.
 
 The interval algorithm works by continuously mapping the observed input sequence to successive intervals defined by the stochastic model of the source. In parallel, the intervals are reverse mapped to an output sequence according to the stochastic model of the target. Terms of the output sequence can be generated as long as its interval is a superinterval of the input sequence interval. See \cref{fig:interval_algorithm} for an example of the procedure.
 
@@ -1043,7 +1043,7 @@ The problem is that we have no control over how small the interval $\mathbf s$ t
 
 	\end{tikzpicture}
 
-	\caption{\label{fig:stegosystem_decoding}Generating $\mathbf{P'}$ (right) from $\mathbf S$ (left). We use the statistics of $\mathcal S$ to find the interval $\mathbf s = [0.42,0.56)$. We then use the interval algorithm to generate $\mathbf{P'}$. Since we don't know how long the original sequence $\mathbf P$ was, we keep generating terms according to the statistics of $\mathcal P$ for as long as possible. In this case we decode $\mathbf{P'} = [b,c,a]$. $\mathbf{P'}$ has the correct prefix $\mathbf P = [b,c]$, but also contains an extra symbol $a$.}
+	\caption{\label{fig:stegosystem_decoding}Recovering $\mathbf{P'}$ (right) from $\mathbf S$ (left) using the interval algorithm \intervalAlgorithm{S}{P}. Since we don't know how long the original sequence $\mathbf P$ was, we keep generating terms according to the statistics of $\mathcal P$ for as long as possible. In this case we decode $\mathbf{P'} = [b,c,a]$. $\mathbf{P'}$ has the correct prefix $\mathbf P = [b,c]$, but also contains an extra symbol $a$.}
 
 \end{figure}
 
@@ -1066,7 +1066,7 @@ The plaintext and key sequences are first mapped to intervals $\mathbf p$ and $\
 
 The binary representation of plaintext $\mathbf{P_2}$ is then encrypted to binary \emph{ciphertext} $\mathbf{C_2}$ using a stream cipher with key $\mathbf{K_2}$. If $\mathbf{K_2}$ is at least as long as $\mathbf{P_2}$, we can achieve perfect secrecy \cite{shannon1949communication}. The simplest choice for a stream cipher is the \emph{exclusive or} operation between $\mathbf{P_2}$ and infinitely repeated key $\mathbf{K^+_2}$, \ie $\mathbf{C_2} = \mathbf{P_2} \oplus \mathbf{K^+_2}$.
 
-$\mathbf{C_2}$ is used as an input to the simple stegosystem, producing pseudo-random English \emph{stegotext} $\mathbf S$. Provided that the language model is correct, the stegotext is statistically indistinguishable from any random English text.
+$\mathbf{C_2}$ is used as an input to the simple stegosystem, producing pseudo-random English \emph{stegotext} $\mathbf S$. Note that $\mathbf{C_2}$ is used as $\mathbf P$ in \cref{sec:simple_stegosystem}. Provided that the language model is correct, the stegotext is statistically indistinguishable from any random English text.
 
 \subsubsection{Recovering plaintext}
 
@@ -1084,9 +1084,9 @@ A user asked to supply the key may give $\mathbf {\overline K}$ instead and clai
 
 \subsubsection{Example}
 
-Assume that the language contains three tokens $\{ \alpha, \beta, \gamma \}$ and both plaintext and stegotext are generated according to one stochastic process $\mathcal E$. The plaintext we wish to securely and innocuously transmit is $\mathbf P = [\beta,\gamma]$. For this purpose we use the key $\mathbf K = [\beta,\alpha]$.
+Both plaintext and stegotext are generated according to the same stochastic process $\mathcal E$ over the alphabet of three tokens $\{ \alpha, \beta, \gamma \}$. The plaintext we wish to securely and innocuously transmit is $\mathbf P = [\beta,\gamma]$. For this purpose we use the key $\mathbf K = [\beta,\alpha]$.
 
-\cref{fig:plaintext_to_binary,fig:key_to_binary} demonstrate converting the plaintext and key intervals $\mathbf p = [0.49, 0.69)$ and $\mathbf k = [0.28, 0.39)$ to their binary representations $\mathbf{P_2} = [1,0,0]$ and $\mathbf{K_2} = [0,1]$. Note that $\mathbf{K_2}$ is shorter than $\mathbf{P_2}$, so perfect secrecy is not possible.
+\cref{fig:plaintext_to_binary,fig:key_to_binary,fig:ciphertext_to_stegotext} demonstrate generating the stegotext $\mathbf S = [\gamma,\alpha,\beta]$ from $\mathbf P$ and $\mathbf K$. \cref{fig:stegotext_to_ciphertext,fig:binary_to_plaintext} show recovering from the stegotext $\mathbf S$ a sequence $\mathbf{P'} = [\beta,\gamma,\beta]$ with prefix $\mathbf P$, given the knowledge of the key $\mathbf K$.
 
 \begin{figure}[h]
 	\centering
@@ -1127,7 +1127,7 @@ Assume that the language contains three tokens $\{ \alpha, \beta, \gamma \}$ and
 
 	\end{tikzpicture}
 
-	\caption{\label{fig:plaintext_to_binary}Finding a binary subinterval sequence $\mathbf{P_2} = [1,0,0]$ of $\mathbf p = [0.49,0.69)$.}
+	\caption{\label{fig:plaintext_to_binary}Converting the plaintext $\mathbf P = [\beta,\gamma]$ to a binary sequence $\mathbf{P_2} = [1,0,0]$. $\mathbf{P_2}$ is a binary subinterval sequence of the plaintext interval $\mathbf p = [0.49,0.69)$.}
 
 \end{figure}
 
@@ -1170,11 +1170,9 @@ Assume that the language contains three tokens $\{ \alpha, \beta, \gamma \}$ and
 
 	\end{tikzpicture}
 
-	\caption{\label{fig:key_to_binary}Finding the binary superinterval sequence $\mathbf{K_2} = [0,1]$ of $\mathbf k = [0.28,0.39)$.}
+	\caption{\label{fig:key_to_binary}Converting the key $\mathbf K = [\beta,\alpha]$ to a binary sequence $\mathbf{K_2} = [0,1]$. $\mathbf{K_2}$ is the binary superinterval sequence of the key interval $\mathbf k = [0.28,0.39)$. We are effectively using the interval algorithm \intervalAlgorithm{E}{B}, where $\mathcal B$ denotes a source of \iid uniform bits.}
 
 \end{figure}
-
-Ciphertext $\mathbf {C_2}$ is constructed by the \emph{exclusive or} operation on streams of $\mathbf{P_2}$ and the cycled key $\mathbf{K^+_2} = [0,1,0,1,0,1,\dots]$, \ie $\mathbf {C_2} = \mathbf{P_2} \oplus \mathbf{K^+_2} = [1,1,0]$. The ciphertext is used to generate stegotext $\mathbf S = [\gamma,\alpha,\beta]$ as shown in \cref{fig:ciphertext_to_stegotext}.
 
 \begin{figure}[h]
 	\centering
@@ -1235,11 +1233,9 @@ Ciphertext $\mathbf {C_2}$ is constructed by the \emph{exclusive or} operation o
 
 	\end{tikzpicture}
 
-	\caption{\label{fig:ciphertext_to_stegotext}Generating stegotext $\mathbf S = [\gamma,\alpha,\beta]$ from ciphertext $\mathbf{C_2} = [1,1,0]$. Ciphertext needs to be extended to $\mathbf I = [1,1,0,\mathit{0,0}]$ so that $\mathbf s \subseteq \mathbf{c_2}$, \ie $[0.75,0.81) \subseteq [0.750,0.875)$. Note that the stegotext is not unique -- if we extended the ciphertext to $\mathbf I = [1,1,0,\mathit{1,0}]$, the stegotext would be $\mathbf S = [\gamma,\alpha,\gamma]$.}
+	\caption{\label{fig:ciphertext_to_stegotext}Generating stegotext $\mathbf S = [\gamma,\alpha,\beta]$ from ciphertext $\mathbf{C_2} = [1,1,0]$. Ciphertext is constructed by the \emph{exclusive or} operation on streams of $\mathbf{P_2}$ and the cycled key $\mathbf{K^+_2} = [0,1,0,1,0,1,\dots]$, \ie $\mathbf {C_2} = \mathbf{P_2} \oplus \mathbf{K^+_2} = [1,1,0]$. Ciphertext needs to be extended to $\mathbf I = [1,1,0,\mathit{0,0}]$ so that $\mathbf s \subseteq \mathbf{c_2}$, \ie $[0.75,0.81) \subseteq [0.750,0.875)$. Note that the stegotext is not unique -- if we extended the ciphertext to $\mathbf I = [1,1,0,\mathit{1,0}]$, the stegotext would be $\mathbf S = [\gamma,\alpha,\gamma]$.}
 
 \end{figure}
-
-\cref{fig:stegotext_to_ciphertxt} shows how the binary ciphertext sequence with trailing bits $\mathbf{C'_2} = [1,1,0,0]$ can be recovered from the stegotext $\mathbf S$. Since the recipient of the message knows $\mathbf K$, $\mathbf {K_2} = [0,1]$ can be obtained exactly like in \cref{fig:key_to_binary}. Deciphered binary plaintext with trailing bits is then $\mathbf {P'_2} = \mathbf{C'_2} \oplus \mathbf {K^+_2} = [1,0,0,1]$. We can verify that $\mathbf {P_2} = [1,0,0]$ is a prefix of $\mathbf {P'_2}$.
 
 \begin{figure}[h]
 	\centering
@@ -1293,11 +1289,9 @@ Ciphertext $\mathbf {C_2}$ is constructed by the \emph{exclusive or} operation o
 
 	\end{tikzpicture}
 
-	\caption{\label{fig:stegotext_to_ciphertxt}Recovering the ciphertext with trailing bits $\mathbf{C'_2} = [1,1,0,0]$ from the stegotext $\mathbf S = [\gamma,\alpha,\beta]$. Note that the ciphertext $\mathbf {C_2} = [1,1,0]$ is indeed a prefix of $\mathbf{C'_2}$.}
+	\caption{\label{fig:stegotext_to_ciphertext}Recovering the ciphertext with trailing bits $\mathbf{C'_2} = [1,1,0,0]$ from the stegotext $\mathbf S = [\gamma,\alpha,\beta]$. We are effectively using the interval algorithm \intervalAlgorithm{E}{B}. Since the recipient of the message knows $\mathbf K$, $\mathbf {K_2} = [0,1]$ can be obtained exactly as in \cref{fig:key_to_binary}. Deciphered binary plaintext with trailing bits is then $\mathbf {P'_2} = \mathbf{C'_2} \oplus \mathbf {K^+_2} = [1,0,0,1]$. We can verify that $\mathbf {P'_2}$ has the prefix $\mathbf {P_2} = [1,0,0]$.}
 
 \end{figure}
-
-$\mathbf {P'_2}$ can now be used to recover $\mathbf{P'} = [\beta,\gamma,\beta]$ as in \cref{fig:binary_to_plaintext}. $\mathbf P = [\beta,\gamma]$ is indeed a prefix of $\mathbf {P'}$, so the stegosystem works correctly.
 
 \begin{figure}[h]
 	\centering
@@ -1352,13 +1346,11 @@ $\mathbf {P'_2}$ can now be used to recover $\mathbf{P'} = [\beta,\gamma,\beta]$
 
 	\end{tikzpicture}
 
-	\caption{\label{fig:binary_to_plaintext}Recovering the plaintext with trailing symbols $\mathbf{P'} = [\beta,\gamma,\beta]$ from the binary plaintext with trailing bits $\mathbf{P'_2} = [1,0,0,1]$.}
+	\caption{\label{fig:binary_to_plaintext}Recovering the plaintext with trailing symbols $\mathbf{P'} = [\beta,\gamma,\beta]$ from the binary plaintext with trailing bits $\mathbf{P'_2} = [1,0,0,1]$. $\mathbf {P'}$ has indeed the prefix $\mathbf P = [\beta,\gamma]$, so the stegosystem works correctly.}
 
 \end{figure}
 
-Finally, imagine using a false key
-
-Note that this example is a special case where both \emph{plaintext} and \emph{stegotext} are generated according to the same model. So transmitting stegotext has the same innocuousness as transmitting plaintext. However, the system still implements secrecy without \emph{compromising} innocuousness. Conversely, standard text encryption gives a sequence of \iid uniform bits, not just different plausible text. Also, one can easily imagine modifying the system to use a completely different stochastic process for plaintext, \eg French text. Plaintext source could be also much more elaborate, for example it could be a custom format for storing some intelligence information. If $\mathcal P$ is designed to emit plausible outputs, we have deniable encryption.
+%Note that this example is a special case where both \emph{plaintext} and \emph{stegotext} are generated according to the same model. So transmitting stegotext has the same innocuousness as transmitting plaintext. However, the system still implements secrecy without \emph{compromising} innocuousness. Conversely, standard text encryption gives a sequence of \iid uniform bits, not just different plausible text. Also, one can easily imagine modifying the system to use a completely different stochastic process for plaintext, \eg French text. Plaintext source could be also much more elaborate, for example it could be a custom format for storing some intelligence information. If $\mathcal P$ is designed to emit plausible outputs, we have deniable encryption.
 
 %\clearpage
 %\section{Detailed description of the stegosystem}
