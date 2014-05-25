@@ -1043,14 +1043,14 @@ The problem is that we have no control over how small the interval $\mathbf s$ t
 
 	\end{tikzpicture}
 
-	\caption{\label{fig:stegosystem_decoding}Generating $\mathbf{P'}$ (right) from $\mathbf S$ (left). We use the statistics of $\mathcal S$ to find the interval $\mathbf s = [0.42,0.56)$. We then use the interval algorithm to generate $\mathbf{P'}$. Since we don't know how long the original sequence $\mathbf P$ was, we keep generating terms according to the statistics of $\mathcal P$ for as long as possible. In this case we decode $\mathbf{P'} = [b,c,a]$. $\mathbf{P'}$ has the prefix $\mathbf P = [b,c]$, but also contains an extra symbol $a$.}
+	\caption{\label{fig:stegosystem_decoding}Generating $\mathbf{P'}$ (right) from $\mathbf S$ (left). We use the statistics of $\mathcal S$ to find the interval $\mathbf s = [0.42,0.56)$. We then use the interval algorithm to generate $\mathbf{P'}$. Since we don't know how long the original sequence $\mathbf P$ was, we keep generating terms according to the statistics of $\mathcal P$ for as long as possible. In this case we decode $\mathbf{P'} = [b,c,a]$. $\mathbf{P'}$ has the correct prefix $\mathbf P = [b,c]$, but also contains an extra symbol $a$.}
 
 \end{figure}
 
 \FloatBarrier
 \subsection{Secure stegosystem}
 
-The simple stegosystem from \cref{sec:simple_stegosystem} can be used to construct a secure stegosystem, where a key sequence $\mathbf K$ is used to \emph{securely} and \emph{innocuously} transform a plaintext sequence $\mathbf P$ to a stegotext sequence $\mathbf S$. Only the knowledge of $\mathbf K$ allows to recover $\mathbf P$ from $\mathbf S$.
+The simple stegosystem from \cref{sec:simple_stegosystem} can be used to construct a secure stegosystem, where a key sequence $\mathbf K$ is used to \emph{securely} and \emph{innocuously} transform a plaintext sequence $\mathbf P$ to a stegotext sequence $\mathbf S$. Only the knowledge of $\mathbf K$ allows to recover from $\mathbf S$ a sequence with prefix $\mathbf P$.
 
 \subsubsection{Generating secure stegotext}
 
@@ -1058,9 +1058,9 @@ The plaintext and key sequences are first mapped to intervals $\mathbf p$ and $\
 
 \begin{description}
 
-\item[$\mathbf{P_2}$] \emph{Binary subinterval sequence} of $\mathbf p$, \ie the shortest sequence $\mathbf{P_2}$ such that $\mathbf {p_2} \subseteq \mathbf p$. Mapping between binary sequences and intervals is achieved in the usual way -- by successive refinements of the $[0,1)$ interval by its upper or lower half. Note that there may be more than one valid binary subinterval sequence. See \cref{fig:plaintext_to_binary}.
+\item[$\mathbf{P_2}$] \emph{Binary subinterval sequence} of $\mathbf p$, \ie the shortest sequence $\mathbf{P_2}$ such that $\mathbf {p_2} \subseteq \mathbf p$. Mapping between binary sequences and intervals is achieved in the usual way -- by successive refinements of the $[0,1)$ interval by its upper or lower half. Note that there may be more than one valid $\mathbf{P_2}$. See \cref{fig:plaintext_to_binary}.
 
-\item[$\mathbf{K_2}$] \emph{Binary superinterval sequence} of $\mathbf k$, \ie the longest sequence $\mathbf{K_2}$ such that $\mathbf k \subseteq \mathbf {k_2}$. There is a single possible binary superinterval sequence. The procedure is equivalent to generating $\mathbf{K_2}$ from $\mathbf K$ using the interval algorithm, so $\mathbf{K_2}$ is \iid uniform by construction. See \cref{fig:key_to_binary}.
+\item[$\mathbf{K_2}$] \emph{Binary superinterval sequence} of $\mathbf k$, \ie the longest sequence $\mathbf{K_2}$ such that $\mathbf k \subseteq \mathbf {k_2}$. There is a single possible $\mathbf{K_2}$. Finding it is equivalent to generating $\mathbf{K_2}$ from $\mathbf K$ using the interval algorithm, so $\mathbf{K_2}$ is \iid uniform by construction. See \cref{fig:key_to_binary}.
 
 \end{description}
 
@@ -1078,7 +1078,7 @@ $\mathbf {p'_2} \subseteq \mathbf {p_2} \subseteq \mathbf p$. The first relation
 
 An important feature of a stegosystem constructed in this way is \emph{deniable encryption}. Assume that an enemy with full knowledge of the system is told that a particular fragment of text $\mathbf S$ is indeed stegotext. Using the knowledge of the system (\ie the language model), they can reconstruct $\mathbf {C'_2}$ -- the binary ciphertext sequence with trailing bits.
 
-However, the recovery of plaintext requires knowledge of the key. If a \emph{false key} $\mathbf {\overline K}$ is supplied in text form, it will still be correctly converted to its binary superinterval sequence $\mathbf {\overline K_2}$. It will then allow to decipher ciphertext $\mathbf{C'_2}$ into an \emph{incorrect} binary sequence $\mathbf {\overline {P'}_2} = \mathbf{C'_2} \oplus \mathbf {\overline K^+_2}$ without failure. $\mathbf {\overline {P'}_2}$ will then be mapped to some incorrect plaintext $\mathbf {\overline {P'}}$, generated according to the stochastic process $\mathcal P$. So it will be a fragment of text randomly drawn from all English sentences.
+However, the recovery of plaintext requires knowledge of the key. If a \emph{false key} $\mathbf {\overline K}$ is supplied in text form, it will still be correctly converted to its binary superinterval sequence $\mathbf {\overline K_2}$. It will then allow to decipher without failure ciphertext $\mathbf{C'_2}$ into an \emph{incorrect} binary sequence $\mathbf {\overline {P'}_2} = \mathbf{C'_2} \oplus \mathbf {\overline K^+_2}$. $\mathbf {\overline {P'}_2}$ will then be mapped to some incorrect plaintext $\mathbf {\overline {P'}}$, generated according to the stochastic process $\mathcal P$. So it will be a fragment of text randomly drawn from all English sentences.
 
 A user asked to supply the key may give $\mathbf {\overline K}$ instead and claim that $\mathbf {\overline {P'}}$ contains the plaintext message as a prefix. If the enemy does not know $\mathbf P$ but expects it to be just a random sentence, \ie one generated according to the same statistics as $\mathcal P$, $\mathbf {\overline {P'}}$ is just as likely to contain $\mathbf P$ as a prefix as is the real $\mathbf{P'}$.
 
@@ -1136,7 +1136,7 @@ Assume that the language contains three tokens $\{ \alpha, \beta, \gamma \}$ and
 
 	\begin{tikzpicture}[scale=0.05]
 		% Show that the binary interval is a subinterval of plaintext interval
-		\fill [opacity=0.1] (-30,0.28*100) rectangle (30,0.39*100);
+		\fill [opacity=0.1] (-30,0.28*100) rectangle (120,0.39*100);
 
 		% Input side
 		\intervalBothLabels{-90}{0}{100}{0}{1}{solid}{left}
@@ -1153,16 +1153,20 @@ Assume that the language contains three tokens $\{ \alpha, \beta, \gamma \}$ and
 		\node[below] at (-30,-5) {\footnotesize $[\beta,\alpha]$};
 
 		% Output side
-		\intervalBothLabels{90}{0}{100}{0}{1}{solid}{right}
-		\node[below] at (90,-5) {\footnotesize $[~]$};
+		\intervalBothLabels{120}{0}{100}{0}{1}{solid}{right}
+		\node[below] at (120,-5) {\footnotesize $[~]$};
 
-		\intervalBothLabels{60}{0}{100}{0.50}{1.00}{densely dotted}{right}
-		\intervalBottomLabel{60}{0}{100}{0.00}{0.50}{solid}{right}
-		\node[below] at (60,-5) {\footnotesize $[0]$};
+		\intervalBothLabels{90}{0}{100}{0.50}{1.00}{densely dotted}{right}
+		\intervalBottomLabel{90}{0}{100}{0.00}{0.50}{solid}{right}
+		\node[below] at (90,-5) {\footnotesize $[0]$};
 
-		\intervalBothLabels{30}{0}{100}{0.25}{0.50}{solid}{right}
-		\intervalBottomLabel{30}{0}{100}{0.00}{0.25}{densely dotted}{right}
-		\node[below] at (30,-5) {\footnotesize $[0,1]$};
+		\intervalBothLabels{60}{0}{100}{0.25}{0.50}{solid}{right}
+		\intervalBottomLabel{60}{0}{100}{0.00}{0.25}{densely dotted}{right}
+		\node[below] at (60,-5) {\footnotesize $[0,1]$};
+
+		\intervalBothLabels{30}{0}{100}{0.375}{0.500}{densely dotted}{right}
+		\intervalBottomLabel{30}{0}{100}{0.250}{0.375}{densely dotted}{right}
+		\node[below] at (30,-5) {\footnotesize $[0,1,-]$};
 
 	\end{tikzpicture}
 
@@ -1177,30 +1181,38 @@ Ciphertext $\mathbf {C_2}$ is constructed by the \emph{exclusive or} operation o
 
 	\begin{tikzpicture}[scale=0.05]
 		% C_2 interval range
-		\fill [opacity=0.1] (-30,0.750*100) rectangle (120,0.875*100);
+		\fill [opacity=0.1] (-90,0.750*100) rectangle (120,0.875*100);
 
 		% I interval range
-		\fill [opacity=0.1] (-30,0.7500*100) rectangle (120,0.8125*100);
+		\fill [opacity=0.1] (-30,0.7500*100) rectangle (120,0.78125*100);
 
 		% C_2
-		\intervalBothLabels{-150}{0}{100}{0}{1}{solid}{left}
-		\node[below] at (-150,-5) {\footnotesize $[~]$};
+		\intervalBothLabels{-180}{0}{100}{0}{1}{solid}{left}
+		\node[below] at (-180,-5) {\footnotesize $[~]$};
 
-		\intervalBothLabels{-120}{0}{100}{0.50}{1.00}{solid}{left}
-		\intervalBottomLabel{-120}{0}{100}{0.00}{0.50}{densely dotted}{left}
-		\node[below] at (-120,-5) {\footnotesize $[1]$};
+		\intervalBothLabels{-150}{0}{100}{0.50}{1.00}{solid}{left}
+		\intervalBottomLabel{-150}{0}{100}{0.00}{0.50}{densely dotted}{left}
+		\node[below] at (-150,-5) {\footnotesize $[1]$};
 
-		\intervalBothLabels{-90}{0}{100}{0.75}{1.00}{solid}{left}
-		\intervalBottomLabel{-90}{0}{100}{0.50}{0.75}{densely dotted}{left}
-		\node[below] at (-90,-5) {\footnotesize $[1,1]$};
+		\intervalBothLabels{-120}{0}{100}{0.75}{1.00}{solid}{left}
+		\intervalBottomLabel{-120}{0}{100}{0.50}{0.75}{densely dotted}{left}
+		\node[below] at (-120,-5) {\footnotesize $[1,1]$};
 
-		\intervalBothLabels{-60}{0}{100}{0.875}{1.000}{densely dotted}{left}
-		\intervalBottomLabel{-60}{0}{100}{0.750}{0.875}{solid}{left}
-		\node[below] at (-60,-5) {\footnotesize $[1,1,0]$};
+		\intervalBothLabels{-90}{0}{100}{0.875}{1.000}{densely dotted}{left}
+		\intervalBottomLabel{-90}{0}{100}{0.750}{0.875}{solid}{left}
+		\node[below] at (-90,-5) {\footnotesize $[1,1,0]$};
 
-		\intervalBothLabels{-30}{0}{100}{0.8125}{0.8750}{densely dotted}{left}
-		\intervalBottomLabel{-30}{0}{100}{0.7500}{0.8125}{solid}{left}
-		\node[below] at (-30,-5) {\footnotesize $[1,1,0,\mathit{0}]$};
+		\intervalBothLabels{-60}{0}{100}{0.8125}{0.8750}{densely dotted}{left}
+		\intervalBottomLabel{-60}{0}{100}{0.7500}{0.8125}{solid}{left}
+		\node[below] at (-60,-5) {\footnotesize $[1,1,0,\mathit{0}]$};
+
+		\interval{-30}{0}{100}{0.78125}{0.81250}{densely dotted}{left}
+		\interval{-30}{0}{100}{0.75000}{0.78125}{solid}{left}
+		% Interval descriptions
+		\node[left] at (-30,0.78125*100+6) {\footnotesize 0.81250};
+		\node[left] at (-30,0.78125*100) {\footnotesize 0.78125};
+		\node[left] at (-30,0.78125*100-6) {\footnotesize 0.75000};
+		\node[below] at (-30,-5) {\footnotesize ~~~ $[1,1,0,\mathit{0,0}]$};
 
 		% S
 		\intervalBothLabels{120}{0}{100}{0}{1}{solid}{right}
@@ -1212,22 +1224,141 @@ Ciphertext $\mathbf {C_2}$ is constructed by the \emph{exclusive or} operation o
 		\node[below] at (90,-5) {\footnotesize $[\gamma]$};
 
 		\intervalBothLabels{60}{0}{100}{0.94}{1.00}{densely dotted}{right}
-		\intervalBottomLabel{60}{0}{100}{0.88}{0.94}{densely dotted}{right}
-		\intervalBottomLabel{60}{0}{100}{0.69}{0.88}{solid}{right}
+		\intervalBottomLabel{60}{0}{100}{0.87}{0.94}{densely dotted}{right}
+		\intervalBottomLabel{60}{0}{100}{0.69}{0.87}{solid}{right}
 		\node[below] at (60,-5) {\footnotesize $[\gamma,\alpha]$};
 
-		\intervalBothLabels{30}{0}{100}{0.82}{0.88}{densely dotted}{right}
-		\intervalBottomLabel{30}{0}{100}{0.75}{0.82}{solid}{right}
+		\intervalBothLabels{30}{0}{100}{0.81}{0.87}{densely dotted}{right}
+		\intervalBottomLabel{30}{0}{100}{0.75}{0.81}{solid}{right}
 		\intervalBottomLabel{30}{0}{100}{0.69}{0.75}{densely dotted}{right}
 		\node[below] at (30,-5) {\footnotesize $[\gamma,\alpha,\beta]$};
 
 	\end{tikzpicture}
 
-	\caption{\label{fig:ciphertext_to_stegotext}Generating stegotext $\mathbf S = [\gamma,\alpha,\beta]$ from ciphertext $\mathbf{C_2} = [1,1,0]$. Ciphertext needs to be extended to $\mathbf I = [1,1,0,\mathit{0}]$ so that $\mathbf s \subseteq \mathbf{c_2}$. Note that the stegotext is not unique -- if we extended the ciphertext to $\mathbf I = [1,1,0,\mathit{1,1}]$, the stegotext would be $\mathbf S = [\gamma,\alpha,\gamma]$.}
+	\caption{\label{fig:ciphertext_to_stegotext}Generating stegotext $\mathbf S = [\gamma,\alpha,\beta]$ from ciphertext $\mathbf{C_2} = [1,1,0]$. Ciphertext needs to be extended to $\mathbf I = [1,1,0,\mathit{0,0}]$ so that $\mathbf s \subseteq \mathbf{c_2}$, \ie $[0.75,0.81) \subseteq [0.750,0.875)$. Note that the stegotext is not unique -- if we extended the ciphertext to $\mathbf I = [1,1,0,\mathit{1,0}]$, the stegotext would be $\mathbf S = [\gamma,\alpha,\gamma]$.}
 
 \end{figure}
 
-Note that this is a special case where both \emph{plaintext} and \emph{stegotext} are generated according to the same model. So transmitting stegotext has the same innocuousness as transmitting plaintext. However, the system still implements secrecy without \emph{compromising} innocuousness. Conversely, standard text encryption gives a sequence of \iid uniform bits, not just different plausible text. Also, one can easily imagine modifying the system to use a completely different stochastic process for plaintext, \eg French text. Plaintext source could be also much more elaborate, for example it could be a custom format for storing some intelligence information. If $\mathcal P$ is designed to emit plausible outputs, we have deniable encryption.
+\cref{fig:stegotext_to_ciphertxt} shows how the binary ciphertext sequence with trailing bits $\mathbf{C'_2} = [1,1,0,0]$ can be recovered from the stegotext $\mathbf S$. Since the recipient of the message knows $\mathbf K$, $\mathbf {K_2} = [0,1]$ can be obtained exactly like in \cref{fig:key_to_binary}. Deciphered binary plaintext with trailing bits is then $\mathbf {P'_2} = \mathbf{C'_2} \oplus \mathbf {K^+_2} = [1,0,0,1]$. We can verify that $\mathbf {P_2} = [1,0,0]$ is a prefix of $\mathbf {P'_2}$.
+
+\begin{figure}[h]
+	\centering
+
+	\begin{tikzpicture}[scale=0.05]
+		% S interval range
+		\fill [opacity=0.1] (-30,0.75*100) rectangle (180,0.81*100);
+
+		% S
+		\intervalBothLabels{-120}{0}{100}{0}{1}{solid}{left}
+		\node[below] at (-120,-5) {\footnotesize $[~]$};
+
+		\intervalBothLabels{-90}{0}{100}{0.69}{1.00}{solid}{left}
+		\intervalBottomLabel{-90}{0}{100}{0.28}{0.69}{densely dotted}{left}
+		\intervalBottomLabel{-90}{0}{100}{0.00}{0.28}{densely dotted}{left}
+		\node[below] at (-90,-5) {\footnotesize $[\gamma]$};
+
+		\intervalBothLabels{-60}{0}{100}{0.94}{1.00}{densely dotted}{left}
+		\intervalBottomLabel{-60}{0}{100}{0.87}{0.94}{densely dotted}{left}
+		\intervalBottomLabel{-60}{0}{100}{0.69}{0.87}{solid}{left}
+		\node[below] at (-60,-5) {\footnotesize $[\gamma,\alpha]$};
+
+		\intervalBothLabels{-30}{0}{100}{0.81}{0.87}{densely dotted}{left}
+		\intervalBottomLabel{-30}{0}{100}{0.75}{0.81}{solid}{left}
+		\intervalBottomLabel{-30}{0}{100}{0.69}{0.75}{densely dotted}{left}
+		\node[below] at (-30,-5) {\footnotesize $[\gamma,\alpha,\beta]$};
+
+		% C_2
+		\intervalBothLabels{180}{0}{100}{0}{1}{solid}{right}
+		\node[below] at (180,-5) {\footnotesize $[~]$};
+
+		\intervalBothLabels{150}{0}{100}{0.50}{1.00}{solid}{right}
+		\intervalBottomLabel{150}{0}{100}{0.00}{0.50}{densely dotted}{right}
+		\node[below] at (150,-5) {\footnotesize $[1]$};
+
+		\intervalBothLabels{120}{0}{100}{0.75}{1.00}{solid}{right}
+		\intervalBottomLabel{120}{0}{100}{0.50}{0.75}{densely dotted}{right}
+		\node[below] at (120,-5) {\footnotesize $[1,1]$};
+
+		\intervalBothLabels{90}{0}{100}{0.875}{1.000}{densely dotted}{right}
+		\intervalBottomLabel{90}{0}{100}{0.750}{0.875}{solid}{right}
+		\node[below] at (90,-5) {\footnotesize $[1,1,0]$};
+
+		\intervalBothLabels{60}{0}{100}{0.8125}{0.8750}{densely dotted}{right}
+		\intervalBottomLabel{60}{0}{100}{0.7500}{0.8125}{solid}{right}
+		\node[below] at (60,-5) {\footnotesize $[1,1,0,0]$};
+
+		\intervalTopLabel{30}{0}{100}{0.78125}{0.8125}{densely dotted}{right}
+		\intervalBottomLabel{30}{0}{100}{0.7500}{0.78125}{densely dotted}{right}
+		\node[below] at (30,-5) {\footnotesize $[1,1,0,0,-]$~~~};
+
+	\end{tikzpicture}
+
+	\caption{\label{fig:stegotext_to_ciphertxt}Recovering the ciphertext with trailing bits $\mathbf{C'_2} = [1,1,0,0]$ from the stegotext $\mathbf S = [\gamma,\alpha,\beta]$. Note that the ciphertext $\mathbf {C_2} = [1,1,0]$ is indeed a prefix of $\mathbf{C'_2}$.}
+
+\end{figure}
+
+$\mathbf {P'_2}$ can now be used to recover $\mathbf{P'} = [\beta,\gamma,\beta]$ as in \cref{fig:binary_to_plaintext}. $\mathbf P = [\beta,\gamma]$ is indeed a prefix of $\mathbf {P'}$, so the stegosystem works correctly.
+
+\begin{figure}[h]
+	\centering
+
+	\begin{tikzpicture}[scale=0.05]
+		% P'_2 interval
+		\fill [opacity=0.1] (-30,0.5625*100) rectangle (150,0.6250*100);
+
+		% P'_2
+		\intervalBothLabels{-150}{0}{100}{0}{1}{solid}{left}
+		\node[below] at (-150,-5) {\footnotesize $[~]$};
+
+		\intervalBothLabels{-120}{0}{100}{0.50}{1.00}{solid}{left}
+		\intervalBottomLabel{-120}{0}{100}{0.00}{0.50}{densely dotted}{left}
+		\node[below] at (-120,-5) {\footnotesize $[1]$};
+
+		\intervalBothLabels{-90}{0}{100}{0.75}{1.00}{densely dotted}{left}
+		\intervalBottomLabel{-90}{0}{100}{0.50}{0.75}{solid}{left}
+		\node[below] at (-90,-5) {\footnotesize $[1,0]$};
+
+		\intervalBothLabels{-60}{0}{100}{0.625}{0.750}{densely dotted}{left}
+		\intervalBottomLabel{-60}{0}{100}{0.500}{0.625}{solid}{left}
+		\node[below] at (-60,-5) {\footnotesize $[1,0,0]$};
+
+		\intervalBothLabels{-30}{0}{100}{0.5625}{0.6250}{solid}{left}
+		\intervalBottomLabel{-30}{0}{100}{0.5000}{0.5625}{densely dotted}{left}
+		\node[below] at (-30,-5) {\footnotesize $[1,0,0,1]$};
+
+		% P'
+		\intervalBothLabels{150}{0}{100}{0}{1}{solid}{right}
+		\node[below] at (150,-5) {\footnotesize $[~]$};
+
+		\intervalBothLabels{120}{0}{100}{0.69}{1.00}{densely dotted}{right}
+		\intervalBottomLabel{120}{0}{100}{0.28}{0.69}{solid}{right}
+		\intervalBottomLabel{120}{0}{100}{0.00}{0.28}{densely dotted}{right}
+		\node[below] at (120,-5) {\footnotesize $[\beta]$};
+
+		\intervalBothLabels{90}{0}{100}{0.49}{0.69}{solid}{right}
+		\intervalBottomLabel{90}{0}{100}{0.39}{0.49}{densely dotted}{right}
+		\intervalBottomLabel{90}{0}{100}{0.28}{0.39}{densely dotted}{right}
+		\node[below] at (90,-5) {\footnotesize $[\beta,\gamma]$};
+
+		\intervalBothLabels{60}{0}{100}{0.63}{0.69}{densely dotted}{right}
+		\intervalBottomLabel{60}{0}{100}{0.55}{0.63}{solid}{right}
+		\intervalBottomLabel{60}{0}{100}{0.49}{0.55}{densely dotted}{right}
+		\node[below] at (60,-5) {\footnotesize $[\beta,\gamma,\beta]$};
+
+		\intervalTopLabel{30}{0}{100}{0.60}{0.63}{densely dotted}{right}
+		\interval{30}{0}{100}{0.58}{0.60}{solid}{right}
+		\intervalBottomLabel{30}{0}{100}{0.55}{0.58}{densely dotted}{right}
+		\node[below] at (30,-5) {\footnotesize $[\beta,\gamma,\beta,-]$};
+
+	\end{tikzpicture}
+
+	\caption{\label{fig:binary_to_plaintext}Recovering the plaintext with trailing symbols $\mathbf{P'} = [\beta,\gamma,\beta]$ from the binary plaintext with trailing bits $\mathbf{P'_2} = [1,0,0,1]$.}
+
+\end{figure}
+
+Finally, imagine using a false key
+
+Note that this example is a special case where both \emph{plaintext} and \emph{stegotext} are generated according to the same model. So transmitting stegotext has the same innocuousness as transmitting plaintext. However, the system still implements secrecy without \emph{compromising} innocuousness. Conversely, standard text encryption gives a sequence of \iid uniform bits, not just different plausible text. Also, one can easily imagine modifying the system to use a completely different stochastic process for plaintext, \eg French text. Plaintext source could be also much more elaborate, for example it could be a custom format for storing some intelligence information. If $\mathcal P$ is designed to emit plausible outputs, we have deniable encryption.
 
 %\clearpage
 %\section{Detailed description of the stegosystem}
