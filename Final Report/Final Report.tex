@@ -161,35 +161,42 @@
 \projectgroup{F}
 \maketitle
 
-% Summary and table of contents
-\thispagestyle{empty}
+% Technical abstract
+\clearpage
+\pagestyle{plain}
+\section*{Technical abstract}
+
+Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.
+
+% Abstract and table of contents
+\clearpage
+\pagestyle{empty}
 \begin{abstract}
 Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.
 \end{abstract}
-
 \tableofcontents
 
 % Contents
+\clearpage
 \pagestyle{plain}
-
-\clearpage
-\section{Technical abstract}
-
-Lorem ipsum.
-
-\clearpage
 \section{Introduction}
 
-Lorem ipsum.
+Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.
 
 \FloatBarrier
 \subsection{Aim}
 
+Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.
+
 \FloatBarrier
 \subsection{Overview of steganography}
 
+Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.
+
 \FloatBarrier
 \subsection{High level description of the stegosystem}
+
+Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.
 
 \clearpage
 \section{Statistical natural language models}
@@ -1049,6 +1056,7 @@ The problem is that we have no control over how small the interval $\mathbf s$ t
 
 \FloatBarrier
 \subsection{Secure stegosystem}
+\label{sec:secure_stegosystem}
 
 The simple stegosystem from \cref{sec:simple_stegosystem} can be used to construct a secure stegosystem, where a key sequence $\mathbf K$ is used to \emph{securely} and \emph{innocuously} transform a plaintext sequence $\mathbf P$ to a stegotext sequence $\mathbf S$. Only the knowledge of $\mathbf K$ allows to recover from $\mathbf S$ a sequence with prefix $\mathbf P$.
 
@@ -1350,90 +1358,57 @@ Both plaintext and stegotext are generated according to the same stochastic proc
 
 \end{figure}
 
-%Note that this example is a special case where both \emph{plaintext} and \emph{stegotext} are generated according to the same model. So transmitting stegotext has the same innocuousness as transmitting plaintext. However, the system still implements secrecy without \emph{compromising} innocuousness. Conversely, standard text encryption gives a sequence of \iid uniform bits, not just different plausible text. Also, one can easily imagine modifying the system to use a completely different stochastic process for plaintext, \eg French text. Plaintext source could be also much more elaborate, for example it could be a custom format for storing some intelligence information. If $\mathcal P$ is designed to emit plausible outputs, we have deniable encryption.
+\clearpage
+\section{Results}
 
-%\clearpage
-%\section{Detailed description of the stegosystem}
-%
-%Lorem ipsum.
-%
-%\FloatBarrier
-%\subsection{Source -- plaintext concatenated with randomness}
-%
-%Blah blah.
-%
-%\FloatBarrier
-%\subsection{Target -- English language model}
-%
-%Blah blah.
-%
-%\FloatBarrier
-%\subsection{Storing length of plaintext}
-%
-%Blah blah.
-%
-%\FloatBarrier
-%\subsection{Sentence delimiters}
-%
-%Google Books $N$-grams contain \ngram{\_START\_} and \ngram{\_END\_} tokens to identify beginning and end of a sentence. If text is \emph{generated} using the language model, it will inevitably contain these tokens (for example any sequence will start with \ngram{\_START\_}). As a result some kind of convention needs to be adopted as to how sentence delimiters are identified in formatted output text. I decided that sentences will be delimited with multiple whitespace characters, for example a double space. I will return to this issue in the discussion section, as it has non-trivial consequences for practical application of the system.
-%
-%\subsubsection{Universal coding of plaintext length}
-%
-%Blah blah.
-%
-%\subsubsection{EOF symbol}
-%
-%Blah blah.
-%
-%\FloatBarrier
-%\subsection{Sufficient length of the output interval}
-%
-%Blah blah.
-%
-%\FloatBarrier
-%\subsection{Secrecy}
-%
-%\clearpage
-%\section{Implementation}
-%
-%Lorem ipsum.
-%
-%\clearpage
-%\section{Security vulnerabilities}
-%
-%Lorem ipsum.
-%
-%\FloatBarrier
-%\subsection{Telling stegotext from covertext}
-%
-%\subsubsection{Plaintext length declaration incompatible with interval size}
-%
-%If the plaintext length declaration is longer than the maximum length of plaintext that can be recovered from the potential stegotext, we know the message was covertext.
-%
-%Conversely -- how often does a compatible length declaration indicate stegotext? If almost always, then the system is flawed.
-%
-%\clearpage
-%\section{Theoretical considerations}
-%
-%Lorem ipsum.
-%
-%\FloatBarrier
-%\subsection{Rate of the system}
-%
-%\FloatBarrier
-%\subsection{Entropy of the language model and its effect on stegotext length}
-%
-%Use the bounds from Han \& Hoshi's paper.
-%
-%\clearpage
-%\section{Interesting questions}
-%
-%Lorem ipsum.
-%
-%\FloatBarrier
-%\subsection{How many bits of information stored per word, sentence, tweet?}
-%
-%\subsubsection{Dependence on the entropy of the language model}
+In this section I will present the results of my project. I have implemented the full language model I designed in \cref{sec:language_model} along with the secure stegosystem from \cref{sec:secure_stegosystem}.
+
+\clearpage
+\section{Discussion}
+
+\subsection{Storing length of plaintext}
+
+If the plaintext length declaration is longer than the maximum length of plaintext that can be recovered from the potential stegotext, we know the message was covertext.
+
+Conversely -- how often does a compatible length declaration indicate stegotext? If almost always, then the system is flawed.
+
+\subsubsection{Universal coding of plaintext length}
+
+Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.
+
+\subsubsection{EOF symbol}
+
+Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.
+
+\subsection{Sentence delimiters}
+
+Google Books $N$-grams contain \ngram{\_START\_} and \ngram{\_END\_} tokens to identify beginning and end of a sentence. If text is \emph{generated} using the language model, it will inevitably contain these tokens (for example any sequence will start with \ngram{\_START\_}). As a result some kind of convention needs to be adopted as to how sentence delimiters are identified in formatted output text. I decided that sentences will be delimited with multiple whitespace characters, for example a double space. This has non-trivial consequences for practical application of the system.
+
+\subsection{Different models for plaintext and stegotext}
+
+Note that this example is a special case where both \emph{plaintext} and \emph{stegotext} are generated according to the same model. So transmitting stegotext has the same innocuousness as transmitting plaintext. However, the system still implements secrecy without \emph{compromising} innocuousness. Conversely, standard text encryption gives a sequence of \iid uniform bits, not just different plausible text. Also, one can easily imagine modifying the system to use a completely different stochastic process for plaintext, \eg French text. Plaintext source could be also much more elaborate, for example it could be a custom format for storing some intelligence information. If $\mathcal P$ is designed to emit plausible outputs, we have deniable encryption.
+
+
+\subsection{Theoretical considerations}
+
+Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.
+
+\subsubsection{Rate of the system}
+
+Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.
+
+\subsubsection{Entropy of the language model and its effect on stegotext length}
+
+Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.
+
+\subsubsection{How many bits of information stored per word, sentence, tweet?}
+
+Use the bounds from Han \& Hoshi's paper.
+
+\clearpage
+\section{Conclusions}
+
+Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.
 
 \clearpage
 \footnotesize
