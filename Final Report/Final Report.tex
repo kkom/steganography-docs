@@ -853,6 +853,32 @@ c(b_d) = \ceil*{ \beta \bracket*{ \overline m_d - \sum_{w_l \in \mathcal W_d} f(
 
 The only special case to consider is when $m_1 = 0$ or $\overline m_d = 0$. This can simply occur if the context was not observed in training data frequently enough to be in the corpus, but also in more subtle situations.\footnote{If all tokens in a level are excluded \emph{and} the context count $f(w_{l-N+d}^{l-1})$ is equal to the sum of excluded counts $\sum_{w_l \in \mathcal W_1 \cup \dots \cup \mathcal W_{d-1}} f(w_{l-N+d}^l)$ then $\overline m_d$ will be 0. This happens if the context was observed in training data only followed by the excluded tokens.} Back-off pseudo-count would then be 0. However, the back-off node would be the only node in its level anyway. One way to deal with the problem elegantly is to give the back-off node an arbitrary non-zero pseudo-count, for example 1.
 
+\FloatBarrier
+\subsection{Offsetting counts}
+\label{sec:offsetting_counts}
+
+Sentences generated according to their ML probabilities are usually subjectively judged to be of low quality. The reason is that rarely seen $N$-grams have high variance in their counts. Since the predictive distribution of tokens in a sentence is heavy-tailed, these uncertain possibilities form the majority of the probability mass.
+
+Introducing cutoff $C$ is one way to deal with this problem. $N$-grams $w_1^N$ with $f(w_1^N) < C$ are discarded and effectively given counts of zero. As a result, probabilities of uncommon tokens are calculated according to a lower-order, but more certain, model.
+
+An even bolder approach is to modify the counts. I propose a simple method where a constant offset $F$ is removed from the count of every leaf in the back-off tree
+
+\begin{equation}
+\label{eq:offsetting_leaves}
+\overline c(w_l) = c(w_l) - F .
+\end{equation}
+
+The result is that uncommon $N$-grams become underrepresented and the sentences generated are skewed towards frequently observed $N$-grams, \ie common phrases. Obviously, $F<C$ so that the counts are still positive.
+
+Back-off pseudo-counts are modified in a different way. They are adjusted so that they roughly stay as the same proportion of a particular level of the tree
+
+\begin{equation}
+\label{eq:adjusting_backoff_pseudocounts}
+\overline c(b_d) = \ceil*{ \frac {\sum_{w_l \in \mathcal W_d} \overline c(w_l)} {\sum_{w_l \in \mathcal W_d} c(w_l)} c(b_d) }.
+\end{equation}
+
+Offsetting counts does not have the same statistical motivation as the back-off scheme described in the previous section. It is simply an \emph{ad-hoc} modification to yield subjectively better results. The effects of varying the $F$ parameter are described in the results section.
+
 \clearpage
 \section{The interval algorithm}
 \label{sec:interval_algorithm}
