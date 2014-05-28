@@ -1437,7 +1437,7 @@ I used the English language model with $N = 5$, $\beta = 0.1$, $\gamma = 0.01$ a
 
 \subsubsection{Perplexity of a language model}
 
-See \cite{brown1992entropy} for broader treatment of perplexity in computational linguistics. Perplexity per token in bits is the expected negative log probability of a token given the preceding ones. In the interval algorithm, it directly corresponds to the expected size of successive subintervals. It can be also interpreted as the number of bits of information needed on average to encode a single token.
+Perplexity per token in bits is the expected negative log probability of a token given the preceding ones. In the interval algorithm, it directly corresponds to the expected size of successive subintervals. It can be also interpreted as the number of bits of information needed on average to encode a single token. See \cite{brown1992entropy} for a broader treatment of perplexity in computational linguistics.
 
 We can talk about perplexity of a probability distribution itself (first sense) and the perplexity of a probability distribution that tries to model some test data (second sense). The former applies to the generation of random sentences and describes the variety of text that can be produced by the model. For example, for a model with perplexity of 5.4 bits, generating the next token can be thought of as equivalent to choosing 1 out of $2^{5.4} \approx 42$ equally likely choices.
 
@@ -1463,7 +1463,7 @@ There are two problems. Firstly, because of the prohibitive size of the dynamica
 
 Secondly, in a practical stegosystem it is advantageous to continue generating stegotext randomly until the end of a sentence is reached. As a result, the stegotext does not awkwardly terminate mid-sentence. This lowers the rate, as some number of trailing tokens needs to be appended. It is not trivial to introduce this constraint when calculating bounds on the expected number of tokens of stegotext.
 
-However, there is a number of relationships between model statistics and the rate, which I will state without proof:
+However, there is a number of \emph{common sense} relationships between model statistics and the rate, which I will state without proof:
 
 \begin{enumerate}
 \item The rate falls with plaintext perplexity.
