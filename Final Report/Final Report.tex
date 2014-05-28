@@ -1471,27 +1471,40 @@ However, there is a number of relationships between model statistics and the rat
 \item The rate falls with average stegotext sentence length.
 \end{enumerate}
 
-\subsection{Storing length of plaintext}
+\subsection{Unique recovery of plaintext}
 
-If the plaintext length declaration is longer than the maximum length of plaintext that can be recovered from the potential stegotext, we know the message was covertext.
+\subsubsection{Communicating the length of plaintext}
 
-Conversely -- how often does a compatible length declaration indicate stegotext? If almost always, then the system is flawed.
+The stegosystem as described in \cref{sec:simple_stegosystem} does not allow to uniquely identify plaintext from stegotext. We can only recover a sequence of tokens whose \emph{prefix} is the plaintext. If we want to know plaintext exactly, its length needs to be somehow communicated:
 
-\subsubsection{Universal coding of plaintext length}
+\begin{description}
+	\item[EOM token] We can add an \emph{end of message} token to our alphabet. The problem is learning its conditional probabilities. We could constraint \ngram{\_EOM\_} to only follow an \ngram{\_END\_} token and then create a probability distribution over the number of sentences in the plaintext. We can choose for example a \pmf from the exponential family. The subinterval size corresponding to \ngram{\_EOM\_} would be then equal to the probability that the current sentence is the last one.
+	\item[Communicating $L$ at the beginning of plaintext] We can transmit the length $L$ of plaintext as the first symbol. $[0,1)$ can be partitioned into an infinite number of arbitrarily sized intervals, each corresponding to a particular $L$. Thus, if we can measure the \pmf of $L$, we can exactly match it. If in practice we do not care about being optimal, we can use a binary integer prefix code to initially partition $[0,1)$ by lengths. The requirement is that every possible sequence of bits either is a codeword, is a prefix of a codeword, or has a codeword as a prefix -- then $[0,1)$ will be partitioned among all integers.
+\end{description}
 
-Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.
+\subsubsection{Compromising innocuousness}
 
-\subsubsection{EOF symbol}
+In the case of a simple stegosystem from \cref{sec:simple_stegosystem}, communicating the length of plaintext may compromise innocuousness. Real stegotext is guaranteed to have \emph{consistent plaintext length} -- we should either eventually decode an \ngram{\_EOM\_} token, or we should not decode more tokens than the number given by the length declaration.
 
-Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.
+This is not the case with truly random sentences interpreted as stegotext. If our stegosystem uses the \ngram{\_EOM\_} token, it is not guaranteed to appear within the recovered plaintext sequence. Similarly, if we the plaintext length declaration gives $L$, we may in fact recover a plaintext sequence shorter than $L$.
+
+As a result, plaintext length consistency increases the probability that observed fragment of text is stegotext. It is possible that length consistency is an \emph{almost sure} indication of using the stegosystem -- simulations or theoretical analysis should answer this question.
+
+\subsubsection{Compromising security}
+
+If we use the secure stegosystem from \cref{sec:secure_stegosystem}, innocuousness of transmission is not compromised in an obvious way. We cannot attempt to decode plaintext without knowing the key, so we do not know if its length will be consistent or not.
+
+However, an enemy with partial knowledge can infer more information. For example, if the enemy knows that a fragment of text is stegotext, they also know that a key that gives inconsistent plaintext length is not correct -- deniable encryption no longer applies. If they know the key, the situation is completely analogous to the one in the previous section -- they have an above chance probability of guessing whether a fragment of text is stegotext.
 
 \subsection{Sentence delimiters}
 
-Google Books $N$-grams contain \ngram{\_START\_} and \ngram{\_END\_} tokens to identify beginning and end of a sentence. If text is \emph{generated} using the language model, it will inevitably contain these tokens (for example any sequence will start with \ngram{\_START\_}). As a result some kind of convention needs to be adopted as to how sentence delimiters are identified in formatted output text. I decided that sentences will be delimited with multiple whitespace characters, for example a double space. This has non-trivial consequences for practical application of the system.
+Google Books $N$-grams contain \ngram{\_START\_} and \ngram{\_END\_} tokens to identify beginning and end of a sentence. If stegotext is \emph{generated} using the language model, it will inevitably contain these tokens. For example any sequence will start with \ngram{\_START\_} and finish with \ngram{\_END\_}. As a result, some kind of convention needs to be adopted to uniquely identify sentence delimiters in formatted output text. I decided that sentences will be delimited with multiple whitespace characters, for example a double space.
 
-\subsubsection{How many bits of information stored per word, sentence, tweet?}
+This has non-trivial consequences for practical application of the system. Most real text does not have such explicit sentence boundaries, so their presence is suspicious. In hindsight, choosing a corpus without explicit sentence boundaries would remove this problem. In addition, there would be desirable continuity between sentences.
 
-Use the bounds from Han \& Hoshi's paper.
+Examples of corpora meeting this condition are the the 2009 Google Books $N$-grams Corpus and the COCA $N$-grams discussed below.
+
+\subsection{Using COCA instead of Google Books}
 
 \clearpage
 \section{Conclusions}
