@@ -208,9 +208,9 @@ The methods outlined above provide only some degree of innocuousness. They large
 
 \subsection{Approach taken}
 
-In this project I will take an information theoretic approach to steganography. Plaintext and covertext will be modelled by stochastic processes. I will then adapt an algorithm for discrete pseudo-random number generation to generate stegotext from covertext in a pseudo-random fashion.
+In this project I will take an information theoretic approach to steganography. Plaintext and covertext will be modelled by stochastic processes, whose statistics need to be learnt. I will then generate stegotext directly from plaintext in such a way that stegotext will be statistically indistinguishable from covertext, but it will still be possible to recover plaintext from it.
 
-\cref{sec:snlm,sec:processing_ngrams,sec:language_model} show how text can be modelled as the output of a stochastic process and how to efficiently estimate the statistics of this process. \cref{sec:interval_algorithm,sec:stegosystem} describe how to construct a stegosystem using this language model.
+\cref{sec:snlm,sec:processing_ngrams,sec:language_model} show how natural language text can be modelled as the output of a stochastic process and how to efficiently estimate the statistics of this process from a corpus of training data. \cref{sec:interval_algorithm,sec:stegosystem} describe how to construct a stegosystem given the statistics of the aforementioned processes.
 
 \clearpage
 \section{Statistical natural language models}
