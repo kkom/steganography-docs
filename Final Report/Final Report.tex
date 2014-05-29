@@ -1522,13 +1522,23 @@ I expect the COCA $N$-grams corpus to contain fewer special special characters o
 \clearpage
 \section{Conclusions}
 
-Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.
+What I have done:
+
+\begin{enumerate}
+	\item Designed methods for processing $N$-grams corpora, among them:
+	\item Designed a method for breaking complex, potentially overlapping $N$-grams into simpler ones and an algorithm for inducing the counts of simple $N$-grams from the complex ones
+	\item Designed a format for storing $N$-grams corpora in a space-efficient way and $log(\text{size})$ access time
+	\item Designed a language model which assign non-zero probability to every fragment of text
+	\item Designed a method for estimating the amount of probability mass assigned to lower-order token conditional probability estimates
+	\item Designed using the interval algorithm a simple stegosystem that masks the output of one arbitrary, discrete stochastic process as if it was the output of a different arbitrary process
+	\item Designed a secure stegosystem that protects the output of the original process using a symmetric key and provides deniable encryption, \ie gives a plausible answer when decrypting the message using any incorrect key
+	\item Implemented all of the above for the Google Books $N$-grams Corpus
+\end{enumerate}
 
 \clearpage
 \footnotesize
 \bibliographystyle{unsrt}
 \bibliography{../bibliography}
-
 
 \clearpage
 \appendix
