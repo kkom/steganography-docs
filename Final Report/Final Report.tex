@@ -185,22 +185,28 @@ Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor 
 \pagestyle{plain}
 \section{Introduction}
 
-Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.
-
 \FloatBarrier
 \subsection{Aim}
 
-Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.
+The aim of the project is to create a communications system that will allow to broadcast a secret message enciphered with a private key as a paragraph of pseudo-randomly generated English text. The system should also translate this paragraph back into the original message using the same key. The sentences should appear to be randomly drawn from the set of all possible English sentences -- in other words will seem innocuous for an enemy monitoring communications between two parties. The introduction of a private key means that the secrecy of the message does not rely on the enemy's unfamiliarity with the system, but on a private piece of information exchanged between the two parties.
 
 \FloatBarrier
 \subsection{Overview of steganography}
 
-Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.
+The project falls in the field of \emph{steganography}, which can be defined as follows:
 
-\FloatBarrier
-\subsection{High level description of the stegosystem}
+\begin{quote} Steganography is the art and science of encoding hidden messages in such a way that no one, apart from the sender and intended recipient, suspects the existence of the message. \cite{wiki:steganography} \end{quote}
 
-Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.
+An example stegosystem providing some \emph{innocuousness} and \emph{secrecy} can be constructed in the following way:
+
+\begin{quote} A message, the \emph{plaintext}, may be first encrypted by traditional means, producing a \emph{ciphertext}. Then, an innocuous \emph{covertext} is modified in some way so as to contain the \emph{ciphertext}, resulting in the \emph{stegotext}. \cite{wiki:steganography} \end{quote}
+
+There are various ways in which ciphertext may be embedded in covertext:
+\emph{a)}~by breaking the lines of covertext in such a way that the first words of every line form ciphertext -- this works if stegotext is not reformatted in transmission;
+\emph{b)}~by replacing standard characters with their redundant Unicode lookalikes according to ciphertext  -- this works if stegotext is transmitted using Unicode;
+\emph{c)}~by modifying noise in covertext according to ciphertext -- this works if a rasterised version of stegotext is transmitted \emph{exactly} (\ie digitally, not in print).
+
+The methods outlined above provide only some degree of innocuousness. They largely rely on the enemy's unfamiliarity with the system and may be detected using statistical tests, \eg identifying unusual distributions of Unicode characters or image noise.
 
 \clearpage
 \section{Statistical natural language models}
