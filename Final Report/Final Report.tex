@@ -250,10 +250,10 @@ An example stegosystem providing some \emph{innocuousness} and \emph{secrecy} ca
 
 \begin{quote} A message, the \emph{plaintext}, may be first encrypted by traditional means, producing a \emph{ciphertext}. Then, an innocuous \emph{covertext} is modified in some way so as to contain the \emph{ciphertext}, resulting in the \emph{stegotext}. \cite{wiki:steganography} \end{quote}
 
-There are various ways in which ciphertext may be embedded in covertext:
+There are various ways in which ciphertext may be embedded in covertext. Below are only some examples:
 
 \begin{enumerate}
-	\item Lines of covertext may be broken in such a way that the first words of every line form ciphertext. Note that such stegotext cannot be reformatted in transmission -- the font and page sizes need to stay constant so that the line breaks occur at the same places.
+	\item Lines of covertext may be broken in such a way that the first words of every line form ciphertext. Note that such stegotext cannot be reformatted -- the font and page sizes need to stay constant so that the line breaks occur at the same places.
 	\item Standard ASCII characters can be replaced with their redundant Unicode lookalikes in a specific way according to the ciphertext. For this to work the stegotext needs to be transmitted using Unicode.
 	\item Steganography is not limited to text. Covertext may be a digital \emph{image}, noise in which can be modified in a certain way according to the ciphertext. For successful transmission a rasterised version of the \emph{stegoimage} has to be transmitted \emph{exactly} (\ie digitally, not in print).
 \end{enumerate}
