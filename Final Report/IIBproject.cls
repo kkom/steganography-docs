@@ -66,7 +66,7 @@
       \global\@topnum\z@   % Prevents figures from going at top of page.
       \@maketitle
     \fi
-    \thispagestyle{plain}\@thanks % tpl - remove page number 
+    \thispagestyle{plain}\@thanks % tpl - remove page number
   \endgroup
   \setcounter{footnote}{0}%
   \let\thanks\relax
@@ -75,7 +75,7 @@
 \def\@maketitle{%
   \newpage
   \null
-  \vskip 6.15cm%
+  \vskip 7.15cm%
   \begin{center}%
     {\Large \@title \par}%
     {by\par}
@@ -84,12 +84,12 @@
       \begin{tabular}[t]{c}%
         \@author
       \end{tabular}\par}%
-\vskip 2mm 
+\vskip 2mm
    Fourth-year undergraduate project in\\Group \@projectgroup, 2013/2014%
   \end{center}%
   \par
-\vskip 11cm%
-\noindent I hereby declare that, except where specifically indicated, 
+\vskip 10cm%
+\noindent I hereby declare that, except where specifically indicated,
 the work submitted herein is my own original work.
 
 \vskip 0.5cm %or some other suitable small distance

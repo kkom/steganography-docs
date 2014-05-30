@@ -176,9 +176,9 @@ Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor 
 % Abstract and table of contents
 \clearpage
 \pagestyle{empty}
-\begin{abstract}
-Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.
-\end{abstract}
+%\begin{abstract}
+%Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.
+%\end{abstract}
 \tableofcontents
 
 % Contents
@@ -188,7 +188,7 @@ Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor 
 
 \subsection{Aim}
 
-The aim of the project is to create a communications system that will allow to broadcast a secret message enciphered with a private key as a paragraph of pseudo-randomly generated English text. The system should also translate this paragraph back into the original message using the same key. The sentences should appear to be randomly drawn from the set of all possible English sentences -- in other words will seem innocuous for an enemy monitoring communications between two parties. The introduction of a private key means that the secrecy of the message does not rely on the enemy's unfamiliarity with the system, but on a private piece of information exchanged between the two parties.
+The aim of the project is to create a communications system that will allow to broadcast a secret message enciphered with a private key as a paragraph of English text. The system should also translate this paragraph back into the original message using the same key. The sentences should appear to be randomly drawn from the set of all possible English sentences -- in other words will seem innocuous for an enemy monitoring communications between two parties. The introduction of a private key means that the secrecy of the message does not rely on the enemy's unfamiliarity with the system, but on a private piece of information exchanged between the two parties.
 
 \subsection{Overview of steganography}
 
@@ -229,12 +229,7 @@ A string $\mathbf w$ can be written as a sequence of $L$ \emph{tokens} $\mathbf 
 P(\mathbf w) = \prod_{l=1}^{L} P( w_l | w_1^{l-1} ) .
 \end{equation}
 
-Even though \cref{eq:exact_string_probability} gives a convenient formulation of language as a stochastic process, it is computationally intractable. If the conditional probabilities are stored in tables, the conditional probability table of the $l$th token has $V^l$ entries. The total size of all tables becomes prohibitively large for even small $L$.
-
-\FloatBarrier
-\subsection{$N$-gram language models}
-
-The usual solution is to restrict the size of the context to $N{-}1$ previous tokens, resulting in an approximate $N$-gram language model
+Even though \cref{eq:exact_string_probability} gives a convenient formulation of language as a stochastic process, it is computationally intractable. If the conditional probabilities are stored in tables, the conditional probability table of the $l$th token has $V^l$ entries. The total size of all tables becomes prohibitively large for even small $L$. The usual solution is to restrict the size of the context to $N{-}1$ previous tokens, resulting in an approximate $N$-gram language model
 
 \begin{equation}
 \label{eq:ngram_string_probability}
@@ -253,7 +248,7 @@ The ML (maximum likelihood) estimate of the conditional probability of $w_l$ in 
 
 where $f(\cdot)$ is the number of occurrences of a particular sequence of tokens in training data.
 
-A problem with \cref{eq:ml_conditional_token_probability} is that most $N$-gram counts will be zero. For example, a $5$-gram model with $V \approx 10^6$ will have $V^N \approx \left( 10^6 \right)^5 = 10^{30}$ distinct $N$-grams. For every possible $5$-gram sequence to occur at least once, training data would need to consist of more than $10^{30}$ tokens. Google Books $N$-gram Corpus \cite{googlengrams2011}, currently the largest available dataset, is based on $4.7 \times 10^{8}$ tokens. As a result, a large number of grammatically correct sentences will have zero probability.
+A problem with \cref{eq:ml_conditional_token_probability} is that most $N$-gram counts will be zero. For example, a $5$-gram model with $V \approx 10^6$ will have $V^N \approx \left( 10^6 \right)^5 = 10^{30}$ distinct $N$-grams. For every possible $5$-gram sequence to occur at least once, training data would need to consist of more than $10^{30}$ tokens. Google Books $N$-gram Corpus \cite{googlengrams2011}, currently the largest available dataset, is based on $4.7 \times 10^{8}$ tokens. As it turns out, the vast majority of grammatically correct sentences has zero probability.
 
 \FloatBarrier
 \subsection{Limiting corpus size, discounting and back-off}
@@ -271,7 +266,7 @@ A standard way of dealing with this problem is to introduce \emph{discounting} a
 
 where $d(\cdot)$ and $\alpha(\cdot)$ return the discount and back-off weights -- scaling factors used to ensure that \cref{eq:conditional_token_probability_with_backoff} gives a valid \pmf. Intuitively, they reduce the mass assigned to observed $N$-grams to make space for estimates of order $N{-}1$ and lower.
 
-$d(\cdot)$ and $\alpha(\cdot)$ are hard to choose or compute -- there exist many different schemes motivated by linguistics and statistics. Examples include Good-Turing smoothing \cite{good1953}, Kneser-Ney smoothing \cite{kneserney1995}, or stupid back-off \cite{brants2007} -- all exhibit various levels of complexity. In addition, the last does not even return a valid \pmf, but this is judged acceptable for strict scoring applications.
+$d(\cdot)$ and $\alpha(\cdot)$ are hard to choose or compute -- there exist many different schemes motivated by linguistics and statistics. Examples include Good-Turing smoothing \cite{good1953}, Kneser-Ney smoothing \cite{kneserney1995}, or stupid back-off \cite{brants2007} -- all exhibit various levels of complexity. In addition, the last one does not even return a valid \pmf, but this is judged acceptable for strict scoring applications.
 
 \clearpage
 \section{Processing and storing $N$-gram counts}
@@ -282,8 +277,6 @@ I have shown that under certain assumptions, $N$-gram counts provide a practical
 I will first describe two sources of data that I investigated, Google Books $N$-gram Corpus and Corpus of Contemporary American English $N$-grams, motivating why I chose the former. I will then explain in detail the processing required to make the $N$-gram counts corpus fit for a steganographic application.
 
 Firstly, all $N$-grams that contain digits are removed from the corpus. This is because they are frequently associated with illegible fragments of text from various data tables. Token strings of the remaining $N$-grams are then transliterated from Unicode to 7-bit ASCII, followed by conversion to lowercase letters and filtering only a set of allowed characters. The desired result is to remove noise from the system and make token representations unambiguous. Following this, extended tokens like \ngram{it's} are split into multiple base tokens such as \ngram{it}, \ngram{'} and \ngram{s}. The aim is to ensure that a fragment of text has a unique sequence of corresponding tokens. An algorithm to induce counts of base tokens from counts of the extended tokens is illustrated. Lastly, a procedure to enforce the $N$-gram counts to be self-consistent is described.
-
-Final counts are stored using a binary storage format referred to as BinDB (binary database). BinDB files store $N$-grams in sorted order. This allows efficient binary search. Additionally, $N$-grams with a common prefix will be adjacent to each other.
 
 \FloatBarrier
 \subsection{Sources of natural language statistical data}
@@ -444,7 +437,8 @@ The Google Books $N$-gram Corpus supplies counts of 1- to 5-grams of unnormalise
 \centering
 \begin{tikzpicture}[scale=0.312]
 
-	\node [right] at (-0.45,0) {\Large \texttt{\textcolor{red}{what} '\textcolor{red}{s} the \textcolor{red}{cross}-\textcolor{red}{section} area \textcolor{red}{?}}};
+	\node [right] at (-0.45,0) {\Large \texttt{what 's the cross-section area ?}};
+%	\node [right] at (-0.45,0) {\Large \texttt{\textcolor{red}{what} '\textcolor{red}{s} the \textcolor{red}{cross}-\textcolor{red}{section} area \textcolor{red}{?}}};
 %	\node [right] at (-0.45,0) {\Large \texttt{\textcolor{red}{what 's the cross-section area ?}}};
 
 	% Extended token delimiters
@@ -551,11 +545,6 @@ The above restriction can be easily stated in an equivalent way. A base $N$-gram
 Using the example from the beginning of the section, \ngram{\underline{'s} the \mbox{\underline{cross-section}}} corresponds to the base token sequence \ngram{\underline{' s} the \underline{cross - section}}. The following induced $N$-grams can be selected from it: 3-gram \ngram{\underline{s} the \underline{cross}}, 4-grams \ngram{\underline{' s} the \underline{cross}}, \ngram{\underline{s} the \underline{cross -}} and 5-grams \ngram{\underline{' s} the \underline{cross -}}, \ngram{\underline{s} the \underline{cross - section}}. In all examples, base tokens that belong to the first or last extended token of the extended $N$-gram are underlined.
 
 \FloatBarrier
-\subsection{BinDB file format}
-
-\noteSelf{Quickly describe the BinDB format -- binary storage of $N$-grams, format of each line, tokens are stored using their indices, $N$-grams are sorted.}
-
-\FloatBarrier
 \subsection{Counts consistency}
 \label{sec:counts_consistency}
 
@@ -581,7 +570,7 @@ $N$-grams are \emph{counts consistent} if they are both left and right counts co
 
 \subsubsection{Ensuring counts consistency}
 
-The Google Books $N$-grams Corpus is not counts consistent. This may be caused by a bug in the script that processed $N$-gram counts on-the-fly from Google servers. It skipped the last $N$-gram from each of the 2892 files that the corpus is split into. The corpus may also be inconsistent itself, for example due to the failure of some jobs during its distributed creation.
+The Google Books $N$-grams Corpus is not counts consistent. This may be caused by a bug in my script that processed $N$-gram counts on-the-fly from Google servers. It skipped the last $N$-gram from each of the 2892 files that the corpus is split into.\footnote{This script run for 4 weeks and a special permission was obtained from the departmental computer operators to process 1.5 TB of incoming raw data over the Internet. Fixing this retroactively was judged not worth the effort.} The corpus may also be inconsistent itself, for example due to the failure of some jobs during its distributed creation.
 
 Counts consistency is assumed in some parts of the stegosystem, for example in $\beta{-}\gamma$ estimation in \cref{sec:beta_gamma_backoff}. Since inconsistencies are very rare (in the order of $10^3$ for the whole corpus of about $1.5 \times 10^9$ base $N$-grams), they can be forcefully corrected without visibly distorting information in the counts.
 
@@ -1585,7 +1574,7 @@ The stegosystem as described in \cref{sec:simple_stegosystem} does not allow to 
 
 In the case of a simple stegosystem from \cref{sec:simple_stegosystem}, communicating the length of plaintext may compromise innocuousness. Real stegotext is guaranteed to have \emph{consistent plaintext length} -- we should either eventually decode an \ngram{\_EOM\_} token, or we should not decode more tokens than the number given by the length declaration.
 
-This is not the case with truly random sentences interpreted as stegotext. If our stegosystem uses the \ngram{\_EOM\_} token, it is not guaranteed to appear within the recovered plaintext sequence. Similarly, if we the plaintext length declaration gives $L$, we may in fact recover a plaintext sequence shorter than $L$.
+This is not the case with truly random sentences interpreted as stegotext. If our stegosystem uses the \ngram{\_EOM\_} token, it is not guaranteed to appear within the recovered plaintext sequence. Similarly, if the plaintext length declaration gives $L$, we may in fact recover a plaintext sequence shorter than $L$.
 
 As a result, plaintext length consistency increases the probability that observed fragment of text is stegotext. It is possible that length consistency is an \emph{almost sure} indication of using the stegosystem -- simulations or theoretical analysis should answer this question.
 
