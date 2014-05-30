@@ -266,7 +266,7 @@ In this project I will take an information theoretic approach to steganography. 
 
 \cref{sec:snlm,sec:processing_ngrams,sec:language_model} show how natural language text can be modelled as the output of a stochastic process and how to efficiently estimate the statistics of this process from a corpus of training data. \cref{sec:interval_algorithm,sec:stegosystem} describe how to construct a stegosystem given the statistics of the aforementioned processes.
 
-\clearpage
+\cleardoublepage
 \section{Statistical natural language models}
 \label{sec:snlm}
 
@@ -321,7 +321,7 @@ where $d(\cdot)$ and $\alpha(\cdot)$ return the discount and back-off weights --
 
 $d(\cdot)$ and $\alpha(\cdot)$ are hard to choose or compute -- there exist many different schemes motivated by linguistics and statistics. Examples include Good-Turing smoothing \cite{good1953}, Kneser-Ney smoothing \cite{kneserney1995}, or stupid back-off \cite{brants2007} -- all exhibit various levels of complexity. In addition, the last one does not even return a valid \pmf, but this is judged acceptable for strict scoring applications.
 
-\clearpage
+\cleardoublepage
 \section{Processing and storing $N$-gram counts}
 \label{sec:processing_ngrams}
 
@@ -639,7 +639,7 @@ Steps \ref{alg:cc_left_consistency}-\ref{alg:cc_full_consistency} can be perform
 
 Creating count consistent $N$-grams requires counts consistent \npgrams. So $N$-gram tables need to be created sequentially from the highest $N$ down to 1.
 
-\clearpage
+\cleardoublepage
 \section{Language model}
 \label{sec:language_model}
 
@@ -937,7 +937,7 @@ Back-off pseudo-counts are modified in a different way. They are adjusted so tha
 
 Offsetting counts does not have the same statistical motivation as the back-off scheme described in the previous section. It is simply an \emph{ad-hoc} modification to yield subjectively better results. The effects of varying the $F$ parameter are described in the results section.
 
-\clearpage
+\cleardoublepage
 \section{The interval algorithm}
 \label{sec:interval_algorithm}
 
@@ -1009,7 +1009,7 @@ It is possible to extend the interval algorithm to a scenario where the input se
 
 Note that if the processes are infinite, it is not possible to do the opposite, \ie define an interval algorithm $\angled{\mathcal I / \mathcal O_1, \dots, \mathcal O_N}$. It would end up being equivalent to simply $\angled{\mathcal I / \mathcal O_1}$.
 
-\clearpage
+\cleardoublepage
 \section{Stegosystem}
 \label{sec:stegosystem}
 
@@ -1447,7 +1447,7 @@ Both plaintext and stegotext are generated according to the same stochastic proc
 
 \end{figure}
 
-\clearpage
+\cleardoublepage
 \section{Results}
 
 In this section I will present the results of my project. I have implemented the full language model from \cref{sec:language_model} along with the secure stegosystem from \cref{sec:secure_stegosystem}.
@@ -1571,7 +1571,7 @@ I used the English language model for $N = 5$ and with parameters $\beta = 0.1$,
 % Go back to normal array row size
 \renewcommand{\arraystretch}{1}
 
-\clearpage
+\cleardoublepage
 \section{Discussion}
 
 \subsection{Language model statistics and the rate of the stegosystem}
@@ -1657,7 +1657,7 @@ The aim of the Google Books project is to digitise \emph{all} books in the world
 
 I expect the COCA $N$-grams corpus to contain fewer special special characters or foreign words. Additionally, it does not have a cutoff on counts, which gives more flexibility in designing the language model. Its drawbacks compared to the Google Books $N$-grams are: price and counts given only up to $N=4$. It is not possible to be sure without implementing the COCA corpus, but I now expect it to be give better results in a practical system.
 
-\clearpage
+\cleardoublepage
 \section{Conclusions}
 
 What I have done:
@@ -1673,12 +1673,12 @@ What I have done:
 	\item Implemented all of the above for the Google Books $N$-grams Corpus
 \end{enumerate}
 
-\clearpage
+\cleardoublepage
 \footnotesize
 \bibliographystyle{unsrt}
 \bibliography{../bibliography}
 
-\clearpage
+\cleardoublepage
 \appendix
 \section{Random English sentences}
 \label{sec:random_english_sentences}
