@@ -234,7 +234,11 @@ Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor 
 
 \subsection{Aim}
 
-The aim of the project is to create a communications system that will allow to broadcast a secret message enciphered with a private key as a paragraph of English text. The system should also translate this paragraph back into the original message using the same key. The sentences should appear to be randomly drawn from the set of all possible English sentences -- in other words will seem innocuous for an enemy monitoring communications between two parties. The introduction of a private key means that the secrecy of the message does not rely on the enemy's unfamiliarity with the system, but on a private piece of information exchanged between the two parties.
+The aim of the project is to create a communications system that will allow to broadcast a secret message enciphered with a private key as a paragraph of English text. The system should also translate this paragraph back into the original message using the same key.
+
+The sentences should appear to be randomly drawn from the set of all possible English sentences, in other words seem innocuous for an enemy monitoring communications between two parties.
+
+The introduction of a private key means that the secrecy of the message does not rely on the enemy's unfamiliarity with the system, but on a private piece of information exchanged between the two parties.
 
 \subsection{Overview of steganography}
 
@@ -247,9 +251,12 @@ An example stegosystem providing some \emph{innocuousness} and \emph{secrecy} ca
 \begin{quote} A message, the \emph{plaintext}, may be first encrypted by traditional means, producing a \emph{ciphertext}. Then, an innocuous \emph{covertext} is modified in some way so as to contain the \emph{ciphertext}, resulting in the \emph{stegotext}. \cite{wiki:steganography} \end{quote}
 
 There are various ways in which ciphertext may be embedded in covertext:
-\emph{a)}~by breaking the lines of covertext in such a way that the first words of every line form ciphertext -- this works if stegotext is not reformatted in transmission;
-\emph{b)}~by replacing standard characters with their redundant Unicode lookalikes according to ciphertext  -- this works if stegotext is transmitted using Unicode;
-\emph{c)}~by modifying noise in covertext according to ciphertext -- this works if a rasterised version of stegotext is transmitted \emph{exactly} (\ie digitally, not in print).
+
+\begin{enumerate}
+	\item Lines of covertext may be broken in such a way that the first words of every line form ciphertext. Note that such stegotext cannot be reformatted in transmission -- the font and page sizes need to stay constant so that the line breaks occur at the same places.
+	\item Standard ASCII characters can be replaced with their redundant Unicode lookalikes in a specific way according to the ciphertext. For this to work the stegotext needs to be transmitted using Unicode.
+	\item Steganography is not limited to text. Covertext may be a digital \emph{image}, noise in which can be modified in a certain way according to the ciphertext. For successful transmission a rasterised version of the \emph{stegoimage} has to be transmitted \emph{exactly} (\ie digitally, not in print).
+\end{enumerate}
 
 The methods outlined above provide only some degree of innocuousness. They largely rely on the enemy's unfamiliarity with the system and may be detected using statistical tests, \eg identifying unusual distributions of Unicode characters or image noise.
 
