@@ -13,7 +13,7 @@
     {\ClassError{IIBproject}{Option `titlepage' not supported}{}}
 \DeclareOption{wide}
     {\@cuedwidetrue\typeout{Wide option selected}}
-\PassOptionsToClass{12pt,a4paper}{article}
+\PassOptionsToClass{12pt,a4paper,twoside}{article}
 \DeclareOption*{\PassOptionsToClass{\CurrentOption}{article}}
 \ProcessOptions
 \LoadClass{article}
