@@ -178,6 +178,9 @@
 \pagestyle{plain}
 \pagenumbering{Roman}
 
+% Tables in the abstract are numbered using uppercase letters
+\renewcommand{\thetable}{\Alph{table}}
+
 % Technical abstract title
 \begin{center}
 \mbox{}
@@ -198,7 +201,7 @@
 
 The problem addressed in this project is constructing a \emph{stegosystem} that allows to broadcast a secret message as a paragraph of innocuous English text. The output text should appear to be randomly drawn from the set of all grammatically correct English sentences. The original message needs to be able to be recovered in full from the stegotext. Secrecy is provided by a symmetric key which allows both encryption and decryption of the original message.
 
-\subsection*{Contributions}
+\subsection*{Achievement}
 
 The work done can be split into two logical parts: statistical natural language modelling and construction of the secure stegosystem.
 
@@ -214,13 +217,32 @@ Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor 
 
 \subsection*{Results}
 
-Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.
+\cref{tab:example_stegosystem} shows how the secure stegosystem can be used to generate stegotext and recover plaintext from it. It also demonstrates how deniable encryption is implemented -- an incorrect key will allow to recover without failure randomly generated plaintext. In principle, it makes it impossible to verify if the supplied key is correct or not.
+
+\renewcommand{\arraystretch}{1.25}
+\begin{table}[h]
+	\centering
+	\begin{tabular}{m{3cm} m{12cm}}
+	\centering plaintext & Come in the morning with the documents. \\ \hline
+	\centering key & Light rain on Monday morning. \\ \hline
+	\centering stegotext & The Hurrian pantheon of the gods, o king, who is in turn responsible for the conditions at the surface of the whole Earth, we could not talk to her about what she had done. \\ \hline
+	\centering recovered plaintext & Come in the morning with the documents.\ \ The grocer takes the form of a human, or a full-time basis.\ \ With this \\ \hline
+	\centering false key & Early light rain or drizzle will soon die out. \\ \hline
+	\centering recovered false plaintext & Jennings, H.\ S.\ (editor).\ \ An abstruse and learned specialist who finds that he has been to the west of the entrance to the vagina.\ \ There is a suggestion that the Earth might be blessed.
+	\end{tabular}
+	\caption{\label{tab:example_stegosystem}Example usage of the secure stegosystem.}
+\end{table}
+\renewcommand{\arraystretch}{1}
 
 \subsection*{Conclusions}
 
 Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.
 
 \cleardoublepage
+
+% Reset the table counter and go back to arabic numbering of tables
+\setcounter{table}{0}
+\renewcommand{\thetable}{\arabic{table}}
 
 % Table of contents
 \pagestyle{empty}
