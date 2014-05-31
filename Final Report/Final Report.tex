@@ -198,7 +198,7 @@
 
 Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.
 
-\subsection*{Contributions}
+\subsection*{My contributions}
 
 Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.
 
@@ -1660,7 +1660,11 @@ I expect the COCA $N$-grams corpus to contain fewer special special characters o
 \cleardoublepage
 \section{Conclusions}
 
-What I have done:
+The aim of the project was achieved. I have successfully constructed a stegosystem capable of transforming a secret message into a fragment of text that appears to be randomly drawn from the set of all English sentences. The security of the message is protected by a symmetric key, which is also a fragment of text.
+
+In support of the stegosystem, I have done extensive work in the area of statistical natural language processing. My original contributions include methods for processing $N$-gram counts corpora and a large-scale language model, which meets specific requirements. I introduced a procedure for breaking complex, potentially overlapping $N$-grams into simpler ones and an algorithm for inducing the counts of simple $N$-grams from the complex ones. I proposed a language model which assigns a contiguous conditional probability region to every token that can extend a sequence of other tokens. I processed the Google Books $N$-grams Corpus to create a consistent and succinct $N$-gram counts database and fully implemented the language model based on this data.
+
+I designed a simple stegosystem that transforms the output of any discrete stochastic process (source) to the output of any other arbitrary process (target). The system correctly recovers the source sequence from the target sequence. Following this, I extended the system to a secure stegosystem which uses a symmetric key to encrypt the source sequence. The secure stegosystem provides deniable encryption --
 
 \begin{enumerate}
 	\item Designed methods for processing $N$-grams corpora, among them:
