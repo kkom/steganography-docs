@@ -89,7 +89,7 @@
 % Abbreviations which can occur at the end of the sentence cannot duplicate the following dot
 \makeatletter
 \DeclareRobustCommand*{\AbbreviationWithDot}[1]{\@ifnextchar{.}{#1}{#1.\@\xspace}}
-\DeclareRobustCommand*{\etc}{\AbbreviationWithDot{e.t.c}}
+\DeclareRobustCommand*{\etc}{\AbbreviationWithDot{etc}}
 \DeclareRobustCommand*{\iid}{\AbbreviationWithDot{i.i.d}}
 \DeclareRobustCommand*{\pmf}{\AbbreviationWithDot{p.m.f}}
 \makeatother
@@ -194,17 +194,19 @@
 \end{center}
 \normalsize
 
-\subsection*{Aim}
+\subsection*{Objective}
 
-Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.
+The problem addressed in this project is constructing a \emph{stegosystem} that allows to broadcast a secret message as a paragraph of innocuous English text. The output text should appear to be randomly drawn from the set of all grammatically correct English sentences. The original message needs to be able to be recovered in full from the stegotext. Secrecy is provided by a symmetric key which allows both encryption and decryption of the original message.
 
-\subsection*{My contributions}
+\subsection*{Contributions}
 
-Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.
+The work done can be split into two logical parts: statistical natural language modelling and construction of the secure stegosystem.
 
 \subsubsection*{Language model}
 
-Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.
+A model of natural language as a stochastic process is created. It is based on $N$-gram counts from a training corpus. An $N$-gram is a sequence of $N$ contiguous tokens in a fragment of text. Tokens can be words, punctuation, special characters, \etc. The source of counts is the Google Books $N$-grams Corpus.
+
+The model gives the conditional probability of a token given the preceding text. To be computationally tractable, it only considers a history of $N-1$ tokens. If it is not possible to make a reliable estimate with context of size $N-1$, the model is \emph{backed-off}, \ie its history is reduced by 1 token. This can be repeated recursively until the context is empty. A \emph{back-off tree} is presented as an illustration of how estimates based on different orders are combined to form the full model.
 
 \subsubsection*{Stegosystem}
 
