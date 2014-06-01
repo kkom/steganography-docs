@@ -238,7 +238,7 @@ Then, secrecy is introduced to create a secure stegosystem. A symmetric key is u
 
 \subsection*{Conclusions}
 
-A large database of statistics of English text, the Google Books $N$-grams corpus, was processed to create a model of text as the output of a stochastic process. The language model was used to construct a stegosystem, which allows to encrypt a secret message using a symmetric key and broadcast it as a paragraph of innocuous English text. The system allows other tasks to be performed as well, most importantly text compression and generation of random sentences.
+A large database of statistics of English text, the Google Books $N$-grams corpus, was processed to create a model of text as the output of a stochastic process. The language model was used to construct a stegosystem, which allows to encrypt a secret message using a symmetric key and broadcast it as a paragraph of innocuous English text. Elements of the system allow other tasks to be performed as well, most importantly text compression and generation of random sentences.
 
 \cleardoublepage
 
@@ -1646,7 +1646,7 @@ The stegosystem as described in \cref{sec:simple_stegosystem} does not allow to 
 
 \begin{description}
 	\item[EOM token] We can add an \emph{end of message} token to our alphabet. The problem is learning its conditional probabilities. We could constraint \ngram{\_EOM\_} to only follow an \ngram{\_END\_} token and then create a probability distribution over the number of sentences in the plaintext. We can choose for example a \pmf from the exponential family. The subinterval size corresponding to \ngram{\_EOM\_} would be then equal to the probability that the current sentence is the last one.
-	\item[Communicating $L$ at the beginning of plaintext] We can transmit the length $L$ of plaintext as the first symbol. $[0,1)$ can be partitioned into an infinite number of arbitrarily sized intervals, each corresponding to a particular $L$. Thus, if we can measure the \pmf of $L$, we can exactly match it. If in practice we do not care about being optimal, we can use a binary integer prefix code to partition $[0,1)$. The requirement is that every possible sequence of bits either is a codeword, is a prefix of a codeword, or has a codeword as a prefix -- then $[0,1)$ will be partitioned among all integers. A possible choice is Elias coding \cite{elias1975}.
+	\item[Communicating $L$ at the beginning of plaintext] We can transmit the length $L$ of plaintext as the first symbol. $[0,1)$ can be partitioned into an infinite number of arbitrarily sized intervals, each corresponding to a particular $L$. Thus, if we can measure the \pmf of $L$, we can exactly match it. If in practice we do not care about being optimal, we can use a binary integer prefix code to partition $[0,1)$. The requirement is that every possible sequence of bits either is a codeword, is a prefix of a codeword, or has a codeword as a prefix -- then $[0,1)$ will be partitioned among all integers. Elias coding \cite{elias1975} is one possible choice of a code.
 \end{description}
 
 \subsubsection{Compromising innocuousness}
