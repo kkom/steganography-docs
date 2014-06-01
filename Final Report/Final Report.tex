@@ -1612,13 +1612,13 @@ It can be trivially shown that an \iid uniform model has the highest possible pe
 
 \subsubsection{Plaintext model perplexity}
 
-In the context of this project, when encoding the plaintext we should \emph{minimise} the perplexity in the second sense. We want the information to be optimally compressed. This can be achieved by learning and matching the probability distribution of plaintext. Indeed, this is how the interval algorithm works -- by mapping a sequence using its \emph{true} distribution.
+When encoding the plaintext we should \emph{minimise} the perplexity in the second sense. We want the information to be optimally compressed. This can be achieved by learning and matching the probability distribution of plaintext. Indeed, this is how the interval algorithm works -- by mapping a sequence using its \emph{true} distribution.
 
 \subsubsection{Stegotext model perplexity}
 
 To maximise the rate of the system, the stegotext should be generated using a source with \emph{maximum} perplexity in the first sense. We want each output token to contain as much information as possible -- this is how we ensure that the information from plaintext is transmitted using as few stegotext tokens as possible. For example, if we only used the works of Shakespeare to model stegotext, there would less variety in the output sentences than if we used a corpus of all books in print. As a result, we would need to output relatively long paragraphs of text. Conversely, if the sentences came from general English, each one would be relatively unlikely, so would contain a lot of information.
 
-However, to ensure innocuousness, stegotext needs to be generated according to the same process as the text it aims to mimic. So we are again forced to match the stochastic process to fit particular training data.
+However, to ensure innocuousness, stegotext needs to be generated according to the same process as the text it aims to mimic. So we are again forced to match the stochastic process to fit particular training data, \ie innocuous English text.
 
 \subsubsection{Rate of the stegosystem}
 
