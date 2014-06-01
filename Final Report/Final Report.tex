@@ -2,7 +2,7 @@
 %%% Document class and page properties
 %%%
 
-\documentclass[draft]{IIBproject}
+\documentclass{IIBproject}
 
 % Set margin size
 \usepackage[margin=2.5cm]{geometry}
@@ -1626,7 +1626,7 @@ Knowing the perplexities of the plaintext and stegotext models, we can talk abou
 
 In principle, it should be possible to adapt this bound to the case of the stegosystem. Input and output should be simply reversed -- in the stegosystem it is the output that has to uniquely identify the input. We should also interpret plaintext as a discrete probability distribution over the set of \emph{all} possible plaintext sequences of length $L$. In this way, we will be able to talk about the entropy of plaintext as a function of $L$, the number of tokens we want to transmit.
 
-There are two problems. Firstly, because of the prohibitive size of the dynamically generated conditional probability trees, none of the statistics of the two distributions can be calculated exactly -- we need to estimate them and motivate why the estimations are justified.
+There are two problems. Firstly, because of the prohibitive size of the dynamically generated conditional probability trees, none of the statistics can be calculated exactly -- we need to estimate them and motivate why the estimations are justified.
 
 Secondly, in a practical stegosystem it is advantageous to continue generating stegotext randomly until the end of a sentence is reached. As a result, the stegotext does not awkwardly terminate mid-sentence. This lowers the rate, as some number of trailing tokens needs to be appended. It is not trivial to introduce this constraint when calculating bounds on the expected number of tokens of stegotext.
 
@@ -1778,5 +1778,10 @@ Different corpora can be used in training the language model. For example, the s
 \subsection{$N = 5$, $\beta = 0.1$, $\gamma = 0.01$, $F = 0$}
 
 \tokenStrings{\_START\_ vol .\ \_END\_ \_START\_ he ' s out of the " house of the dead .\ \_END\_ \_START\_ the heavy tax on land values .\ \_END\_ \_START\_ balio , united artists : the company built by the stars ( madison : university of wisconsin press , cadet officer jones ' discourse ) , as well as in other portions of the body , and casting the dart , to beat and abuse the weaker judgements of scholars , and to keep the promises which he could defend himself , indeed almost before they ' d be cold , both in india and abroad .\ \_END\_ \_START\_ first two pairs of pleopods are all but absent from the islands of the indian archipelago the etiquette of court life , and a laterally placed the sunny earth - day that the first gun is not the vocation of the christian ministry .\ \_END\_ \_START\_ but braves stepped forward to retrieve the prestige of his office for a couple of periods .\ \_END\_ \_START\_ target height , in quicktime player from the first team , " he continued , pointing to a larger creative process .\ \_END\_ \_START\_ thickness of wall , which was a drawback , however , is there not good reason to believe that the region is simply connected .\ \_END\_}
+
+\clearpage
+\section{Risk assessment retrospective}
+
+Hazards associated with excessive computer work were correctly identified in the original risk assessment. At one point during the writing of the final report, I needed to rest for a few days because of mild Repetitive Strain Injuries due to too much typing. No other risks were observed.
 
 \end{document}
