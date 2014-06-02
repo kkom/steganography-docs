@@ -75,7 +75,7 @@
 \def\@maketitle{%
   \newpage
   \null
-  \vskip 7.15cm%
+  \vskip 7.35cm%
   \begin{center}%
     {\Large \@title \par}%
     {by\par}
@@ -88,7 +88,7 @@
    Fourth-year undergraduate project in\\Group \@projectgroup, 2013/2014%
   \end{center}%
   \par
-\vskip 10cm%
+\vskip 10.2cm%
 \noindent I hereby declare that, except where specifically indicated,
 the work submitted herein is my own original work.
 
